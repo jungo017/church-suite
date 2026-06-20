@@ -1,0 +1,26 @@
+# 로컬 개발 인프라. Postgres 만으로 시작(스펙 §12: 초기 단순 구성).
+# 기동:  docker compose up -d
+# 종료:  docker compose down       (데이터 유지)
+# 초기화: docker compose down -v    (볼륨 삭제)
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: church-suite-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: church
+      POSTGRES_PASSWORD: church
+      POSTGRES_DB: church_suite
+    ports:
+      # 호스트 포트는 DB_PORT 로 변경 가능(기본 5432). 5432가 이미 쓰이면 .env 에서 DB_PORT 지정.
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U church -d church_suite"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

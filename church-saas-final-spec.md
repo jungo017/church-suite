@@ -37,6 +37,9 @@
 | 잡 큐 = Postgres 기반(pg-boss/Graphile) | 초기 Redis 불필요. 처리량 커지면 BullMQ+Redis로 전환 |
 | 멀티테넌시 = 행 단위 + RLS | 단순·저비용, 수천 교회 확장. DB 차원 안전망 |
 | 빌드 순서 = 코어 → 자산 → 교적 → 재정 → 홈페이지 | 코어 토대 후 저위험 자산부터 순차 |
+| **(0.1) `middleware.ts` → `proxy.ts` 채택** | Next 16이 `middleware` 파일 규칙을 deprecated하고 `proxy`로 대체. 역할·구현은 동일(호스트→`church_id` 해석). 본 문서 §13의 `middleware.ts`는 `proxy.ts`로 읽는다 |
+| **(0.1) DB 드라이버 = postgres.js, Drizzle `casing: snake_case`** | 경량·PgBouncer(transaction pooling) 호환(`prepare:false`). TS는 camelCase, DB는 snake_case 자동 매핑(`church_id` 등) |
+| **(0.1) 로컬 Postgres = docker-compose** | 로컬에 psql 미설치. Postgres 16 컨테이너로 단순 기동(스펙 §12 "초기 단순 구성"에 부합) |
 
 ---
 
