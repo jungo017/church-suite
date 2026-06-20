@@ -1,22 +1,33 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import {
+  parseTenantHost,
+  normalizeHost,
+  TENANT_HOST_HEADER,
+  TENANT_SLUG_HEADER,
+} from "@/lib/tenant/host";
 
 /**
- * 테넌트 해석 프록시 (스펙 §5, §13).
+ * 테넌트 해석 프록시 (스펙 §5, §13). Next 16: `middleware`→`proxy`(스펙 §1).
  *
- * Next 16에서 `middleware` 규칙이 `proxy`로 대체되었습니다(스펙 §1 결정 로그 참조).
- * 역할/구현은 스펙의 "테넌트 미들웨어"(작업 0.4)와 동일합니다.
- *
- * ⚠️ Phase 0.4 에서 본격 구현 예정:
- *   - 요청 호스트(서브도메인 `교회.도메인` 또는 커스텀 도메인) → church_id 해석
- *   - 미등록 도메인 처리(거부/안내)
- *   - 요청 컨텍스트/세션 변수로 church_id 전파
- *   - 인증 검사(Phase 0.5 JWT 와 연동)
- *
- * 현재는 구조용 pass-through 입니다.
+ * Edge 에서 동작하므로 호스트 "파싱"만 하고(순수 함수), DB 조회 없이 테넌트 힌트를
+ * 요청 헤더로 다운스트림에 전파한다. 실제 church_id 해석(DB)·미등록 거부는
+ * 서버 경계(lib/tenant: getTenant/requireTenant)에서 수행한다.
+ * (인증 검사는 Phase 0.5 에서 추가)
  */
-export function proxy(_request: NextRequest) {
-  return NextResponse.next();
+export function proxy(request: NextRequest) {
+  const host = request.headers.get("host");
+  const hint = parseTenantHost(host);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(TENANT_HOST_HEADER, normalizeHost(host));
+  if (hint.kind === "subdomain") {
+    requestHeaders.set(TENANT_SLUG_HEADER, hint.slug);
+  } else {
+    requestHeaders.delete(TENANT_SLUG_HEADER);
+  }
+
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

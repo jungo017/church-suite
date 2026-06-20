@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: church
+          POSTGRES_PASSWORD: church
+          POSTGRES_DB: church_suite
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U church -d church_suite"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # 마이그레이션/관리(슈퍼유저)
+      DATABASE_URL: postgresql://church:church@localhost:5432/church_suite
+      # 앱 런타임/테스트(비슈퍼유저, RLS 적용) — church_app 은 마이그레이션 0003 에서 생성
+      APP_DATABASE_URL: postgresql://church_app:church_app@localhost:5432/church_suite
+      NEXT_PUBLIC_ROOT_DOMAIN: localhost
+      JWT_SECRET: ci-test-secret-not-for-production
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      # npm ci 대신 npm install 사용:
+      # esbuild 의 플랫폼별 optional 바이너리가 여러 버전으로 중첩 설치될 때
+      # npm ci 가 lockfile 의 optional 처리를 제대로 못해(EBADPLATFORM/missing) 깨지는
+      # 알려진 이슈 회피. npm install 은 매칭되지 않는 플랫폼 바이너리를 안전하게 건너뛴다.
+      - run: npm install --no-audit --no-fund
+
+      # church_app 롤 + 테이블 + RLS 정책 적용(슈퍼유저로 실행)
+      - run: npm run db:migrate
+
+      - run: npm run lint
+      - run: npm run typecheck
+
+      # 테넌트 격리(RLS)·인증·RBAC 통합 테스트 — church_app 로 접속해 RLS 검증
+      - run: npm run test
+
+      - run: npm run build

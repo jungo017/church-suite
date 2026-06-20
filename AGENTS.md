@@ -17,10 +17,18 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: Phase 0(코어) — `0.1 스캐폴드` 완료. 다음 작업: `0.2 코어 스키마`.**
+- **단계: ✅ Phase 0(코어) 전체 완료 (0.1~0.8). 다음 단계: Phase 1(비품/자산) — 스펙 §7.1, §16 6단계 패턴.** (작업 브랜치: `feat/phase-0-core`)
 - **스택 확정:** Next.js **16.2.9**(App Router, Turbopack) · React 19 · TypeScript · Tailwind v4 · ESLint · **Drizzle ORM**(`postgres.js` 드라이버, casing=snake_case) · **PostgreSQL 16**(docker-compose).
-- **구현됨(0.1):** §13 폴더 구조, 공개/인증 라우트 그룹(`app/(public)` · `app/(app)`), 테넌트 프록시 placeholder(`proxy.ts`), DB 클라이언트(`lib/db`), 최소 `church` 테이블 + 첫 마이그레이션(`drizzle/0000_*.sql`), env/마이그레이션 파이프라인, `docker-compose.yml`(Postgres).
-- **미구현(이후 작업):** 코어 스키마 확장(0.2) · RLS(0.3) · 테넌트 해석(0.4) · 인증(0.5) · RBAC(0.6) · 격리 테스트(0.7) · 온보딩(0.8).
+- **DB 접속 2종(중요):** `DATABASE_URL`=슈퍼유저(`church`, 마이그레이션/drizzle-kit/시스템) · `APP_DATABASE_URL`=비슈퍼유저(`church_app`, 앱 런타임·RLS 적용). 앱은 반드시 후자로 접속(슈퍼유저는 RLS 우회).
+- **구현됨(0.1):** §13 폴더 구조, 공개/인증 라우트 그룹(`app/(public)` · `app/(app)`), 테넌트 프록시 placeholder(`proxy.ts`), DB 클라이언트(`lib/db`), env/마이그레이션 파이프라인, `docker-compose.yml`(Postgres).
+- **구현됨(0.2):** 코어 스키마(`church`·`app_user`·`role`·`user_role`·`member`·`family`) — 모든 테넌트 테이블 `church_id` FK(cascade) + 인덱스 + 교회범위 unique. 공통 타임스탬프 헬퍼.
+- **구현됨(0.3):** 전 테넌트 테이블 RLS ENABLE+FORCE + `tenant_isolation` 정책(`app.church_id` 일치, `app.bypass_rls='on'` 우회). 앱 롤 `church_app`(마이그레이션 0003). 테넌트 래퍼 `lib/db/tenant.ts`(`withTenant`/`withSystem`, `SET LOCAL` via set_config). 검증: `npm run db:rls-test`.
+- **구현됨(0.4):** `proxy.ts`(Edge) 호스트 파싱→테넌트 힌트 헤더 전파. `lib/tenant/`(`host.ts` 순수 파서 / `resolve.ts` DB 해석 / `context.ts` `getTenant`·`requireTenant`). 서브도메인→`church.code`(커스텀 도메인은 Phase 4). 미등록→404. `NEXT_PUBLIC_ROOT_DOMAIN`. 진단: `GET /api/tenant`(dev 전용).
+- **구현됨(0.5):** 자체 JWT 인증. `lib/auth/`(`jwt` jose HS256 / `password` scrypt / `tokens` 리프레시(해시저장·회전·취소) / `users` / `session` login·refresh·logout·getCurrentUser·requireUser). 액세스=httpOnly 쿠키(15분), 리프레시=DB(30일, 취소가능). 라우트 `/api/auth/{login,refresh,logout,me,dev-seed}`. `(app)` 레이아웃 `requireUser` 가드 + `/login` 페이지. `JWT_SECRET` 필수. 교회는 호스트(테넌트)로 해석.
+- **구현됨(0.6):** RBAC. `lib/rbac/`(`roles` 역할/권한 정의·역할→권한 맵·hasRole/hasPermission / `seed` seedDefaultRoles·assignRole / `guards` requireRole·requirePermission·checkRole). 기본 역할 `admin/staff/viewer`. 가드 시연: `GET /api/admin/ping`(admin만). `/forbidden` 페이지. dev-seed 가 역할 시드·부여.
+- **구현됨(0.7 ★ 게이트):** vitest 테스트 러너(`server-only`는 빈 모듈로 alias). `test/`: RLS 격리(스코프·타교회 INSERT 차단·미설정 0행·시스템 우회) · 인증·RBAC 격리 · 호스트 파싱 · 인증 프리미티브 · 온보딩. 20 tests 통과. `npm run test`. **GitHub Actions CI**(`.github/workflows/ci.yml`: Postgres 서비스→migrate→lint/typecheck/test/build).
+- **구현됨(0.8):** 온보딩. billing 스키마(`plan` 전역 / `subscription`·`church_storage_usage` 테넌트+RLS). `lib/onboarding/onboard.ts`(교회+기본역할+관리자+구독+사용량, 단일 트랜잭션 원자적, 코드 검증·중복거부). 공개 `POST /api/onboard` + `/onboard` 가입 페이지. 공개 랜딩(가입/로그인 안내) ↔ `(app)` 인증 가드로 공개/인증 분리 완성.
+- **완료 게이트 통과:** 새 교회 온보딩→서브도메인 로그인→권한(admin) 동작 E2E 검증. → **Phase 1(자산) 착수 가능.**
 
 > 작업을 끝낼 때마다 이 섹션(현재 단계/완료된 작업)을 갱신해 다음 세션이 상태를 즉시 파악하게 하세요.
 

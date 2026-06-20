@@ -40,6 +40,13 @@
 | **(0.1) `middleware.ts` → `proxy.ts` 채택** | Next 16이 `middleware` 파일 규칙을 deprecated하고 `proxy`로 대체. 역할·구현은 동일(호스트→`church_id` 해석). 본 문서 §13의 `middleware.ts`는 `proxy.ts`로 읽는다 |
 | **(0.1) DB 드라이버 = postgres.js, Drizzle `casing: snake_case`** | 경량·PgBouncer(transaction pooling) 호환(`prepare:false`). TS는 camelCase, DB는 snake_case 자동 매핑(`church_id` 등) |
 | **(0.1) 로컬 Postgres = docker-compose** | 로컬에 psql 미설치. Postgres 16 컨테이너로 단순 기동(스펙 §12 "초기 단순 구성"에 부합) |
+| **(0.3) 앱 런타임 = 비슈퍼유저 롤 `church_app`** | RLS 는 슈퍼유저/BYPASSRLS 에 적용되지 않는다(FORCE 도 무효). 마이그레이션/관리는 슈퍼유저(`church`, `DATABASE_URL`), 앱은 `church_app`(`APP_DATABASE_URL`)로 분리해야 RLS 가 실제로 적용됨 |
+| **(0.3) RLS = ENABLE+FORCE + `tenant_isolation` 정책 + bypass 플래그** | `church_id = NULLIF(current_setting('app.church_id',true),'')::uuid` (빈문자열 안전). 시스템/온보딩/호스트해석은 `app.bypass_rls='on'`(withSystem)으로 우회. 테넌트 접근은 `withTenant`가 `SET LOCAL`(set_config, 트랜잭션 스코프)로 설정 |
+| **(0.4) 테넌트 해석 = Edge 파싱 + Node DB 해석 분리** | 프록시(Edge)는 호스트만 파싱해 헤더 전파(매 요청 DB조회 회피), church_id DB해석·미등록거부(404)는 서버(Node) 경계에서. 서브도메인→`church.code` 우선, 커스텀 도메인은 Phase 4(SITE.domain) |
+| **(0.5) 인증 = 경량 자체 JWT (Auth.js 대신)** | RLS/테넌트 모델과 결합이 깔끔·솔로 친화(스펙 §9 허용 옵션). 액세스=httpOnly JWT(jose HS256, 15분), 리프레시=DB 해시저장·회전·취소(30일), 비밀번호=Node scrypt. 교회는 호스트(테넌트)로 해석 |
+| **(0.6) RBAC = 역할→권한 정적 맵 (PERMISSION 테이블 보류)** | 기본 역할 admin/staff/viewer + 코드 내 ROLE_PERMISSIONS. 가드는 JWT roles 클레임 기준(역할변경은 재로그인/리프레시 반영). 세밀해지면 PERMISSION 테이블 추가(스펙 §6.1) |
+| **(0.7) 테스트 = vitest + 라이브 Postgres, CI = GitHub Actions** | vitest 에서 `server-only` 가드는 빈 모듈로 alias. 격리 테스트는 church_app(RLS 적용)으로 라이브 DB 검증. CI: Postgres 서비스 → migrate → lint/typecheck/test/build |
+| **(0.8) 온보딩 = 단일 트랜잭션 원자적 생성, 요금제 = free 자동 시드** | 교회+역할+관리자+구독+사용량을 withTenant 한 트랜잭션으로 생성(부분 실패 방지). 교회 코드=서브도메인 규칙(`^[a-z0-9][a-z0-9-]{1,30}$`). `plan` 은 전역 참조 데이터(RLS 미적용), 'free' 자동 upsert. 가입은 루트 도메인 공개 `/api/onboard` |
 
 ---
 
