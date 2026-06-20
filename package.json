@@ -13,7 +13,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:up": "docker compose up -d",
-    "db:down": "docker compose down"
+    "db:down": "docker compose down",
+    "db:rls-test": "docker exec -i church-suite-db psql -U church_app -d church_suite -v ON_ERROR_STOP=0 < scripts/rls-smoke-test.sql"
   },
   "dependencies": {
     "dotenv": "^17.4.2",

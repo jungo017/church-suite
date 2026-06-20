@@ -40,6 +40,8 @@
 | **(0.1) `middleware.ts` → `proxy.ts` 채택** | Next 16이 `middleware` 파일 규칙을 deprecated하고 `proxy`로 대체. 역할·구현은 동일(호스트→`church_id` 해석). 본 문서 §13의 `middleware.ts`는 `proxy.ts`로 읽는다 |
 | **(0.1) DB 드라이버 = postgres.js, Drizzle `casing: snake_case`** | 경량·PgBouncer(transaction pooling) 호환(`prepare:false`). TS는 camelCase, DB는 snake_case 자동 매핑(`church_id` 등) |
 | **(0.1) 로컬 Postgres = docker-compose** | 로컬에 psql 미설치. Postgres 16 컨테이너로 단순 기동(스펙 §12 "초기 단순 구성"에 부합) |
+| **(0.3) 앱 런타임 = 비슈퍼유저 롤 `church_app`** | RLS 는 슈퍼유저/BYPASSRLS 에 적용되지 않는다(FORCE 도 무효). 마이그레이션/관리는 슈퍼유저(`church`, `DATABASE_URL`), 앱은 `church_app`(`APP_DATABASE_URL`)로 분리해야 RLS 가 실제로 적용됨 |
+| **(0.3) RLS = ENABLE+FORCE + `tenant_isolation` 정책 + bypass 플래그** | `church_id = NULLIF(current_setting('app.church_id',true),'')::uuid` (빈문자열 안전). 시스템/온보딩/호스트해석은 `app.bypass_rls='on'`(withSystem)으로 우회. 테넌트 접근은 `withTenant`가 `SET LOCAL`(set_config, 트랜잭션 스코프)로 설정 |
 
 ---
 

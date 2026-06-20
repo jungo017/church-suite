@@ -15,6 +15,20 @@
       "when": 1781965675352,
       "tag": "0001_serious_kingpin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781966016142,
+      "tag": "0002_rls_policies",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781966306056,
+      "tag": "0003_app_role",
+      "breakpoints": true
     }
   ]
 }

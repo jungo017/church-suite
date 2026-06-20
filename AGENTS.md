@@ -17,11 +17,13 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: Phase 0(코어) — `0.2 코어 스키마` 완료. 다음 작업: `0.3 RLS 정책`.** (작업 브랜치: `feat/phase-0-core`)
+- **단계: Phase 0(코어) — `0.3 RLS 정책` 완료. 다음 작업: `0.4 테넌트 프록시`.** (작업 브랜치: `feat/phase-0-core`)
 - **스택 확정:** Next.js **16.2.9**(App Router, Turbopack) · React 19 · TypeScript · Tailwind v4 · ESLint · **Drizzle ORM**(`postgres.js` 드라이버, casing=snake_case) · **PostgreSQL 16**(docker-compose).
+- **DB 접속 2종(중요):** `DATABASE_URL`=슈퍼유저(`church`, 마이그레이션/drizzle-kit/시스템) · `APP_DATABASE_URL`=비슈퍼유저(`church_app`, 앱 런타임·RLS 적용). 앱은 반드시 후자로 접속(슈퍼유저는 RLS 우회).
 - **구현됨(0.1):** §13 폴더 구조, 공개/인증 라우트 그룹(`app/(public)` · `app/(app)`), 테넌트 프록시 placeholder(`proxy.ts`), DB 클라이언트(`lib/db`), env/마이그레이션 파이프라인, `docker-compose.yml`(Postgres).
-- **구현됨(0.2):** 코어 스키마(`church`·`app_user`·`role`·`user_role`·`member`·`family`) — 모든 테넌트 테이블 `church_id` FK(cascade) + 인덱스 + 교회범위 unique. 마이그레이션 `drizzle/0001_*.sql` 적용. 공통 타임스탬프 헬퍼(`schema/_shared.ts`).
-- **미구현(이후 작업):** RLS(0.3) · 테넌트 해석(0.4) · 인증(0.5) · RBAC(0.6) · 격리 테스트(0.7) · 온보딩(0.8).
+- **구현됨(0.2):** 코어 스키마(`church`·`app_user`·`role`·`user_role`·`member`·`family`) — 모든 테넌트 테이블 `church_id` FK(cascade) + 인덱스 + 교회범위 unique. 공통 타임스탬프 헬퍼.
+- **구현됨(0.3):** 전 테넌트 테이블 RLS ENABLE+FORCE + `tenant_isolation` 정책(`app.church_id` 일치, `app.bypass_rls='on'` 우회). 앱 롤 `church_app`(마이그레이션 0003). 테넌트 래퍼 `lib/db/tenant.ts`(`withTenant`/`withSystem`, `SET LOCAL` via set_config). 검증: `npm run db:rls-test`.
+- **미구현(이후 작업):** 테넌트 해석(0.4) · 인증(0.5) · RBAC(0.6) · 격리 테스트(0.7) · 온보딩(0.8).
 
 > 작업을 끝낼 때마다 이 섹션(현재 단계/완료된 작업)을 갱신해 다음 세션이 상태를 즉시 파악하게 하세요.
 
