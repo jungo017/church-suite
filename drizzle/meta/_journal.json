@@ -29,6 +29,20 @@
       "when": 1781966306056,
       "tag": "0003_app_role",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781972791410,
+      "tag": "0004_illegal_living_lightning",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1781972797306,
+      "tag": "0005_refresh_token_rls",
+      "breakpoints": true
     }
   ]
 }
