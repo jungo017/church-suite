@@ -5,9 +5,9 @@ import { church } from "@/lib/db/schema";
 
 export { closeDb } from "@/lib/db";
 
-/** 충돌 없는 짧은 식별자. */
+/** 충돌 없는 짧은 식별자(서브도메인/코드 규칙에 맞게 하이픈 사용). */
 export function uniqueCode(prefix = "t"): string {
-  return `${prefix}_${randomUUID().slice(0, 8)}`;
+  return `${prefix}-${randomUUID().slice(0, 8)}`;
 }
 
 /** 테스트용 교회 생성(시스템 컨텍스트). churchId 반환. */
