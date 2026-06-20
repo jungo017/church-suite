@@ -57,6 +57,20 @@
       "when": 1781975256596,
       "tag": "0007_billing_rls",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1781999486892,
+      "tag": "0008_mighty_xorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1781999497857,
+      "tag": "0009_assets_rls",
+      "breakpoints": true
     }
   ]
 }
