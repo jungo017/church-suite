@@ -44,6 +44,8 @@
 | **(0.3) RLS = ENABLE+FORCE + `tenant_isolation` 정책 + bypass 플래그** | `church_id = NULLIF(current_setting('app.church_id',true),'')::uuid` (빈문자열 안전). 시스템/온보딩/호스트해석은 `app.bypass_rls='on'`(withSystem)으로 우회. 테넌트 접근은 `withTenant`가 `SET LOCAL`(set_config, 트랜잭션 스코프)로 설정 |
 | **(0.4) 테넌트 해석 = Edge 파싱 + Node DB 해석 분리** | 프록시(Edge)는 호스트만 파싱해 헤더 전파(매 요청 DB조회 회피), church_id DB해석·미등록거부(404)는 서버(Node) 경계에서. 서브도메인→`church.code` 우선, 커스텀 도메인은 Phase 4(SITE.domain) |
 | **(0.5) 인증 = 경량 자체 JWT (Auth.js 대신)** | RLS/테넌트 모델과 결합이 깔끔·솔로 친화(스펙 §9 허용 옵션). 액세스=httpOnly JWT(jose HS256, 15분), 리프레시=DB 해시저장·회전·취소(30일), 비밀번호=Node scrypt. 교회는 호스트(테넌트)로 해석 |
+| **(0.6) RBAC = 역할→권한 정적 맵 (PERMISSION 테이블 보류)** | 기본 역할 admin/staff/viewer + 코드 내 ROLE_PERMISSIONS. 가드는 JWT roles 클레임 기준(역할변경은 재로그인/리프레시 반영). 세밀해지면 PERMISSION 테이블 추가(스펙 §6.1) |
+| **(0.7) 테스트 = vitest + 라이브 Postgres, CI = GitHub Actions** | vitest 에서 `server-only` 가드는 빈 모듈로 alias. 격리 테스트는 church_app(RLS 적용)으로 라이브 DB 검증. CI: Postgres 서비스 → migrate → lint/typecheck/test/build |
 
 ---
 

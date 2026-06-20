@@ -35,3 +35,8 @@ if (process.env.NODE_ENV !== "production") {
 export const db = drizzle(client, { schema, casing: "snake_case" });
 
 export { schema };
+
+/** 커넥션 종료(테스트 teardown·스크립트 종료용). */
+export async function closeDb(): Promise<void> {
+  await client.end({ timeout: 5 });
+}

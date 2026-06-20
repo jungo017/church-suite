@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: church
+          POSTGRES_PASSWORD: church
+          POSTGRES_DB: church_suite
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U church -d church_suite"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # 마이그레이션/관리(슈퍼유저)
+      DATABASE_URL: postgresql://church:church@localhost:5432/church_suite
+      # 앱 런타임/테스트(비슈퍼유저, RLS 적용) — church_app 은 마이그레이션 0003 에서 생성
+      APP_DATABASE_URL: postgresql://church_app:church_app@localhost:5432/church_suite
+      NEXT_PUBLIC_ROOT_DOMAIN: localhost
+      JWT_SECRET: ci-test-secret-not-for-production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # church_app 롤 + 테이블 + RLS 정책 적용(슈퍼유저로 실행)
+      - run: npm run db:migrate
+
+      - run: npm run lint
+      - run: npm run typecheck
+
+      # 테넌트 격리(RLS)·인증·RBAC 통합 테스트 — church_app 로 접속해 RLS 검증
+      - run: npm run test
+
+      - run: npm run build
