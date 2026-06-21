@@ -10,6 +10,7 @@ import {
   createLocation,
   createCategory,
 } from "./classification";
+import { addRepair, deleteRepair } from "./repairs";
 import { isAssetType, isAssetStatus } from "./constants";
 
 /**
@@ -91,4 +92,24 @@ export async function createCategoryAction(fd: FormData) {
   const name = str(fd, "name");
   if (name) await createCategory(user.church_id, name);
   revalidatePath("/assets/classification");
+}
+
+export async function addRepairAction(assetId: string, fd: FormData) {
+  const user = await requireWrite();
+  const description = str(fd, "description");
+  if (!description) throw new Error("description_required");
+  await addRepair(user.church_id, {
+    assetId,
+    description,
+    repairedAt: str(fd, "repairedAt"),
+    cost: str(fd, "cost"),
+    vendor: str(fd, "vendor"),
+  });
+  revalidatePath(`/assets/${assetId}`);
+}
+
+export async function deleteRepairAction(assetId: string, repairId: string) {
+  const user = await requireWrite();
+  await deleteRepair(user.church_id, repairId);
+  revalidatePath(`/assets/${assetId}`);
 }

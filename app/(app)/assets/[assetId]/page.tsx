@@ -3,7 +3,12 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { getAsset } from "@/lib/assets/service";
-import { deleteAssetAction } from "@/lib/assets/actions";
+import { listRepairs } from "@/lib/assets/repairs";
+import {
+  deleteAssetAction,
+  addRepairAction,
+  deleteRepairAction,
+} from "@/lib/assets/actions";
 import {
   ASSET_TYPE_LABELS,
   ASSET_STATUS_LABELS,
@@ -30,6 +35,9 @@ export default async function AssetDetailPage({
   const a = await getAsset(user.church_id, assetId);
   if (!a) notFound();
   const canWrite = hasPermission(user.roles, PERMISSIONS.ASSETS_WRITE);
+  const repairs = await listRepairs(user.church_id, assetId);
+  const inputCls =
+    "rounded-md border border-black/15 px-2 py-1 text-sm dark:border-white/20 dark:bg-transparent";
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
@@ -63,6 +71,50 @@ export default async function AssetDetailPage({
         />
         <Row label="비고" value={a.note} />
       </div>
+      <section className="mt-4 flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">수리이력</h2>
+        {repairs.length === 0 ? (
+          <p className="text-sm text-gray-500">수리이력이 없습니다.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {repairs.map((r) => (
+              <li
+                key={r.repairId}
+                className="flex items-start justify-between gap-4 border-b border-black/5 pb-2 text-sm dark:border-white/10"
+              >
+                <div>
+                  <div className="font-medium">{r.description}</div>
+                  <div className="text-gray-500">
+                    {r.repairedAt ?? "날짜미상"}
+                    {r.vendor ? ` · ${r.vendor}` : ""}
+                    {r.cost ? ` · ${Number(r.cost).toLocaleString()}원` : ""}
+                  </div>
+                </div>
+                {canWrite && (
+                  <form action={deleteRepairAction.bind(null, a.assetId, r.repairId)}>
+                    <button className="text-xs text-red-600">삭제</button>
+                  </form>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {canWrite && (
+          <form
+            action={addRepairAction.bind(null, a.assetId)}
+            className="flex flex-wrap items-end gap-2"
+          >
+            <input name="description" required placeholder="수리 내용" className={inputCls} />
+            <input name="repairedAt" type="date" className={inputCls} />
+            <input name="vendor" placeholder="업체" className={inputCls} />
+            <input name="cost" type="number" step="0.01" min="0" placeholder="비용(원)" className={inputCls} />
+            <button className="rounded-md bg-foreground px-3 py-1.5 text-sm text-background">
+              이력 추가
+            </button>
+          </form>
+        )}
+      </section>
+
       <Link href="/assets" className="text-sm underline">
         ← 목록으로
       </Link>

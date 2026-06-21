@@ -17,10 +17,11 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: Phase 1(비품/자산) 진행 중 — `P1.3 화면` 완료. 다음: `P1.4 수리이력`.** (작업 브랜치: `feat/phase-1-assets`. Phase 0는 main 병합 완료.)
+- **단계: Phase 1(비품/자산) 진행 중 — `P1.4 수리이력` 완료. 다음: `P1.5 QR 라벨`.** (작업 브랜치: `feat/phase-1-assets`. Phase 0는 main 병합 완료.)
 - **Phase 1 구현됨(P1.1):** `department`(부서/구역, 공유 §6.4)·`location`·`asset_category`·`asset` 스키마 + church_id·인덱스·RLS(`apply_tenant_rls()` 함수로 일반화, 마이그레이션 0008/0009). asset: type(equipment/land/building/consumable)·status·tag(QR, 교회범위 unique)·`acquired_cost numeric`. 자산 RLS 격리 테스트.
 - **Phase 1 구현됨(P1.2):** `lib/assets/`(`constants` 타입/라벨 / `service` 자산 CRUD·필터 / `classification` 부서·장소·품목 list/create / `actions` 서버액션, assets:write 가드). 서비스/분류 격리·필터 테스트(25 tests).
 - **Phase 1 구현됨(P1.3):** `app/(app)/assets` 화면 — 목록(상태 필터·취득가액 포맷)·상세·등록(`/new`)·편집(`[id]/edit`)·분류 관리(`/classification`). 공용 `asset-form`. 읽기는 인증, 쓰기는 `assets:write`(미인증→/login, 권한부족→/forbidden). E2E 검증(렌더·권한).
+- **Phase 1 구현됨(P1.4):** 수리이력. `asset_repair` 스키마+RLS(0010/0011). `lib/assets/repairs.ts`(list/add/delete). 액션(addRepair/deleteRepair, assets:write). 자산 상세에 이력 목록·추가·삭제 UI. 격리 테스트(26 tests).
 - **스택 확정:** Next.js **16.2.9**(App Router, Turbopack) · React 19 · TypeScript · Tailwind v4 · ESLint · **Drizzle ORM**(`postgres.js` 드라이버, casing=snake_case) · **PostgreSQL 16**(docker-compose).
 - **DB 접속 2종(중요):** `DATABASE_URL`=슈퍼유저(`church`, 마이그레이션/drizzle-kit/시스템) · `APP_DATABASE_URL`=비슈퍼유저(`church_app`, 앱 런타임·RLS 적용). 앱은 반드시 후자로 접속(슈퍼유저는 RLS 우회).
 - **구현됨(0.1):** §13 폴더 구조, 공개/인증 라우트 그룹(`app/(public)` · `app/(app)`), 테넌트 프록시 placeholder(`proxy.ts`), DB 클라이언트(`lib/db`), env/마이그레이션 파이프라인, `docker-compose.yml`(Postgres).

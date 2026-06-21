@@ -93,3 +93,26 @@ export const asset = pgTable(
     uniqueIndex("asset_church_tag_unique").on(t.churchId, t.tag),
   ],
 );
+
+/** ASSET_REPAIR — 자산 수리이력 (스펙 §7.1). 금액 numeric. */
+export const assetRepair = pgTable(
+  "asset_repair",
+  {
+    repairId: uuid().primaryKey().defaultRandom(),
+    churchId: uuid()
+      .notNull()
+      .references(() => church.churchId, { onDelete: "cascade" }),
+    assetId: uuid()
+      .notNull()
+      .references(() => asset.assetId, { onDelete: "cascade" }),
+    repairedAt: date(),
+    description: text().notNull(),
+    cost: numeric({ precision: 14, scale: 2 }),
+    vendor: text(),
+    ...timestamps,
+  },
+  (t) => [
+    index("asset_repair_church_idx").on(t.churchId),
+    index("asset_repair_asset_idx").on(t.assetId),
+  ],
+);
