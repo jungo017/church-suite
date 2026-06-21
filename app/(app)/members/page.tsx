@@ -24,14 +24,17 @@ export default async function MembersPage({
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">교적 ({members.length})</h1>
-        {canWrite && (
-          <div className="flex gap-2 text-sm">
-            <Link href="/members/attendance" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">출석</Link>
-            <Link href="/members/education" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">교육</Link>
-            <Link href="/members/families" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">가족 관리</Link>
-            <Link href="/members/new" className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background">+ 교인 등록</Link>
-          </div>
-        )}
+        <div className="flex gap-2 text-sm">
+          <Link href="/members/stats" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">통계</Link>
+          {canWrite && (
+            <>
+              <Link href="/members/attendance" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">출석</Link>
+              <Link href="/members/education" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">교육</Link>
+              <Link href="/members/families" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">가족 관리</Link>
+              <Link href="/members/new" className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background">+ 교인 등록</Link>
+            </>
+          )}
+        </div>
       </div>
 
       <form className="flex flex-wrap gap-2 text-sm">
