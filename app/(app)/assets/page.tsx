@@ -44,22 +44,30 @@ export default async function AssetsPage({
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">비품 (자산)</h1>
-        {canWrite && (
-          <div className="flex gap-2 text-sm">
-            <Link
-              href="/assets/classification"
-              className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
-            >
-              분류 관리
-            </Link>
-            <Link
-              href="/assets/new"
-              className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background"
-            >
-              + 자산 등록
-            </Link>
-          </div>
-        )}
+        <div className="flex gap-2 text-sm">
+          <Link
+            href="/assets/labels"
+            className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+          >
+            QR 라벨
+          </Link>
+          {canWrite && (
+            <>
+              <Link
+                href="/assets/classification"
+                className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+              >
+                분류 관리
+              </Link>
+              <Link
+                href="/assets/new"
+                className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background"
+              >
+                + 자산 등록
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="flex gap-2 text-sm">
