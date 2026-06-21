@@ -26,6 +26,9 @@ export default async function MembersPage({
         <h1 className="text-2xl font-bold">교적 ({members.length})</h1>
         <div className="flex gap-2 text-sm">
           <Link href="/members/stats" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">통계</Link>
+          {hasPermission(user.roles, PERMISSIONS.CHURCH_MANAGE) && (
+            <Link href="/members/compliance" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">컴플라이언스</Link>
+          )}
           {canWrite && (
             <>
               <Link href="/members/attendance" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">출석</Link>

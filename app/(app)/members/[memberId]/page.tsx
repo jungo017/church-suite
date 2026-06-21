@@ -6,6 +6,7 @@ import { getMember, listFamilies } from "@/lib/members/service";
 import { listMemberCare } from "@/lib/members/care";
 import { listMemberAttendance } from "@/lib/members/attendance";
 import { listDepartments } from "@/lib/assets/classification";
+import { logAccess } from "@/lib/compliance/access-log";
 import {
   deleteMemberAction,
   addCareAction,
@@ -42,6 +43,13 @@ export default async function MemberDetailPage({
   const user = await requireUser();
   const m = await getMember(user.church_id, memberId);
   if (!m) notFound();
+  // 민감정보(교인 상세) 접근 기록 (PIPA §5)
+  await logAccess(user.church_id, {
+    userId: user.sub,
+    action: "member.view",
+    targetType: "member",
+    targetId: m.memberId,
+  });
   const canWrite = hasPermission(user.roles, PERMISSIONS.MEMBERS_WRITE);
 
   const [departments, families] = await Promise.all([
