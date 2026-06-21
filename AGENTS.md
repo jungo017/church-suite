@@ -17,7 +17,9 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: Phase 4(홈페이지/온라인교인센터) 진행 중 — `P4.2 공개 홈페이지` 완료. 다음: `P4.3 새가족 등록`.** (작업 브랜치: `feat/phase-4-site`. Phase 0·1·2·3 main 병합 완료.)
+- **단계: ✅ Phase 4(홈페이지/온라인교인센터) 전체 완료 (P4.1~P4.4). 다음 단계: Phase 5(고도화) — 스펙 §7.5.** (작업 브랜치: `feat/phase-4-site`. Phase 0·1·2·3 main 병합 완료.)
+- **Phase 4 구현됨(P4.3):** 새가족 접수. `newfamily_req` intake(0025/0026). `lib/site/intake.ts`. 공개 `/online/new-family` 폼 → `/site/new-family` 어드민 승인(→교인 전환)/거절.
+- **Phase 4 구현됨(P4.4):** 온라인 헌금 접수. `online_offering` intake. `lib/site/offering.ts`(제출=mock PG paid → 어드민 재정반영=수입 전표 생성, reflected). 공개 `/online/offering` 폼 → `/site/offerings` 어드민. 테스트(44 tests). **→ Phase 4 완료.** (실제 PG는 §14 추후)
 - **Phase 4 구현됨(P4.2):** 공개 홈페이지. `lib/site/public.ts`(발행 콘텐츠만, `getPublicContext`). `app/(public)`: 홈(루트=마케팅 / 서브도메인=교회사이트 / 미발행=준비중), `/b/[slug]`·`/b/[slug]/[postId]`·`/p/[slug]`, `site-header`. 공개경계 테스트(미발행 숨김).
 - **RBAC 추가(P4.1):** `site:read`/`site:write` 권한(admin·staff write, viewer read). 역할맵 갱신.
 - **Phase 4 구현됨(P4.1):** CMS. `site`·`board`·`post`·`page` 스키마+RLS(0023/0024). `lib/site/admin.ts`+`actions.ts`. `/site`(개요·게시판/페이지 생성·공개여부)·`/site/boards/[id]`(글 등록·발행)·`/site/pages/[id]`(편집). site:write 가드. 테스트.
