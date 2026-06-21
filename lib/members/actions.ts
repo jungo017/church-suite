@@ -11,6 +11,7 @@ import {
   createFamily,
   type MemberInput,
 } from "./service";
+import { saveAttendance } from "./attendance";
 import { isGender, isMemberStatus } from "./constants";
 
 /** 교인 모듈 서버 액션 (스펙 §16). members:write 가드. */
@@ -74,4 +75,20 @@ export async function createFamilyAction(fd: FormData) {
   const name = str(fd, "name");
   if (name) await createFamily(user.church_id, name);
   revalidatePath("/members/families");
+}
+
+export async function saveAttendanceAction(
+  serviceDate: string,
+  serviceType: string,
+  fd: FormData,
+) {
+  const user = await requireWrite();
+  const allIds = fd.getAll("member").map(String);
+  const presentSet = new Set(fd.getAll("present").map(String));
+  const records = allIds.map((id) => ({
+    memberId: id,
+    present: presentSet.has(id),
+  }));
+  await saveAttendance(user.church_id, serviceDate, serviceType, records);
+  revalidatePath("/members/attendance");
 }

@@ -21,6 +21,25 @@ export const MEMBER_STATUS_LABELS: Record<MemberStatus, string> = {
   deceased: "소천",
 };
 
+export const SERVICE_TYPES = [
+  "sunday",
+  "dawn",
+  "wednesday",
+  "friday",
+  "etc",
+] as const;
+export type ServiceType = (typeof SERVICE_TYPES)[number];
+export const SERVICE_TYPE_LABELS: Record<ServiceType, string> = {
+  sunday: "주일예배",
+  dawn: "새벽예배",
+  wednesday: "수요예배",
+  friday: "금요예배",
+  etc: "기타",
+};
+export function isServiceType(v: string): v is ServiceType {
+  return (SERVICE_TYPES as readonly string[]).includes(v);
+}
+
 export function isGender(v: string): v is Gender {
   return (GENDERS as readonly string[]).includes(v);
 }
