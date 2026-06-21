@@ -25,7 +25,7 @@ function FilterLink({
   return (
     <Link
       href={status ? `/assets?status=${status}` : "/assets"}
-      className={`rounded-md px-2 py-1 ${active ? "bg-foreground text-background" : "border border-black/15 dark:border-white/20"}`}
+      className={`rounded-md px-2 py-1 ${active ? "bg-primary text-primary-foreground" : "border border-border"}`}
     >
       {children}
     </Link>
@@ -56,7 +56,7 @@ export default async function AssetsPage({
         <div className="flex gap-2 text-sm">
           <Link
             href="/assets/labels"
-            className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+            className="rounded-md border border-border px-3 py-1.5"
           >
             QR 라벨
           </Link>
@@ -64,13 +64,13 @@ export default async function AssetsPage({
             <>
               <Link
                 href="/assets/audits"
-                className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+                className="rounded-md border border-border px-3 py-1.5"
               >
                 전수조사
               </Link>
               <Link
                 href="/assets/classification"
-                className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+                className="rounded-md border border-border px-3 py-1.5"
               >
                 분류 관리
               </Link>
@@ -95,10 +95,10 @@ export default async function AssetsPage({
       </div>
 
       {assets.length === 0 ? (
-        <p className="py-8 text-sm text-gray-500">등록된 자산이 없습니다.</p>
+        <p className="py-8 text-sm text-muted-foreground">등록된 자산이 없습니다.</p>
       ) : (
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+          <thead className="border-b border-border text-muted-foreground">
             <tr>
               <th className="py-2">이름</th>
               <th className="py-2">종류</th>
@@ -112,7 +112,7 @@ export default async function AssetsPage({
             {assets.map((a) => (
               <tr
                 key={a.assetId}
-                className="border-b border-black/5 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
+                className="border-b border-border hover:bg-muted"
               >
                 <td className="py-2">
                   <Link href={`/assets/${a.assetId}`} className="font-medium underline">

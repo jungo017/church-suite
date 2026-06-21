@@ -15,7 +15,7 @@ export function LogoutButton() {
         router.refresh();
       }}
       disabled={loading}
-      className="rounded-md px-2 py-1.5 text-left text-sm text-gray-500 hover:bg-black/5 disabled:opacity-50 dark:hover:bg-white/10"
+      className="rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
     >
       {loading ? "로그아웃 중…" : "로그아웃"}
     </button>

@@ -38,6 +38,18 @@ export async function getPublicSite(churchId: string) {
   return rows[0] ?? null;
 }
 
+/** 공개 사이트 색상 테마(발행 여부와 무관). 없으면 modern. */
+export async function getPublicSiteTheme(churchId: string): Promise<string> {
+  const rows = await withTenant(churchId, (tx) =>
+    tx
+      .select({ theme: site.theme })
+      .from(site)
+      .where(eq(site.churchId, churchId))
+      .limit(1),
+  );
+  return rows[0]?.theme ?? "modern";
+}
+
 export async function listPublicBoards(churchId: string) {
   return withTenant(churchId, (tx) =>
     tx.select().from(board).where(eq(board.churchId, churchId)),

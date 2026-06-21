@@ -4,7 +4,7 @@ import { getTenant } from "@/lib/tenant/context";
 import { submitOnlineOfferingAction } from "@/lib/site/public-actions";
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
 export default async function OfferingPublicPage({
   searchParams,
@@ -36,7 +36,7 @@ export default async function OfferingPublicPage({
           <button className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">
             헌금하기
           </button>
-          <p className="text-xs text-gray-500">※ 결제(PG) 연동은 추후 제공됩니다(테스트 접수).</p>
+          <p className="text-xs text-muted-foreground">※ 결제(PG) 연동은 추후 제공됩니다(테스트 접수).</p>
         </form>
       )}
     </main>

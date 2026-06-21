@@ -27,16 +27,16 @@ export default async function MemberLabelsPage() {
       <div className="flex items-center justify-between print:hidden">
         <h1 className="text-2xl font-bold">교인 QR (키오스크)</h1>
         <div className="flex gap-2 text-sm">
-          <Link href="/members" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">← 목록</Link>
+          <Link href="/members" className="rounded-md border border-border px-3 py-1.5">← 목록</Link>
           <PrintButton />
         </div>
       </div>
       {labels.length === 0 ? (
-        <p className="text-sm text-gray-500">교인이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">교인이 없습니다.</p>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {labels.map(({ m, qr }) => (
-            <div key={m.memberId} className="flex flex-col items-center gap-1 rounded-md border border-black/15 p-3 text-center dark:border-white/20">
+            <div key={m.memberId} className="flex flex-col items-center gap-1 rounded-md border border-border p-3 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qr} alt={m.name} width={120} height={120} />
               <div className="text-sm font-medium">{m.name}</div>

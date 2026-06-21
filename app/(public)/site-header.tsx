@@ -17,12 +17,12 @@ export function SiteHeader({
     ...boards.map((b) => ({ href: `/b/${b.slug}`, label: b.name })),
   ];
   return (
-    <header className="border-b border-black/10 dark:border-white/15">
+    <header className="border-b border-border bg-card">
       <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-6 py-4">
-        <Link href="/" className="text-lg font-bold">{churchName}</Link>
+        <Link href="/" className="text-lg font-bold text-primary">{churchName}</Link>
         <nav className="flex flex-wrap gap-3 text-sm">
           {nav.map((n) => (
-            <Link key={n.href} href={n.href} className="text-gray-600 hover:underline dark:text-gray-300">
+            <Link key={n.href} href={n.href} className="text-muted-foreground hover:text-foreground hover:underline">
               {n.label}
             </Link>
           ))}

@@ -27,7 +27,7 @@ export default async function LabelsPage() {
         <div className="flex gap-2 text-sm">
           <Link
             href="/assets"
-            className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+            className="rounded-md border border-border px-3 py-1.5"
           >
             ← 목록
           </Link>
@@ -36,18 +36,18 @@ export default async function LabelsPage() {
       </div>
 
       {assets.length === 0 ? (
-        <p className="text-sm text-gray-500">자산이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">자산이 없습니다.</p>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {labels.map(({ a, qr }) => (
             <div
               key={a.assetId}
-              className="flex flex-col items-center gap-1 rounded-md border border-black/15 p-3 text-center dark:border-white/20"
+              className="flex flex-col items-center gap-1 rounded-md border border-border p-3 text-center"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qr} alt={a.name} width={120} height={120} />
               <div className="text-sm font-medium">{a.name}</div>
-              {a.tag && <div className="text-xs text-gray-500">{a.tag}</div>}
+              {a.tag && <div className="text-xs text-muted-foreground">{a.tag}</div>}
             </div>
           ))}
         </div>

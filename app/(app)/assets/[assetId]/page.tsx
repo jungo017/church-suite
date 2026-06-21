@@ -18,8 +18,8 @@ import {
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex gap-4 border-b border-black/5 py-2 dark:border-white/10">
-      <span className="w-28 shrink-0 text-sm text-gray-500">{label}</span>
+    <div className="flex gap-4 border-b border-border py-2">
+      <span className="w-28 shrink-0 text-sm text-muted-foreground">{label}</span>
       <span className="text-sm">{value ?? "—"}</span>
     </div>
   );
@@ -37,7 +37,7 @@ export default async function AssetDetailPage({
   const canWrite = hasPermission(user.roles, PERMISSIONS.ASSETS_WRITE);
   const repairs = await listRepairs(user.church_id, assetId);
   const inputCls =
-    "rounded-md border border-black/15 px-2 py-1 text-sm dark:border-white/20 dark:bg-transparent";
+    "rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent";
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
@@ -47,12 +47,12 @@ export default async function AssetDetailPage({
           <div className="flex gap-2">
             <Link
               href={`/assets/${a.assetId}/edit`}
-              className="rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20"
+              className="rounded-md border border-border px-3 py-1.5 text-sm"
             >
               편집
             </Link>
             <form action={deleteAssetAction.bind(null, a.assetId)}>
-              <button className="rounded-md border border-red-300 px-3 py-1.5 text-sm text-red-600">
+              <button className="rounded-md border border-red-300 px-3 py-1.5 text-sm text-destructive">
                 삭제
               </button>
             </form>
@@ -74,17 +74,17 @@ export default async function AssetDetailPage({
       <section className="mt-4 flex flex-col gap-3">
         <h2 className="text-lg font-semibold">수리이력</h2>
         {repairs.length === 0 ? (
-          <p className="text-sm text-gray-500">수리이력이 없습니다.</p>
+          <p className="text-sm text-muted-foreground">수리이력이 없습니다.</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {repairs.map((r) => (
               <li
                 key={r.repairId}
-                className="flex items-start justify-between gap-4 border-b border-black/5 pb-2 text-sm dark:border-white/10"
+                className="flex items-start justify-between gap-4 border-b border-border pb-2 text-sm"
               >
                 <div>
                   <div className="font-medium">{r.description}</div>
-                  <div className="text-gray-500">
+                  <div className="text-muted-foreground">
                     {r.repairedAt ?? "날짜미상"}
                     {r.vendor ? ` · ${r.vendor}` : ""}
                     {r.cost ? ` · ${Number(r.cost).toLocaleString()}원` : ""}
@@ -92,7 +92,7 @@ export default async function AssetDetailPage({
                 </div>
                 {canWrite && (
                   <form action={deleteRepairAction.bind(null, a.assetId, r.repairId)}>
-                    <button className="text-xs text-red-600">삭제</button>
+                    <button className="text-xs text-destructive">삭제</button>
                   </form>
                 )}
               </li>

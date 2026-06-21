@@ -18,11 +18,11 @@ export default async function KioskPage() {
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">출석 키오스크</h1>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground">
           {today} 주일예배 · 출석 {count}/{members.length}
         </div>
       </div>
-      <p className="text-sm text-gray-500">이름을 눌러 출석을 체크하세요.</p>
+      <p className="text-sm text-muted-foreground">이름을 눌러 출석을 체크하세요.</p>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {members.map((m) => {
           const isPresent = present.has(m.memberId);
@@ -32,7 +32,7 @@ export default async function KioskPage() {
                 className={`w-full rounded-lg border p-4 text-center text-lg font-medium ${
                   isPresent
                     ? "border-green-400 bg-green-50 text-green-700 dark:bg-green-950"
-                    : "border-black/15 dark:border-white/20"
+                    : "border-border"
                 }`}
               >
                 {isPresent ? "✓ " : ""}

@@ -11,7 +11,7 @@ import {
 } from "@/lib/finance/constants";
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
 export default async function AccountsPage() {
   const user = await requireUser();
@@ -37,10 +37,10 @@ export default async function AccountsPage() {
       )}
 
       {accounts.length === 0 ? (
-        <p className="text-sm text-gray-500">계정과목이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">계정과목이 없습니다.</p>
       ) : (
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+          <thead className="border-b border-border text-muted-foreground">
             <tr>
               <th className="py-2">코드</th>
               <th className="py-2">과목명</th>
@@ -50,7 +50,7 @@ export default async function AccountsPage() {
           </thead>
           <tbody>
             {accounts.map((a) => (
-              <tr key={a.accountId} className="border-b border-black/5 dark:border-white/10">
+              <tr key={a.accountId} className="border-b border-border">
                 <td className="py-2">{a.code}</td>
                 <td className="py-2">{a.name}</td>
                 <td className="py-2">{ACCOUNT_TYPE_LABELS[a.type as AccountType] ?? a.type}</td>

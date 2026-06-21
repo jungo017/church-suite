@@ -17,7 +17,7 @@ import {
 } from "@/lib/members/constants";
 
 const ctrl =
-  "rounded-md border border-black/15 px-2 py-1 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent";
 
 export default async function ProgramDetailPage({
   params,
@@ -40,12 +40,12 @@ export default async function ProgramDetailPage({
     <section className="flex max-w-2xl flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{program.name}</h1>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted-foreground">
           {PROGRAM_STATUS_LABELS[program.status as ProgramStatus] ?? program.status}
         </span>
       </div>
       {program.description && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">{program.description}</p>
+        <p className="text-sm text-muted-foreground">{program.description}</p>
       )}
 
       <form action={enrollAction.bind(null, programId)} className="flex gap-2">
@@ -64,13 +64,13 @@ export default async function ProgramDetailPage({
 
       <h2 className="text-lg font-semibold">수강생 ({enrollments.length})</h2>
       {enrollments.length === 0 ? (
-        <p className="text-sm text-gray-500">등록된 수강생이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">등록된 수강생이 없습니다.</p>
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {enrollments.map((e) => (
             <li
               key={e.enrollmentId}
-              className="flex items-center justify-between gap-2 border-b border-black/5 py-1.5 dark:border-white/10"
+              className="flex items-center justify-between gap-2 border-b border-border py-1.5"
             >
               <span className="font-medium">{e.name}</span>
               <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export default async function ProgramDetailPage({
                   <button className="text-xs underline">변경</button>
                 </form>
                 <form action={removeEnrollmentAction.bind(null, programId, e.enrollmentId)}>
-                  <button className="text-xs text-red-600">제거</button>
+                  <button className="text-xs text-destructive">제거</button>
                 </form>
               </div>
             </li>

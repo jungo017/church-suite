@@ -6,7 +6,7 @@ import { annualGivingByMember } from "@/lib/finance/receipts";
 import { formatWon } from "@/lib/finance/constants";
 
 const ctrl =
-  "rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";
 
 export default async function ReceiptsPage({
   searchParams,
@@ -33,10 +33,10 @@ export default async function ReceiptsPage({
       </form>
 
       {rows.length === 0 ? (
-        <p className="text-sm text-gray-500">{year}년 헌금 내역(헌금자 지정)이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">{year}년 헌금 내역(헌금자 지정)이 없습니다.</p>
       ) : (
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+          <thead className="border-b border-border text-muted-foreground">
             <tr>
               <th className="py-2">교인</th>
               <th className="py-2 text-right">건수</th>
@@ -46,9 +46,9 @@ export default async function ReceiptsPage({
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.memberId} className="border-b border-black/5 dark:border-white/10">
+              <tr key={r.memberId} className="border-b border-border">
                 <td className="py-2 font-medium">{r.name}</td>
-                <td className="py-2 text-right text-gray-500">{r.cnt}건</td>
+                <td className="py-2 text-right text-muted-foreground">{r.cnt}건</td>
                 <td className="py-2 text-right">{formatWon(r.total)}</td>
                 <td className="py-2 text-right">
                   <Link

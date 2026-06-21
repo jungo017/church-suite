@@ -11,7 +11,7 @@ export default async function MyHomePage() {
     return (
       <section className="flex flex-col gap-3">
         <h1 className="text-2xl font-bold">내 정보</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           연결된 교인 정보가 없습니다. 교회 관리자에게 문의하세요.
         </p>
       </section>
@@ -22,24 +22,24 @@ export default async function MyHomePage() {
     <section className="flex max-w-xl flex-col gap-5">
       <h1 className="text-2xl font-bold">{me.name} 님</h1>
       <div className="text-sm">
-        <div className="flex gap-4 border-b border-black/5 py-2 dark:border-white/10">
-          <span className="w-24 text-gray-500">직분</span>
+        <div className="flex gap-4 border-b border-border py-2">
+          <span className="w-24 text-muted-foreground">직분</span>
           <span>{me.position ?? "—"}</span>
         </div>
-        <div className="flex gap-4 border-b border-black/5 py-2 dark:border-white/10">
-          <span className="w-24 text-gray-500">연락처</span>
+        <div className="flex gap-4 border-b border-border py-2">
+          <span className="w-24 text-muted-foreground">연락처</span>
           <span>{me.phone ?? "—"}</span>
         </div>
-        <div className="flex gap-4 border-b border-black/5 py-2 dark:border-white/10">
-          <span className="w-24 text-gray-500">등록일</span>
+        <div className="flex gap-4 border-b border-border py-2">
+          <span className="w-24 text-muted-foreground">등록일</span>
           <span>{me.registeredDate ?? "—"}</span>
         </div>
       </div>
       <div className="flex gap-3 text-sm">
-        <Link href="/my/giving" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">
+        <Link href="/my/giving" className="rounded-md border border-border px-3 py-1.5">
           나의 헌금내역
         </Link>
-        <Link href="/" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">
+        <Link href="/" className="rounded-md border border-border px-3 py-1.5">
           교회 홈페이지
         </Link>
       </div>

@@ -40,7 +40,7 @@ export default async function FinancePage({
   const expense = totals.expense;
 
   const ctrl =
-    "rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20 dark:bg-transparent";
+    "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";
 
   return (
     <section className="flex flex-col gap-4">
@@ -71,15 +71,15 @@ export default async function FinancePage({
 
       <div className="flex gap-6 text-sm">
         <span>수입 합계 <strong className="text-blue-600">{formatWon(income)}</strong></span>
-        <span>지출 합계 <strong className="text-red-600">{formatWon(expense)}</strong></span>
+        <span>지출 합계 <strong className="text-destructive">{formatWon(expense)}</strong></span>
         <span>잔액 <strong>{formatWon(income - expense)}</strong></span>
       </div>
 
       {vouchers.length === 0 ? (
-        <p className="py-8 text-sm text-gray-500">전표가 없습니다.</p>
+        <p className="py-8 text-sm text-muted-foreground">전표가 없습니다.</p>
       ) : (
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+          <thead className="border-b border-border text-muted-foreground">
             <tr>
               <th className="py-2">일자</th>
               <th className="py-2">구분</th>
@@ -92,19 +92,19 @@ export default async function FinancePage({
           </thead>
           <tbody>
             {vouchers.map((v) => (
-              <tr key={v.voucherId} className="border-b border-black/5 dark:border-white/10">
+              <tr key={v.voucherId} className="border-b border-border">
                 <td className="py-2">{v.voucherDate}</td>
                 <td className="py-2">{ACCOUNT_TYPE_LABELS[v.type as AccountType] ?? v.type}</td>
                 <td className="py-2">{v.accountName ?? "—"}</td>
                 <td className="py-2">{v.summary ?? "—"}</td>
                 <td className="py-2">{v.memberName ?? "—"}</td>
-                <td className={`py-2 text-right ${v.type === "income" ? "text-blue-600" : "text-red-600"}`}>
+                <td className={`py-2 text-right ${v.type === "income" ? "text-blue-600" : "text-destructive"}`}>
                   {formatWon(v.amount)}
                 </td>
                 {canWrite && (
                   <td className="py-2 text-right">
                     <form action={deleteVoucherAction.bind(null, v.voucherId)}>
-                      <button className="text-xs text-red-600">삭제</button>
+                      <button className="text-xs text-destructive">삭제</button>
                     </form>
                   </td>
                 )}

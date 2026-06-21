@@ -22,13 +22,13 @@ export default async function CompliancePage() {
       <div className="flex flex-col gap-2">
         <h2 className="font-semibold">접근 기록 (민감정보)</h2>
         {logs.length === 0 ? (
-          <p className="text-sm text-gray-500">기록 없음</p>
+          <p className="text-sm text-muted-foreground">기록 없음</p>
         ) : (
           <ul className="flex flex-col gap-1 text-sm">
             {logs.map((l) => (
-              <li key={l.logId} className="flex justify-between border-b border-black/5 py-1 dark:border-white/10">
+              <li key={l.logId} className="flex justify-between border-b border-border py-1">
                 <span>{l.action} · {l.targetType}/{l.targetId?.slice(0, 8)}</span>
-                <span className="text-gray-500">
+                <span className="text-muted-foreground">
                   {new Date(l.createdAt).toISOString().slice(0, 19).replace("T", " ")}
                 </span>
               </li>
@@ -40,13 +40,13 @@ export default async function CompliancePage() {
       <div className="flex flex-col gap-2">
         <h2 className="font-semibold">동의 기록</h2>
         {consents.length === 0 ? (
-          <p className="text-sm text-gray-500">기록 없음</p>
+          <p className="text-sm text-muted-foreground">기록 없음</p>
         ) : (
           <ul className="flex flex-col gap-1 text-sm">
             {consents.map((c) => (
-              <li key={c.consentId} className="flex justify-between border-b border-black/5 py-1 dark:border-white/10">
+              <li key={c.consentId} className="flex justify-between border-b border-border py-1">
                 <span>{c.subjectName ?? c.memberId?.slice(0, 8) ?? "—"} · {c.consentType} · {c.source ?? ""}</span>
-                <span className={c.agreed ? "text-green-600" : "text-gray-500"}>
+                <span className={c.agreed ? "text-green-600" : "text-muted-foreground"}>
                   {c.agreed ? "동의" : "거부"}
                 </span>
               </li>

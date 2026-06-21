@@ -6,7 +6,7 @@ import { getPageById } from "@/lib/site/admin";
 import { updatePageAction } from "@/lib/site/actions";
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
 export default async function EditPagePage({
   params,

@@ -30,13 +30,13 @@ export default async function PublicBoardPage({
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
         <h1 className="mb-4 text-2xl font-bold">{board.name}</h1>
         {posts.length === 0 ? (
-          <p className="text-sm text-gray-500">게시된 글이 없습니다.</p>
+          <p className="text-sm text-muted-foreground">게시된 글이 없습니다.</p>
         ) : (
           <ul className="flex flex-col gap-2 text-sm">
             {posts.map((p) => (
-              <li key={p.postId} className="flex justify-between border-b border-black/5 py-2 dark:border-white/10">
+              <li key={p.postId} className="flex justify-between border-b border-border py-2">
                 <Link href={`/b/${slug}/${p.postId}`} className="underline">{p.title}</Link>
-                <span className="text-gray-500">
+                <span className="text-muted-foreground">
                   {p.publishedAt ? new Date(p.publishedAt).toISOString().slice(0, 10) : ""}
                 </span>
               </li>

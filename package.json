@@ -20,6 +20,7 @@
     "db:rls-test": "docker exec -i church-suite-db psql -U church_app -d church_suite -v ON_ERROR_STOP=0 < scripts/rls-smoke-test.sql"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "jose": "^6.2.3",
@@ -29,7 +30,8 @@
     "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

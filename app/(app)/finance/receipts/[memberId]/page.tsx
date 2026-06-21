@@ -31,20 +31,20 @@ export default async function ReceiptPage({
       <div className="flex items-center justify-between print:hidden">
         <h1 className="text-2xl font-bold">기부금영수증</h1>
         <div className="flex gap-2">
-          <Link href={`/finance/receipts?year=${year}`} className="rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20">← 목록</Link>
+          <Link href={`/finance/receipts?year=${year}`} className="rounded-md border border-border px-3 py-1.5 text-sm">← 목록</Link>
           <PrintButton />
         </div>
       </div>
 
-      <article className="flex flex-col gap-4 rounded-md border border-black/15 p-6 dark:border-white/20">
+      <article className="flex flex-col gap-4 rounded-md border border-border p-6">
         <h2 className="text-center text-xl font-bold">기 부 금 영 수 증 ({year})</h2>
 
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div><span className="text-gray-500">성명</span> {data.member.name}</div>
-          <div><span className="text-gray-500">생년월일</span> {data.member.birth ?? "—"}</div>
-          <div className="col-span-2"><span className="text-gray-500">주소</span> {data.member.address ?? "—"}</div>
-          <div className="col-span-2"><span className="text-gray-500">기부받은 단체</span> {tenant?.name ?? "—"}</div>
-          <div className="col-span-2"><span className="text-gray-500">기부기간</span> {year}.01.01 ~ {year}.12.31</div>
+          <div><span className="text-muted-foreground">성명</span> {data.member.name}</div>
+          <div><span className="text-muted-foreground">생년월일</span> {data.member.birth ?? "—"}</div>
+          <div className="col-span-2"><span className="text-muted-foreground">주소</span> {data.member.address ?? "—"}</div>
+          <div className="col-span-2"><span className="text-muted-foreground">기부받은 단체</span> {tenant?.name ?? "—"}</div>
+          <div className="col-span-2"><span className="text-muted-foreground">기부기간</span> {year}.01.01 ~ {year}.12.31</div>
         </div>
 
         <div className="text-center text-lg font-semibold">
@@ -53,7 +53,7 @@ export default async function ReceiptPage({
 
         {data.items.length > 0 && (
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+            <thead className="border-b border-border text-muted-foreground">
               <tr>
                 <th className="py-1.5">일자</th>
                 <th className="py-1.5">항목</th>
@@ -62,7 +62,7 @@ export default async function ReceiptPage({
             </thead>
             <tbody>
               {data.items.map((it, i) => (
-                <tr key={i} className="border-b border-black/5 dark:border-white/10">
+                <tr key={i} className="border-b border-border">
                   <td className="py-1.5">{it.voucherDate}</td>
                   <td className="py-1.5">{it.accountName ?? "헌금"}</td>
                   <td className="py-1.5 text-right">{formatWon(it.amount)}</td>
@@ -72,7 +72,7 @@ export default async function ReceiptPage({
           </table>
         )}
 
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted-foreground">
           ※ 본 영수증은 교회 내부 발행용입니다. 국세청 연말정산 간소화 자료 제출은 별도 연동이 필요합니다(스펙 §14).
         </p>
       </article>

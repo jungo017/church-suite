@@ -28,7 +28,7 @@ export default async function AuditDetailPage({
     <section className="flex max-w-2xl flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{audit.name}</h1>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted-foreground">
           {open ? "진행중" : "마감"} · {checked}/{total} 확인
         </span>
       </div>
@@ -42,14 +42,14 @@ export default async function AuditDetailPage({
             <input
               name="tag"
               placeholder="자산 태그 스캔/입력"
-              className="rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20 dark:bg-transparent"
+              className="rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent"
             />
             <button className="rounded-md bg-foreground px-3 py-1.5 text-sm text-background">
               확인
             </button>
           </form>
           <form action={closeAuditAction.bind(null, auditId)}>
-            <button className="rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20">
+            <button className="rounded-md border border-border px-3 py-1.5 text-sm">
               조사 마감
             </button>
           </form>
@@ -60,14 +60,14 @@ export default async function AuditDetailPage({
         {items.map((i) => (
           <li
             key={i.itemId}
-            className="flex items-center justify-between border-b border-black/5 py-1.5 dark:border-white/10"
+            className="flex items-center justify-between border-b border-border py-1.5"
           >
             <span>
-              <span className={i.checked ? "text-green-600" : "text-gray-400"}>
+              <span className={i.checked ? "text-green-600" : "text-muted-foreground"}>
                 {i.checked ? "✓" : "○"}
               </span>{" "}
               {i.name}
-              {i.tag && <span className="text-gray-500"> ({i.tag})</span>}
+              {i.tag && <span className="text-muted-foreground"> ({i.tag})</span>}
             </span>
             {open && (
               <form

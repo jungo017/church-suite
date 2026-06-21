@@ -23,13 +23,13 @@ function BucketList({
     <div className="flex flex-col gap-1">
       <h2 className="font-semibold">{title}</h2>
       {buckets.length === 0 ? (
-        <p className="text-sm text-gray-500">데이터 없음</p>
+        <p className="text-sm text-muted-foreground">데이터 없음</p>
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {buckets.map((b, i) => (
             <li
               key={i}
-              className="flex justify-between border-b border-black/5 py-1 dark:border-white/10"
+              className="flex justify-between border-b border-border py-1"
             >
               <span>{label(b.key)}</span>
               <span className="font-medium">{b.n}</span>
@@ -51,7 +51,7 @@ export default async function MemberStatsPage() {
   return (
     <section className="flex max-w-3xl flex-col gap-6">
       <h1 className="text-2xl font-bold">교적 통계</h1>
-      <p className="text-sm text-gray-500">전체 교인 {stats.total}명</p>
+      <p className="text-sm text-muted-foreground">전체 교인 {stats.total}명</p>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <BucketList
@@ -74,13 +74,13 @@ export default async function MemberStatsPage() {
       <div className="flex flex-col gap-1">
         <h2 className="font-semibold">최근 출석 추이</h2>
         {trend.length === 0 ? (
-          <p className="text-sm text-gray-500">출석 데이터 없음</p>
+          <p className="text-sm text-muted-foreground">출석 데이터 없음</p>
         ) : (
           <ul className="flex flex-col gap-1 text-sm">
             {trend.map((t, i) => (
               <li
                 key={i}
-                className="flex justify-between border-b border-black/5 py-1 dark:border-white/10"
+                className="flex justify-between border-b border-border py-1"
               >
                 <span>
                   {t.date} ·{" "}

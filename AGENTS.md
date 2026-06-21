@@ -17,7 +17,9 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6: 교인포털·저장소/잡·PIPA). 51 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
+- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마). 55 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
+- **UX 보강 — 페이지네이션:** `lib/db/pagination`(pageParams/toPaged) + `app/(app)/pagination`(필터 보존). 교적·비품·재정 목록 limit/offset+count. 재정 합계는 전체 필터 기준(`voucherTotals`). 55 tests.
+- **UX 보강 — 디자인 시스템/테마:** 색상=CSS 토큰(`app/globals.css`), `data-theme`로 테마 교체(modern/warm/minimal/dark). Pretendard 폰트(layout `<link>`). 프리미티브 `lib/ui`(Button/Card/form/Badge) + `cn`(`lib/utils`, clsx+tailwind-merge). 앱: 사이드바 테마 토글(localStorage, `useSyncExternalStore`). 공개사이트: 교회별 `site.theme`(`/site`에서 선택 → 공개 래퍼 `data-theme`, `getPublicSiteTheme`). 고정색상→토큰 일괄 치환(39파일). 의미색(수입=파랑·성공=초록·경고=앰버)은 의도적 고정. **새 화면은 `lib/ui` 프리미티브와 토큰 색(bg-background/foreground/card/muted/border/primary/destructive)만 사용 — `text-gray-*`·`border-black/*` 금지.**
 - **Phase 5 구현됨(P5.3):** 문자/알림. `notification` 스키마+RLS(0027/0028). `lib/notify`(활성교인 일괄 발송 mock + 로그). `/members/notify`. 실제 SMS/알림톡 송출은 §14 추후. 테스트(46 tests).
 - **남은 외부연동/인프라(§12·§14 — 코드 인터페이스/mock까지 준비됨):** 실제 PG(온라인헌금)·국세청 전자제출(기부금영수증)·SMS/알림톡 실송출(잡 핸들러 연결)·소셜로그인(카카오/네이버)·네이티브 모바일앱·S3(SeaweedFS) 어댑터·배포(nginx·PgBouncer·다중 인스턴스·certbot)·저장 암호화/파기정책.
 - **Phase 5 구현됨(P5.2):** QR 키오스크 출석. `/members/kiosk`(탭 토글, 오늘 주일예배), `/members/kiosk/[memberId]`(QR 스캔 체크인), `/members/labels`(교인 QR=키오스크 딥링크). `kioskSetAction`(saveAttendance 재사용).

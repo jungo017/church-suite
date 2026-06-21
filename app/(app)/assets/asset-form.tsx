@@ -21,7 +21,7 @@ type AssetValues = {
 };
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 const label = "flex flex-col gap-1 text-sm";
 
 function Select({

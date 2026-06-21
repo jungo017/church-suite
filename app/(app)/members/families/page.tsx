@@ -15,14 +15,14 @@ export default async function FamiliesPage() {
           name="name"
           required
           placeholder="가족명 (예: 홍길동 가정)"
-          className="flex-1 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent"
+          className="flex-1 rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent"
         />
         <button className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">추가</button>
       </form>
       <ul className="flex flex-col gap-1 text-sm">
-        {families.length === 0 && <li className="text-gray-500">등록된 가족이 없습니다.</li>}
+        {families.length === 0 && <li className="text-muted-foreground">등록된 가족이 없습니다.</li>}
         {families.map((f) => (
-          <li key={f.familyId} className="border-b border-black/5 py-1.5 dark:border-white/10">{f.name}</li>
+          <li key={f.familyId} className="border-b border-border py-1.5">{f.name}</li>
         ))}
       </ul>
       <Link href="/members" className="text-sm underline">← 목록으로</Link>
