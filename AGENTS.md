@@ -17,7 +17,9 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: Phase 5(고도화) 진행 중 — `P5.2 키오스크 출석` 완료. 다음: `P5.3 알림/문자`.** (작업 브랜치: `feat/phase-5-advanced`. Phase 0~4 main 병합 완료.)
+- **단계: ✅ 전체 로드맵 완료 (Phase 0~5). Phase 5(고도화) 포함 모두 구현·테스트·병합.** (작업 브랜치: `feat/phase-5-advanced`. Phase 0~4 main 병합 완료, Phase 5 병합 예정.)
+- **Phase 5 구현됨(P5.3):** 문자/알림. `notification` 스키마+RLS(0027/0028). `lib/notify`(활성교인 일괄 발송 mock + 로그). `/members/notify`. 실제 SMS/알림톡 송출은 §14 추후. 테스트(46 tests).
+- **외부연동 추후(§14):** 실제 PG(온라인헌금)·국세청 전자제출(기부금영수증)·SMS/알림톡 송출·네이티브 모바일앱·커스텀 도메인 SSL.
 - **Phase 5 구현됨(P5.2):** QR 키오스크 출석. `/members/kiosk`(탭 토글, 오늘 주일예배), `/members/kiosk/[memberId]`(QR 스캔 체크인), `/members/labels`(교인 QR=키오스크 딥링크). `kioskSetAction`(saveAttendance 재사용).
 - **Phase 5 구현됨(P5.1):** 통합 대시보드. `lib/dashboard.ts`(교인/자산 카운트). `/dashboard` 교인·자산·올해 재정요약(finance:read)·최근 출석 카드. 테스트.
 - **Phase 4 구현됨(P4.3):** 새가족 접수. `newfamily_req` intake(0025/0026). `lib/site/intake.ts`. 공개 `/online/new-family` 폼 → `/site/new-family` 어드민 승인(→교인 전환)/거절.

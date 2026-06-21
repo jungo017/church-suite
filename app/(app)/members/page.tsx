@@ -32,6 +32,7 @@ export default async function MembersPage({
               <Link href="/members/kiosk" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">키오스크</Link>
               <Link href="/members/labels" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">QR</Link>
               <Link href="/members/education" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">교육</Link>
+              <Link href="/members/notify" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">알림</Link>
               <Link href="/members/families" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">가족 관리</Link>
               <Link href="/members/new" className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background">+ 교인 등록</Link>
             </>

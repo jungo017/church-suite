@@ -14,3 +14,4 @@ export * from "./education";
 export * from "./finance";
 export * from "./site";
 export * from "./intake";
+export * from "./notify";
