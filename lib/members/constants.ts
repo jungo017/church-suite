@@ -40,6 +40,17 @@ export function isServiceType(v: string): v is ServiceType {
   return (SERVICE_TYPES as readonly string[]).includes(v);
 }
 
+export const CARE_TYPES = ["visitation", "prayer", "counsel"] as const;
+export type CareType = (typeof CARE_TYPES)[number];
+export const CARE_TYPE_LABELS: Record<CareType, string> = {
+  visitation: "심방",
+  prayer: "기도",
+  counsel: "상담",
+};
+export function isCareType(v: string): v is CareType {
+  return (CARE_TYPES as readonly string[]).includes(v);
+}
+
 export function isGender(v: string): v is Gender {
   return (GENDERS as readonly string[]).includes(v);
 }

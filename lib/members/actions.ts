@@ -12,7 +12,8 @@ import {
   type MemberInput,
 } from "./service";
 import { saveAttendance } from "./attendance";
-import { isGender, isMemberStatus } from "./constants";
+import { addCare, deleteCare } from "./care";
+import { isGender, isMemberStatus, isCareType } from "./constants";
 
 /** 교인 모듈 서버 액션 (스펙 §16). members:write 가드. */
 async function requireWrite() {
@@ -91,4 +92,24 @@ export async function saveAttendanceAction(
   }));
   await saveAttendance(user.church_id, serviceDate, serviceType, records);
   revalidatePath("/members/attendance");
+}
+
+export async function addCareAction(memberId: string, fd: FormData) {
+  const user = await requireWrite();
+  const content = str(fd, "content");
+  if (!content) throw new Error("content_required");
+  const careType = str(fd, "careType");
+  await addCare(user.church_id, {
+    memberId,
+    careType: careType && isCareType(careType) ? careType : "visitation",
+    careDate: str(fd, "careDate"),
+    content,
+  });
+  revalidatePath(`/members/${memberId}`);
+}
+
+export async function deleteCareAction(memberId: string, careId: string) {
+  const user = await requireWrite();
+  await deleteCare(user.church_id, careId);
+  revalidatePath(`/members/${memberId}`);
 }
