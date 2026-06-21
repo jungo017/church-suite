@@ -78,6 +78,15 @@ export async function createFamilyAction(fd: FormData) {
   revalidatePath("/members/families");
 }
 
+/** 키오스크: 오늘 주일예배 출석을 지정 값으로 설정(탭 토글/QR 체크인). */
+export async function kioskSetAction(memberId: string, present: boolean) {
+  const user = await requireWrite();
+  const today = new Date().toISOString().slice(0, 10);
+  await saveAttendance(user.church_id, today, "sunday", [{ memberId, present }]);
+  revalidatePath("/members/kiosk");
+  revalidatePath(`/members/kiosk/${memberId}`);
+}
+
 export async function saveAttendanceAction(
   serviceDate: string,
   serviceType: string,
