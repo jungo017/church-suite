@@ -5,3 +5,6 @@ export * from "./members";
 export * from "./users";
 export * from "./auth";
 export * from "./billing";
+export * from "./org";
+export * from "./assets";
+export * from "./audit";
