@@ -7,6 +7,7 @@ import {
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { church } from "./church";
+import { department } from "./org";
 import { timestamps } from "./_shared";
 
 /**
@@ -30,14 +31,22 @@ export const member = pgTable(
     }),
     name: text().notNull(),
     birth: date(),
+    gender: text(), // male | female
     phone: text(),
+    email: text(),
+    address: text(),
     position: text(), // 직분
-    status: text().notNull().default("active"),
+    departmentId: uuid().references(() => department.departmentId, {
+      onDelete: "set null",
+    }), // 구역/부서
+    registeredDate: date(), // 등록일
+    status: text().notNull().default("active"), // active | inactive | transferred | deceased
     ...timestamps,
   },
   (t) => [
     index("member_church_idx").on(t.churchId),
     index("member_family_idx").on(t.familyId),
+    index("member_department_idx").on(t.departmentId),
   ],
 );
 
