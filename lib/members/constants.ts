@@ -40,6 +40,28 @@ export function isServiceType(v: string): v is ServiceType {
   return (SERVICE_TYPES as readonly string[]).includes(v);
 }
 
+export const PROGRAM_STATUSES = ["open", "closed"] as const;
+export type ProgramStatus = (typeof PROGRAM_STATUSES)[number];
+export const PROGRAM_STATUS_LABELS: Record<ProgramStatus, string> = {
+  open: "모집중",
+  closed: "종료",
+};
+
+export const ENROLLMENT_STATUSES = [
+  "enrolled",
+  "completed",
+  "dropped",
+] as const;
+export type EnrollmentStatus = (typeof ENROLLMENT_STATUSES)[number];
+export const ENROLLMENT_STATUS_LABELS: Record<EnrollmentStatus, string> = {
+  enrolled: "수강",
+  completed: "수료",
+  dropped: "중도포기",
+};
+export function isEnrollmentStatus(v: string): v is EnrollmentStatus {
+  return (ENROLLMENT_STATUSES as readonly string[]).includes(v);
+}
+
 export const CARE_TYPES = ["visitation", "prayer", "counsel"] as const;
 export type CareType = (typeof CARE_TYPES)[number];
 export const CARE_TYPE_LABELS: Record<CareType, string> = {

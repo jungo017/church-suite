@@ -10,3 +10,4 @@ export * from "./assets";
 export * from "./audit";
 export * from "./attendance";
 export * from "./care";
+export * from "./education";
