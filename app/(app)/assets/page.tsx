@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { listAssetsPaged } from "@/lib/assets/service";
 import { pageParams } from "@/lib/db/pagination";
 import { Pagination } from "../pagination";
@@ -47,43 +46,10 @@ export default async function AssetsPage({
     pageSize,
   );
   const assets = result.items;
-  const canWrite = hasPermission(user.roles, PERMISSIONS.ASSETS_WRITE);
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">비품 (자산)</h1>
-        <div className="flex gap-2 text-sm">
-          <Link
-            href="/assets/labels"
-            className="rounded-md border border-border px-3 py-1.5"
-          >
-            QR 라벨
-          </Link>
-          {canWrite && (
-            <>
-              <Link
-                href="/assets/audits"
-                className="rounded-md border border-border px-3 py-1.5"
-              >
-                전수조사
-              </Link>
-              <Link
-                href="/assets/classification"
-                className="rounded-md border border-border px-3 py-1.5"
-              >
-                분류 관리
-              </Link>
-              <Link
-                href="/assets/new"
-                className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background"
-              >
-                + 자산 등록
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold">비품 (자산)</h1>
 
       <div className="flex gap-2 text-sm">
         <FilterLink current={status}>전체</FilterLink>

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
@@ -44,19 +43,7 @@ export default async function FinancePage({
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">재정</h1>
-        <div className="flex gap-2 text-sm">
-          <Link href="/finance/report" className={ctrl}>보고서</Link>
-          <Link href="/finance/receipts" className={ctrl}>기부금영수증</Link>
-          {canWrite && (
-            <>
-              <Link href="/finance/accounts" className={ctrl}>계정과목</Link>
-              <Link href="/finance/new" className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background">+ 전표 등록</Link>
-            </>
-          )}
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold">재정</h1>
 
       <form className="flex flex-wrap items-end gap-2 text-sm">
         <select name="type" defaultValue={type ?? ""} className={ctrl}>
