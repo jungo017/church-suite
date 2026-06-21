@@ -13,6 +13,7 @@ import {
 } from "./service";
 import { saveAttendance } from "./attendance";
 import { addCare, deleteCare } from "./care";
+import { createMemberUser } from "./portal";
 import { isGender, isMemberStatus, isCareType } from "./constants";
 
 /** 교인 모듈 서버 액션 (스펙 §16). members:write 가드. */
@@ -120,5 +121,17 @@ export async function addCareAction(memberId: string, fd: FormData) {
 export async function deleteCareAction(memberId: string, careId: string) {
   const user = await requireWrite();
   await deleteCare(user.church_id, careId);
+  revalidatePath(`/members/${memberId}`);
+}
+
+/** 교인 셀프포털 계정 발급. */
+export async function createMemberUserAction(memberId: string, fd: FormData) {
+  const user = await requireWrite();
+  const loginId = str(fd, "loginId");
+  const password = str(fd, "password");
+  if (!loginId || !password || password.length < 8) {
+    throw new Error("invalid_account");
+  }
+  await createMemberUser(user.church_id, memberId, loginId, password);
   revalidatePath(`/members/${memberId}`);
 }

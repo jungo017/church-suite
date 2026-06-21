@@ -7,6 +7,7 @@ export const ROLES = {
   ADMIN: "admin",
   STAFF: "staff",
   VIEWER: "viewer",
+  MEMBER: "member", // 교인 셀프 포털(온라인교인센터) — 관리 권한 없음
 } as const;
 export type RoleName = (typeof ROLES)[keyof typeof ROLES];
 
@@ -42,6 +43,8 @@ export const ROLE_PERMISSIONS: Record<RoleName, Permission[]> = {
     PERMISSIONS.ASSETS_READ,
     PERMISSIONS.SITE_READ,
   ],
+  // 교인: 관리 권한 없음(셀프 포털에서 본인 데이터만 — 앱 레벨에서 보장)
+  member: [],
 };
 
 /** 온보딩 시 생성할 기본 역할(스펙 0.6). */
@@ -49,6 +52,7 @@ export const DEFAULT_ROLES: { name: RoleName; label: string }[] = [
   { name: ROLES.ADMIN, label: "관리자" },
   { name: ROLES.STAFF, label: "직원" },
   { name: ROLES.VIEWER, label: "열람" },
+  { name: ROLES.MEMBER, label: "교인" },
 ];
 
 export function hasRole(roles: string[], role: RoleName): boolean {
