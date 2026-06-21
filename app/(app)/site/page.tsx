@@ -24,6 +24,11 @@ export default async function SiteAdminPage() {
 
   return (
     <section className="flex max-w-2xl flex-col gap-8">
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        <Link href="/site/new-family" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">새가족 신청</Link>
+        <Link href="/site/offerings" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">온라인 헌금</Link>
+      </div>
+
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">홈페이지 관리</h1>
         <form action={setSiteStatusAction} className="flex items-center gap-2 text-sm">

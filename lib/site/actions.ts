@@ -14,6 +14,8 @@ import {
   createPage,
   updatePage,
 } from "./admin";
+import { approveNewFamily, rejectNewFamily } from "./intake";
+import { reflectOffering } from "./offering";
 
 /** CMS 어드민 서버 액션. site:write 가드. */
 async function requireWrite() {
@@ -93,4 +95,27 @@ export async function updatePageAction(pageId: string, fd: FormData) {
     published: fd.get("published") === "on",
   });
   revalidatePath(`/site/pages/${pageId}`);
+}
+
+// ── 접수(새가족/온라인헌금) ──
+export async function approveNewFamilyAction(reqId: string) {
+  const user = await requireWrite();
+  const today = new Date().toISOString().slice(0, 10);
+  await approveNewFamily(user.church_id, reqId, today);
+  revalidatePath("/site/new-family");
+}
+
+export async function rejectNewFamilyAction(reqId: string) {
+  const user = await requireWrite();
+  await rejectNewFamily(user.church_id, reqId);
+  revalidatePath("/site/new-family");
+}
+
+export async function reflectOfferingAction(offeringId: string, fd: FormData) {
+  const user = await requireWrite();
+  const accountId = str(fd, "accountId");
+  if (!accountId) return;
+  const today = new Date().toISOString().slice(0, 10);
+  await reflectOffering(user.church_id, offeringId, accountId, today);
+  revalidatePath("/site/offerings");
 }
