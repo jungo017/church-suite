@@ -17,7 +17,11 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ Phase 2(교적) 전체 완료 (P2.1~P2.5). 다음 단계: Phase 3(재정) — 스펙 §7.3.** (작업 브랜치: `feat/phase-2-members`. Phase 0·1 main 병합 완료.)
+- **단계: ✅ Phase 3(재정) 전체 완료 (P3.1~P3.4). 다음 단계: Phase 4(홈페이지/온라인교인센터) — 스펙 §7.4.** (작업 브랜치: `feat/phase-3-finance`. Phase 0·1·2 main 병합 완료.)
+- **Phase 3 구현됨(P3.1):** 단식부기 모델. `account`(계정과목)·`voucher`(전표) 스키마+RLS(0021/0022), 금액 numeric. `lib/finance/`(constants·accounts). `/finance/accounts` 계정과목 관리(finance:read 보기, finance:write 추가). 테스트.
+- **Phase 3 구현됨(P3.2):** 전표. `lib/finance/vouchers.ts`(조인 조회·필터(구분/계정/기간)·CRUD). `/finance` 전표 목록(필터·수입/지출/잔액 합계)·`/finance/new` 등록(계정·헌금자·금액·방법). numeric 정확도 테스트.
+- **Phase 3 구현됨(P3.3):** 보고서. `lib/finance/report.ts`(raw SQL: 계정별 기간집계 accountSummary·월별 monthlyTotals, RLS 스코프 내). `/finance/report` 예결산(기간 수입/지출/잔액). 집계 테스트.
+- **Phase 3 구현됨(P3.4):** 기부금영수증. `lib/finance/receipts.ts`(교인별 연간 헌금 합산 annualGivingByMember·memberAnnualGiving, raw SQL). `/finance/receipts`(연도별 목록)·`[memberId]`(출력용 영수증). 국세청 전자제출은 추후(§14). 테스트(40 tests). **→ Phase 3 완료.**
 - **Phase 2 구현됨(P2.1):** member 확장(gender/email/address/registeredDate/departmentId=구역, 마이그레이션 0014). `lib/members/`(constants·service·actions). 화면 목록(검색·상태필터)·상세·등록·편집·가족관리. members:read/write 가드.
 - **Phase 2 구현됨(P2.2):** 출석. `attendance` 스키마+RLS(0015/0016, 예배×날짜×교인 unique=upsert). `lib/members/attendance.ts`. `/members/attendance` 예배별 출석체크(일괄 저장). 테스트(33 tests).
 - **Phase 2 구현됨(P2.3):** 목양 기록(심방/기도/상담). `pastoral_care` 스키마+RLS(0017/0018). `lib/members/care.ts`. 교인 상세에 목양 기록 + 최근 출석 표시. 테스트(34 tests).
