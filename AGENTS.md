@@ -17,7 +17,8 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ Phase 4(홈페이지/온라인교인센터) 전체 완료 (P4.1~P4.4). 다음 단계: Phase 5(고도화) — 스펙 §7.5.** (작업 브랜치: `feat/phase-4-site`. Phase 0·1·2·3 main 병합 완료.)
+- **단계: Phase 5(고도화) 진행 중 — `P5.1 대시보드` 완료. 다음: `P5.2 키오스크 출석`.** (작업 브랜치: `feat/phase-5-advanced`. Phase 0~4 main 병합 완료.)
+- **Phase 5 구현됨(P5.1):** 통합 대시보드. `lib/dashboard.ts`(교인/자산 카운트). `/dashboard` 교인·자산·올해 재정요약(finance:read)·최근 출석 카드. 테스트.
 - **Phase 4 구현됨(P4.3):** 새가족 접수. `newfamily_req` intake(0025/0026). `lib/site/intake.ts`. 공개 `/online/new-family` 폼 → `/site/new-family` 어드민 승인(→교인 전환)/거절.
 - **Phase 4 구현됨(P4.4):** 온라인 헌금 접수. `online_offering` intake. `lib/site/offering.ts`(제출=mock PG paid → 어드민 재정반영=수입 전표 생성, reflected). 공개 `/online/offering` 폼 → `/site/offerings` 어드민. 테스트(44 tests). **→ Phase 4 완료.** (실제 PG는 §14 추후)
 - **Phase 4 구현됨(P4.2):** 공개 홈페이지. `lib/site/public.ts`(발행 콘텐츠만, `getPublicContext`). `app/(public)`: 홈(루트=마케팅 / 서브도메인=교회사이트 / 미발행=준비중), `/b/[slug]`·`/b/[slug]/[postId]`·`/p/[slug]`, `site-header`. 공개경계 테스트(미발행 숨김).
