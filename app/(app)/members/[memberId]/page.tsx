@@ -1,0 +1,145 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { requireUser } from "@/lib/auth/session";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { getMember, listFamilies } from "@/lib/members/service";
+import { listMemberCare } from "@/lib/members/care";
+import { listMemberAttendance } from "@/lib/members/attendance";
+import { listDepartments } from "@/lib/assets/classification";
+import {
+  deleteMemberAction,
+  addCareAction,
+  deleteCareAction,
+} from "@/lib/members/actions";
+import {
+  GENDER_LABELS,
+  MEMBER_STATUS_LABELS,
+  CARE_TYPES,
+  CARE_TYPE_LABELS,
+  SERVICE_TYPE_LABELS,
+  type Gender,
+  type MemberStatus,
+  type CareType,
+  type ServiceType,
+} from "@/lib/members/constants";
+
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex gap-4 border-b border-black/5 py-2 dark:border-white/10">
+      <span className="w-24 shrink-0 text-sm text-gray-500">{label}</span>
+      <span className="text-sm">{value ?? "—"}</span>
+    </div>
+  );
+}
+
+export default async function MemberDetailPage({
+  params,
+}: {
+  params: Promise<{ memberId: string }>;
+}) {
+  const { memberId } = await params;
+  const user = await requireUser();
+  const m = await getMember(user.church_id, memberId);
+  if (!m) notFound();
+  const canWrite = hasPermission(user.roles, PERMISSIONS.MEMBERS_WRITE);
+
+  const [departments, families] = await Promise.all([
+    listDepartments(user.church_id),
+    listFamilies(user.church_id),
+  ]);
+  const deptName = departments.find((d) => d.departmentId === m.departmentId)?.name;
+  const familyName = families.find((f) => f.familyId === m.familyId)?.name;
+  const [care, recentAttendance] = await Promise.all([
+    listMemberCare(user.church_id, m.memberId),
+    listMemberAttendance(user.church_id, m.memberId, 8),
+  ]);
+  const careInput =
+    "rounded-md border border-black/15 px-2 py-1 text-sm dark:border-white/20 dark:bg-transparent";
+
+  return (
+    <section className="flex max-w-2xl flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{m.name}</h1>
+        {canWrite && (
+          <div className="flex gap-2">
+            <Link href={`/members/${m.memberId}/edit`} className="rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20">편집</Link>
+            <form action={deleteMemberAction.bind(null, m.memberId)}>
+              <button className="rounded-md border border-red-300 px-3 py-1.5 text-sm text-red-600">삭제</button>
+            </form>
+          </div>
+        )}
+      </div>
+      <div>
+        <Row label="상태" value={MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status} />
+        <Row label="성별" value={m.gender ? GENDER_LABELS[m.gender as Gender] : null} />
+        <Row label="생년월일" value={m.birth} />
+        <Row label="직분" value={m.position} />
+        <Row label="구역/부서" value={deptName} />
+        <Row label="가족" value={familyName} />
+        <Row label="연락처" value={m.phone} />
+        <Row label="이메일" value={m.email} />
+        <Row label="주소" value={m.address} />
+        <Row label="등록일" value={m.registeredDate} />
+      </div>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-lg font-semibold">목양 기록</h2>
+        {care.length === 0 ? (
+          <p className="text-sm text-gray-500">기록이 없습니다.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {care.map((c) => (
+              <li
+                key={c.careId}
+                className="flex items-start justify-between gap-4 border-b border-black/5 pb-2 text-sm dark:border-white/10"
+              >
+                <div>
+                  <span className="rounded bg-black/5 px-1.5 py-0.5 text-xs dark:bg-white/10">
+                    {CARE_TYPE_LABELS[c.careType as CareType] ?? c.careType}
+                  </span>{" "}
+                  <span className="text-gray-500">{c.careDate ?? ""}</span>
+                  <div>{c.content}</div>
+                </div>
+                {canWrite && (
+                  <form action={deleteCareAction.bind(null, m.memberId, c.careId)}>
+                    <button className="text-xs text-red-600">삭제</button>
+                  </form>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {canWrite && (
+          <form action={addCareAction.bind(null, m.memberId)} className="flex flex-wrap items-end gap-2">
+            <select name="careType" className={careInput} defaultValue="visitation">
+              {CARE_TYPES.map((t) => (
+                <option key={t} value={t}>{CARE_TYPE_LABELS[t]}</option>
+              ))}
+            </select>
+            <input name="careDate" type="date" className={careInput} />
+            <input name="content" required placeholder="내용" className={`${careInput} flex-1`} />
+            <button className="rounded-md bg-foreground px-3 py-1.5 text-sm text-background">기록 추가</button>
+          </form>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-lg font-semibold">최근 출석</h2>
+        {recentAttendance.length === 0 ? (
+          <p className="text-sm text-gray-500">출석 기록이 없습니다.</p>
+        ) : (
+          <ul className="flex flex-col gap-1 text-sm">
+            {recentAttendance.map((r) => (
+              <li key={r.attendanceId} className="text-gray-600 dark:text-gray-400">
+                {r.serviceDate} · {SERVICE_TYPE_LABELS[r.serviceType as ServiceType] ?? r.serviceType} ·{" "}
+                {r.present ? "출석" : "결석"}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <Link href="/members" className="text-sm underline">← 목록으로</Link>
+    </section>
+  );
+}
