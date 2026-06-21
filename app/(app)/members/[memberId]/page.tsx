@@ -6,10 +6,12 @@ import { getMember, listFamilies } from "@/lib/members/service";
 import { listMemberCare } from "@/lib/members/care";
 import { listMemberAttendance } from "@/lib/members/attendance";
 import { listDepartments } from "@/lib/assets/classification";
+import { logAccess } from "@/lib/compliance/access-log";
 import {
   deleteMemberAction,
   addCareAction,
   deleteCareAction,
+  createMemberUserAction,
 } from "@/lib/members/actions";
 import {
   GENDER_LABELS,
@@ -41,6 +43,13 @@ export default async function MemberDetailPage({
   const user = await requireUser();
   const m = await getMember(user.church_id, memberId);
   if (!m) notFound();
+  // 민감정보(교인 상세) 접근 기록 (PIPA §5)
+  await logAccess(user.church_id, {
+    userId: user.sub,
+    action: "member.view",
+    targetType: "member",
+    targetId: m.memberId,
+  });
   const canWrite = hasPermission(user.roles, PERMISSIONS.MEMBERS_WRITE);
 
   const [departments, families] = await Promise.all([
@@ -138,6 +147,20 @@ export default async function MemberDetailPage({
           </ul>
         )}
       </section>
+
+      {canWrite && (
+        <section className="flex flex-col gap-2">
+          <h2 className="text-lg font-semibold">교인 셀프포털 계정</h2>
+          <p className="text-xs text-gray-500">
+            교인이 직접 로그인해 본인 정보·헌금내역을 볼 수 있는 계정을 발급합니다.
+          </p>
+          <form action={createMemberUserAction.bind(null, m.memberId)} className="flex flex-wrap items-end gap-2">
+            <input name="loginId" required placeholder="로그인 아이디" className={careInput} />
+            <input name="password" type="password" required placeholder="비밀번호(8자+)" className={careInput} />
+            <button className="rounded-md bg-foreground px-3 py-1.5 text-sm text-background">계정 발급</button>
+          </form>
+        </section>
+      )}
 
       <Link href="/members" className="text-sm underline">← 목록으로</Link>
     </section>

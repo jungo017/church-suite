@@ -17,10 +17,13 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ 전체 로드맵 완료 (Phase 0~5). Phase 5(고도화) 포함 모두 구현·테스트·병합.** (작업 브랜치: `feat/phase-5-advanced`. Phase 0~4 main 병합 완료, Phase 5 병합 예정.)
+- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6: 교인포털·저장소/잡·PIPA). 51 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
 - **Phase 5 구현됨(P5.3):** 문자/알림. `notification` 스키마+RLS(0027/0028). `lib/notify`(활성교인 일괄 발송 mock + 로그). `/members/notify`. 실제 SMS/알림톡 송출은 §14 추후. 테스트(46 tests).
-- **외부연동 추후(§14):** 실제 PG(온라인헌금)·국세청 전자제출(기부금영수증)·SMS/알림톡 송출·네이티브 모바일앱·커스텀 도메인 SSL.
+- **남은 외부연동/인프라(§12·§14 — 코드 인터페이스/mock까지 준비됨):** 실제 PG(온라인헌금)·국세청 전자제출(기부금영수증)·SMS/알림톡 실송출(잡 핸들러 연결)·소셜로그인(카카오/네이버)·네이티브 모바일앱·S3(SeaweedFS) 어댑터·배포(nginx·PgBouncer·다중 인스턴스·certbot)·저장 암호화/파기정책.
 - **Phase 5 구현됨(P5.2):** QR 키오스크 출석. `/members/kiosk`(탭 토글, 오늘 주일예배), `/members/kiosk/[memberId]`(QR 스캔 체크인), `/members/labels`(교인 QR=키오스크 딥링크). `kioskSetAction`(saveAttendance 재사용).
+- **Phase 6 구현됨(P6.1):** 교인 셀프포털. `member` 역할, `lib/members/portal`(계정발급·본인정보·본인 헌금내역), `/my`·`/my/giving`. (app) 네비 권한별 필터.
+- **Phase 6 구현됨(P6.2):** 저장소 어댑터(`lib/storage` 인터페이스+로컬+사용량/쿼터, §10) · 백그라운드 잡(`lib/jobs`+`jobs/worker.ts` pg-boss, `npm run worker`, §11).
+- **Phase 6 구현됨(P6.3):** PIPA. `access_log`(접근로그)·`consent`(동의) 스키마+RLS(0029/0030). `lib/compliance`. 교인 상세 조회 시 접근기록, 새가족 폼 동의 수집, `/members/compliance`(admin) 감사. 51 tests.
 - **Phase 5 구현됨(P5.1):** 통합 대시보드. `lib/dashboard.ts`(교인/자산 카운트). `/dashboard` 교인·자산·올해 재정요약(finance:read)·최근 출석 카드. 테스트.
 - **Phase 4 구현됨(P4.3):** 새가족 접수. `newfamily_req` intake(0025/0026). `lib/site/intake.ts`. 공개 `/online/new-family` 폼 → `/site/new-family` 어드민 승인(→교인 전환)/거절.
 - **Phase 4 구현됨(P4.4):** 온라인 헌금 접수. `online_offering` intake. `lib/site/offering.ts`(제출=mock PG paid → 어드민 재정반영=수입 전표 생성, reflected). 공개 `/online/offering` 폼 → `/site/offerings` 어드민. 테스트(44 tests). **→ Phase 4 완료.** (실제 PG는 §14 추후)

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { dashboardCounts } from "@/lib/dashboard";
@@ -27,6 +28,13 @@ function Card({
 
 export default async function DashboardPage() {
   const user = await requireUser();
+  // 관리 권한이 전혀 없는 교인 역할은 셀프 포털로
+  const isStaff =
+    hasPermission(user.roles, PERMISSIONS.MEMBERS_READ) ||
+    hasPermission(user.roles, PERMISSIONS.FINANCE_READ) ||
+    hasPermission(user.roles, PERMISSIONS.ASSETS_READ);
+  if (!isStaff) redirect("/my");
+
   const counts = await dashboardCounts(user.church_id);
   const trend = await attendanceTrend(user.church_id, 3);
 
