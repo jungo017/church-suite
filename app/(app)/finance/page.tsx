@@ -1,11 +1,107 @@
-// 재정 모듈 (Phase 3). 현재는 라우트 placeholder.
-export default function FinancePage() {
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { requireUser } from "@/lib/auth/session";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { listVouchers } from "@/lib/finance/vouchers";
+import {
+  ACCOUNT_TYPE_LABELS,
+  formatWon,
+  type AccountType,
+} from "@/lib/finance/constants";
+import { deleteVoucherAction } from "@/lib/finance/actions";
+
+export default async function FinancePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string; from?: string; to?: string }>;
+}) {
+  const { type, from, to } = await searchParams;
+  const user = await requireUser();
+  if (!hasPermission(user.roles, PERMISSIONS.FINANCE_READ)) redirect("/forbidden");
+  const canWrite = hasPermission(user.roles, PERMISSIONS.FINANCE_WRITE);
+
+  const vouchers = await listVouchers(user.church_id, { type, from, to });
+  const income = vouchers
+    .filter((v) => v.type === "income")
+    .reduce((s, v) => s + Number(v.amount), 0);
+  const expense = vouchers
+    .filter((v) => v.type === "expense")
+    .reduce((s, v) => s + Number(v.amount), 0);
+
+  const ctrl =
+    "rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20 dark:bg-transparent";
+
   return (
-    <section>
-      <h1 className="text-2xl font-bold">재정</h1>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Phase 3 에서 구현됩니다 (전표·예결산·기부금영수증). 금액은 numeric/정수 원.
-      </p>
+    <section className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">재정</h1>
+        <div className="flex gap-2 text-sm">
+          <Link href="/finance/report" className={ctrl}>보고서</Link>
+          <Link href="/finance/receipts" className={ctrl}>기부금영수증</Link>
+          {canWrite && (
+            <>
+              <Link href="/finance/accounts" className={ctrl}>계정과목</Link>
+              <Link href="/finance/new" className="rounded-md bg-foreground px-3 py-1.5 font-medium text-background">+ 전표 등록</Link>
+            </>
+          )}
+        </div>
+      </div>
+
+      <form className="flex flex-wrap items-end gap-2 text-sm">
+        <select name="type" defaultValue={type ?? ""} className={ctrl}>
+          <option value="">전체</option>
+          <option value="income">수입</option>
+          <option value="expense">지출</option>
+        </select>
+        <input name="from" type="date" defaultValue={from ?? ""} className={ctrl} />
+        <input name="to" type="date" defaultValue={to ?? ""} className={ctrl} />
+        <button className={ctrl}>조회</button>
+      </form>
+
+      <div className="flex gap-6 text-sm">
+        <span>수입 합계 <strong className="text-blue-600">{formatWon(income)}</strong></span>
+        <span>지출 합계 <strong className="text-red-600">{formatWon(expense)}</strong></span>
+        <span>잔액 <strong>{formatWon(income - expense)}</strong></span>
+      </div>
+
+      {vouchers.length === 0 ? (
+        <p className="py-8 text-sm text-gray-500">전표가 없습니다.</p>
+      ) : (
+        <table className="w-full text-left text-sm">
+          <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+            <tr>
+              <th className="py-2">일자</th>
+              <th className="py-2">구분</th>
+              <th className="py-2">계정</th>
+              <th className="py-2">적요</th>
+              <th className="py-2">헌금자</th>
+              <th className="py-2 text-right">금액</th>
+              {canWrite && <th className="py-2"></th>}
+            </tr>
+          </thead>
+          <tbody>
+            {vouchers.map((v) => (
+              <tr key={v.voucherId} className="border-b border-black/5 dark:border-white/10">
+                <td className="py-2">{v.voucherDate}</td>
+                <td className="py-2">{ACCOUNT_TYPE_LABELS[v.type as AccountType] ?? v.type}</td>
+                <td className="py-2">{v.accountName ?? "—"}</td>
+                <td className="py-2">{v.summary ?? "—"}</td>
+                <td className="py-2">{v.memberName ?? "—"}</td>
+                <td className={`py-2 text-right ${v.type === "income" ? "text-blue-600" : "text-red-600"}`}>
+                  {formatWon(v.amount)}
+                </td>
+                {canWrite && (
+                  <td className="py-2 text-right">
+                    <form action={deleteVoucherAction.bind(null, v.voucherId)}>
+                      <button className="text-xs text-red-600">삭제</button>
+                    </form>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </section>
   );
 }

@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { checkPermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { createAccount, updateAccount } from "./accounts";
-import { isAccountType } from "./constants";
+import { createVoucher, deleteVoucher } from "./vouchers";
+import { isAccountType, isPaymentMethod } from "./constants";
 
 /** 재정 서버 액션 — 계정과목. finance:write 가드. */
 async function requireWrite() {
@@ -40,4 +41,35 @@ export async function updateAccountAction(accountId: string, fd: FormData) {
     active: active === "true",
   });
   revalidatePath("/finance/accounts");
+}
+
+// ── 전표 ──
+export async function createVoucherAction(fd: FormData) {
+  const user = await requireWrite();
+  const voucherDate = str(fd, "voucherDate");
+  const accountId = str(fd, "accountId");
+  const amountRaw = str(fd, "amount");
+  if (!voucherDate || !accountId || !amountRaw) throw new Error("missing_fields");
+  const amount = Number(amountRaw);
+  if (!Number.isFinite(amount) || amount <= 0) throw new Error("invalid_amount");
+  const type = str(fd, "type") === "expense" ? "expense" : "income";
+  const method = str(fd, "method");
+  await createVoucher(user.church_id, {
+    voucherDate,
+    type,
+    accountId,
+    memberId: str(fd, "memberId"),
+    amount: amountRaw,
+    method: method && isPaymentMethod(method) ? method : null,
+    summary: str(fd, "summary"),
+    note: str(fd, "note"),
+  });
+  revalidatePath("/finance");
+  redirect("/finance");
+}
+
+export async function deleteVoucherAction(voucherId: string) {
+  const user = await requireWrite();
+  await deleteVoucher(user.church_id, voucherId);
+  revalidatePath("/finance");
 }
