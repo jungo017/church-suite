@@ -1,7 +1,8 @@
 import "server-only";
-import { and, asc, eq, ilike } from "drizzle-orm";
+import { and, asc, count, eq, ilike } from "drizzle-orm";
 import { withTenant } from "@/lib/db/tenant";
 import { member, family } from "@/lib/db/schema";
+import { toPaged, type Paged } from "@/lib/db/pagination";
 
 /** 교인 CRUD 서비스 (스펙 §7.2). 테넌트 스코프. 교인 데이터는 단일 원본(§2). */
 
@@ -37,6 +38,32 @@ export async function listMembers(churchId: string, filters: MemberFilters = {})
       .from(member)
       .where(and(...conds))
       .orderBy(asc(member.name));
+  });
+}
+
+/** 페이지 단위 교인 목록(대량 데이터). */
+export async function listMembersPaged(
+  churchId: string,
+  filters: MemberFilters,
+  page: number,
+  pageSize: number,
+): Promise<Paged<typeof member.$inferSelect>> {
+  return withTenant(churchId, async (tx) => {
+    const conds = [eq(member.churchId, churchId)];
+    if (filters.status) conds.push(eq(member.status, filters.status));
+    if (filters.departmentId)
+      conds.push(eq(member.departmentId, filters.departmentId));
+    if (filters.q) conds.push(ilike(member.name, `%${filters.q}%`));
+    const where = and(...conds);
+    const items = await tx
+      .select()
+      .from(member)
+      .where(where)
+      .orderBy(asc(member.name))
+      .limit(pageSize)
+      .offset((page - 1) * pageSize);
+    const c = await tx.select({ n: count() }).from(member).where(where);
+    return toPaged(items, Number(c[0]?.n ?? 0), page, pageSize);
   });
 }
 

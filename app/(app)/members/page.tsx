@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
-import { listMembers } from "@/lib/members/service";
+import { listMembersPaged } from "@/lib/members/service";
+import { pageParams } from "@/lib/db/pagination";
+import { Pagination } from "../pagination";
 import {
   MEMBER_STATUSES,
   MEMBER_STATUS_LABELS,
@@ -13,17 +15,19 @@ import {
 export default async function MembersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; q?: string; page?: string; size?: string }>;
 }) {
-  const { status, q } = await searchParams;
+  const { status, q, page: pageParam, size } = await searchParams;
   const user = await requireUser();
-  const members = await listMembers(user.church_id, { status, q });
+  const { page, pageSize } = pageParams({ page: pageParam, size });
+  const result = await listMembersPaged(user.church_id, { status, q }, page, pageSize);
+  const members = result.items;
   const canWrite = hasPermission(user.roles, PERMISSIONS.MEMBERS_WRITE);
 
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">교적 ({members.length})</h1>
+        <h1 className="text-2xl font-bold">교적 ({result.total})</h1>
         <div className="flex gap-2 text-sm">
           <Link href="/members/stats" className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">통계</Link>
           {hasPermission(user.roles, PERMISSIONS.CHURCH_MANAGE) && (
@@ -91,6 +95,13 @@ export default async function MembersPage({
           </tbody>
         </table>
       )}
+
+      <Pagination
+        basePath="/members"
+        page={result.page}
+        totalPages={result.totalPages}
+        params={{ q, status }}
+      />
     </section>
   );
 }
