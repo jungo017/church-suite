@@ -10,6 +10,7 @@ const NAV = [
   { href: "/members", label: "교적" },
   { href: "/finance", label: "재정" },
   { href: "/assets", label: "비품" },
+  { href: "/site", label: "홈페이지" },
 ];
 
 export default async function AppLayout({

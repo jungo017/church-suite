@@ -17,6 +17,8 @@ export const PERMISSIONS = {
   FINANCE_WRITE: "finance:write",
   ASSETS_READ: "assets:read",
   ASSETS_WRITE: "assets:write",
+  SITE_READ: "site:read",
+  SITE_WRITE: "site:write", // 홈페이지/CMS·접수 관리
   CHURCH_MANAGE: "church:manage", // 사용자·역할·교회 설정 관리
 } as const;
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
@@ -31,11 +33,14 @@ export const ROLE_PERMISSIONS: Record<RoleName, Permission[]> = {
     PERMISSIONS.ASSETS_READ,
     PERMISSIONS.ASSETS_WRITE,
     PERMISSIONS.FINANCE_READ,
+    PERMISSIONS.SITE_READ,
+    PERMISSIONS.SITE_WRITE,
   ],
   viewer: [
     PERMISSIONS.MEMBERS_READ,
     PERMISSIONS.FINANCE_READ,
     PERMISSIONS.ASSETS_READ,
+    PERMISSIONS.SITE_READ,
   ],
 };
 

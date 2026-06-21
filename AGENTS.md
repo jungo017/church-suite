@@ -17,7 +17,9 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ Phase 3(재정) 전체 완료 (P3.1~P3.4). 다음 단계: Phase 4(홈페이지/온라인교인센터) — 스펙 §7.4.** (작업 브랜치: `feat/phase-3-finance`. Phase 0·1·2 main 병합 완료.)
+- **단계: Phase 4(홈페이지/온라인교인센터) 진행 중 — `P4.1 CMS` 완료. 다음: `P4.2 공개 홈페이지`.** (작업 브랜치: `feat/phase-4-site`. Phase 0·1·2·3 main 병합 완료.)
+- **RBAC 추가(P4.1):** `site:read`/`site:write` 권한(admin·staff write, viewer read). 역할맵 갱신.
+- **Phase 4 구현됨(P4.1):** CMS. `site`·`board`·`post`·`page` 스키마+RLS(0023/0024). `lib/site/admin.ts`+`actions.ts`. `/site`(개요·게시판/페이지 생성·공개여부)·`/site/boards/[id]`(글 등록·발행)·`/site/pages/[id]`(편집). site:write 가드. 테스트.
 - **Phase 3 구현됨(P3.1):** 단식부기 모델. `account`(계정과목)·`voucher`(전표) 스키마+RLS(0021/0022), 금액 numeric. `lib/finance/`(constants·accounts). `/finance/accounts` 계정과목 관리(finance:read 보기, finance:write 추가). 테스트.
 - **Phase 3 구현됨(P3.2):** 전표. `lib/finance/vouchers.ts`(조인 조회·필터(구분/계정/기간)·CRUD). `/finance` 전표 목록(필터·수입/지출/잔액 합계)·`/finance/new` 등록(계정·헌금자·금액·방법). numeric 정확도 테스트.
 - **Phase 3 구현됨(P3.3):** 보고서. `lib/finance/report.ts`(raw SQL: 계정별 기간집계 accountSummary·월별 monthlyTotals, RLS 스코프 내). `/finance/report` 예결산(기간 수입/지출/잔액). 집계 테스트.
