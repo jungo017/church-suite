@@ -54,6 +54,12 @@ export default async function AssetsPage({
           {canWrite && (
             <>
               <Link
+                href="/assets/audits"
+                className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
+              >
+                전수조사
+              </Link>
+              <Link
                 href="/assets/classification"
                 className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20"
               >

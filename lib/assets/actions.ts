@@ -11,6 +11,12 @@ import {
   createCategory,
 } from "./classification";
 import { addRepair, deleteRepair } from "./repairs";
+import {
+  createAudit,
+  checkItem,
+  checkByTag,
+  closeAudit,
+} from "./audit";
 import { isAssetType, isAssetStatus } from "./constants";
 
 /**
@@ -112,4 +118,37 @@ export async function deleteRepairAction(assetId: string, repairId: string) {
   const user = await requireWrite();
   await deleteRepair(user.church_id, repairId);
   revalidatePath(`/assets/${assetId}`);
+}
+
+// ── 전수조사 ──
+export async function createAuditAction(fd: FormData) {
+  const user = await requireWrite();
+  const name = str(fd, "name") ?? "전수조사";
+  const { auditId } = await createAudit(user.church_id, name);
+  revalidatePath("/assets/audits");
+  redirect(`/assets/audits/${auditId}`);
+}
+
+export async function checkItemAction(
+  auditId: string,
+  itemId: string,
+  checked: boolean,
+) {
+  const user = await requireWrite();
+  await checkItem(user.church_id, auditId, itemId, checked);
+  revalidatePath(`/assets/audits/${auditId}`);
+}
+
+export async function checkByTagAction(auditId: string, fd: FormData) {
+  const user = await requireWrite();
+  const tag = str(fd, "tag");
+  if (tag) await checkByTag(user.church_id, auditId, tag);
+  revalidatePath(`/assets/audits/${auditId}`);
+}
+
+export async function closeAuditAction(auditId: string) {
+  const user = await requireWrite();
+  await closeAudit(user.church_id, auditId);
+  revalidatePath(`/assets/audits/${auditId}`);
+  revalidatePath("/assets/audits");
 }
