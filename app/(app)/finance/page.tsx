@@ -2,7 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
-import { listVouchers } from "@/lib/finance/vouchers";
+import { listVouchersPaged, voucherTotals } from "@/lib/finance/vouchers";
+import { pageParams } from "@/lib/db/pagination";
+import { Pagination } from "../pagination";
 import {
   ACCOUNT_TYPE_LABELS,
   formatWon,
@@ -13,20 +15,29 @@ import { deleteVoucherAction } from "@/lib/finance/actions";
 export default async function FinancePage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; from?: string; to?: string }>;
+  searchParams: Promise<{
+    type?: string;
+    from?: string;
+    to?: string;
+    page?: string;
+    size?: string;
+  }>;
 }) {
-  const { type, from, to } = await searchParams;
+  const { type, from, to, page: pageParam, size } = await searchParams;
   const user = await requireUser();
   if (!hasPermission(user.roles, PERMISSIONS.FINANCE_READ)) redirect("/forbidden");
   const canWrite = hasPermission(user.roles, PERMISSIONS.FINANCE_WRITE);
 
-  const vouchers = await listVouchers(user.church_id, { type, from, to });
-  const income = vouchers
-    .filter((v) => v.type === "income")
-    .reduce((s, v) => s + Number(v.amount), 0);
-  const expense = vouchers
-    .filter((v) => v.type === "expense")
-    .reduce((s, v) => s + Number(v.amount), 0);
+  const filters = { type, from, to };
+  const { page, pageSize } = pageParams({ page: pageParam, size });
+  // 합계는 전체 필터 기준, 표는 페이지 단위
+  const [totals, result] = await Promise.all([
+    voucherTotals(user.church_id, filters),
+    listVouchersPaged(user.church_id, filters, page, pageSize),
+  ]);
+  const vouchers = result.items;
+  const income = totals.income;
+  const expense = totals.expense;
 
   const ctrl =
     "rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20 dark:bg-transparent";
@@ -102,6 +113,13 @@ export default async function FinancePage({
           </tbody>
         </table>
       )}
+
+      <Pagination
+        basePath="/finance"
+        page={result.page}
+        totalPages={result.totalPages}
+        params={{ type, from, to }}
+      />
     </section>
   );
 }

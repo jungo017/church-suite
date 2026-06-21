@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
-import { listAssets } from "@/lib/assets/service";
+import { listAssetsPaged } from "@/lib/assets/service";
+import { pageParams } from "@/lib/db/pagination";
+import { Pagination } from "../pagination";
 import {
   ASSET_TYPE_LABELS,
   ASSET_STATUS_LABELS,
@@ -33,11 +35,18 @@ function FilterLink({
 export default async function AssetsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; page?: string; size?: string }>;
 }) {
-  const { status } = await searchParams;
+  const { status, page: pageParam, size } = await searchParams;
   const user = await requireUser();
-  const assets = await listAssets(user.church_id, status ? { status } : {});
+  const { page, pageSize } = pageParams({ page: pageParam, size });
+  const result = await listAssetsPaged(
+    user.church_id,
+    status ? { status } : {},
+    page,
+    pageSize,
+  );
+  const assets = result.items;
   const canWrite = hasPermission(user.roles, PERMISSIONS.ASSETS_WRITE);
 
   return (
@@ -122,6 +131,13 @@ export default async function AssetsPage({
           </tbody>
         </table>
       )}
+
+      <Pagination
+        basePath="/assets"
+        page={result.page}
+        totalPages={result.totalPages}
+        params={{ status }}
+      />
     </section>
   );
 }
