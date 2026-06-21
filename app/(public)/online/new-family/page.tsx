@@ -4,7 +4,7 @@ import { getTenant } from "@/lib/tenant/context";
 import { submitNewFamilyAction } from "@/lib/site/public-actions";
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
 export default async function NewFamilyPublicPage({
   searchParams,
@@ -28,7 +28,7 @@ export default async function NewFamilyPublicPage({
       ) : (
         <form action={submitNewFamilyAction} className="flex flex-col gap-3">
           {error && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-destructive">
               이름과 개인정보 수집·이용 동의는 필수입니다.
             </p>
           )}
@@ -37,7 +37,7 @@ export default async function NewFamilyPublicPage({
           <input name="email" type="email" placeholder="이메일" className={input} />
           <input name="address" placeholder="주소" className={input} />
           <textarea name="message" rows={3} placeholder="남기실 말씀" className={input} />
-          <label className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-400">
+          <label className="flex items-start gap-2 text-xs text-muted-foreground">
             <input type="checkbox" name="consent" required />
             개인정보 수집·이용에 동의합니다. (이름·연락처 등 — 새가족 관리 목적)
           </label>

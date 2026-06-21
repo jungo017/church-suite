@@ -24,7 +24,7 @@ export default async function KioskCheckinPage({
   return (
     <main className="mx-auto flex min-h-[60vh] max-w-sm flex-col items-center justify-center gap-6 text-center">
       <h1 className="text-3xl font-bold">{m.name}</h1>
-      <p className="text-sm text-gray-500">{today} 주일예배</p>
+      <p className="text-sm text-muted-foreground">{today} 주일예배</p>
       {isPresent ? (
         <p className="text-2xl font-semibold text-green-600">✓ 출석 확인됨</p>
       ) : (

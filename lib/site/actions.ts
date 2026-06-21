@@ -7,6 +7,7 @@ import { PERMISSIONS } from "@/lib/rbac/roles";
 import {
   ensureSite,
   setSiteStatus,
+  setSiteTheme,
   createBoard,
   createPost,
   setPostPublished,
@@ -36,6 +37,16 @@ export async function setSiteStatusAction(fd: FormData) {
   await ensureSite(user.church_id);
   const status = str(fd, "status") === "published" ? "published" : "draft";
   await setSiteStatus(user.church_id, status);
+  revalidatePath("/site");
+}
+
+const SITE_THEMES = ["modern", "warm", "minimal", "dark"] as const;
+
+export async function setSiteThemeAction(fd: FormData) {
+  const user = await requireWrite();
+  const theme = str(fd, "theme") ?? "modern";
+  if (!SITE_THEMES.includes(theme as (typeof SITE_THEMES)[number])) return;
+  await setSiteTheme(user.church_id, theme);
   revalidatePath("/site");
 }
 

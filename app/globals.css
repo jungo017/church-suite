@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
-:root {
+/*
+ * 디자인 토큰 — 색상은 CSS 변수로, 테마는 [data-theme] 로 통째 교체.
+ * 기본(:root) = modern. data-theme="warm" | "minimal" | "dark" 로 전환.
+ * 공개 교회 사이트는 site.theme 값을 래퍼 div 의 data-theme 로 적용(교회별).
+ */
+:root,
+[data-theme="modern"] {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --accent: #eef2ff;
+  --accent-foreground: #3730a3;
+  --destructive: #dc2626;
+  --ring: #6366f1;
+  --radius: 0.5rem;
+}
+
+[data-theme="warm"] {
+  --background: #faf7f2;
+  --foreground: #3f3a34;
+  --card: #ffffff;
+  --card-foreground: #3f3a34;
+  --muted: #f0ebe3;
+  --muted-foreground: #8a8178;
+  --border: #e7ded2;
+  --input: #e7ded2;
+  --primary: #6b8e6b;
+  --primary-foreground: #ffffff;
+  --accent: #eef3ee;
+  --accent-foreground: #3a4a3a;
+  --destructive: #b4543a;
+  --ring: #6b8e6b;
+  --radius: 0.75rem;
+}
+
+[data-theme="minimal"] {
+  --background: #ffffff;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b7280;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --primary: #111111;
+  --primary-foreground: #ffffff;
+  --accent: #f5f5f5;
+  --accent-foreground: #111111;
+  --destructive: #b91c1c;
+  --ring: #111111;
+  --radius: 0.375rem;
+}
+
+[data-theme="dark"] {
+  --background: #0b0f17;
+  --foreground: #e5e7eb;
+  --card: #131a26;
+  --card-foreground: #e5e7eb;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --border: #243044;
+  --input: #243044;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --accent: #1e293b;
+  --accent-foreground: #c7d2fe;
+  --destructive: #ef4444;
+  --ring: #6366f1;
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --font-sans: "Pretendard Variable", Pretendard, system-ui, -apple-system, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }

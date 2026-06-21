@@ -10,7 +10,7 @@ import {
 } from "@/lib/site/actions";
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
 export default async function BoardPostsPage({
   params,
@@ -39,19 +39,19 @@ export default async function BoardPostsPage({
       </form>
 
       <ul className="flex flex-col gap-1 text-sm">
-        {posts.length === 0 && <li className="text-gray-500">글이 없습니다.</li>}
+        {posts.length === 0 && <li className="text-muted-foreground">글이 없습니다.</li>}
         {posts.map((p) => (
-          <li key={p.postId} className="flex items-center justify-between gap-2 border-b border-black/5 py-1.5 dark:border-white/10">
+          <li key={p.postId} className="flex items-center justify-between gap-2 border-b border-border py-1.5">
             <span className="font-medium">{p.title}</span>
             <div className="flex items-center gap-2">
-              <span className={p.published ? "text-green-600" : "text-gray-400"}>
+              <span className={p.published ? "text-green-600" : "text-muted-foreground"}>
                 {p.published ? "공개" : "비공개"}
               </span>
               <form action={setPostPublishedAction.bind(null, boardId, p.postId, !p.published)}>
                 <button className="text-xs underline">{p.published ? "비공개" : "공개"}</button>
               </form>
               <form action={deletePostAction.bind(null, boardId, p.postId)}>
-                <button className="text-xs text-red-600">삭제</button>
+                <button className="text-xs text-destructive">삭제</button>
               </form>
             </div>
           </li>

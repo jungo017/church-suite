@@ -18,8 +18,8 @@ function Card({
   href?: string;
 }) {
   const body = (
-    <div className="rounded-lg border border-black/10 p-4 dark:border-white/15">
-      <div className="text-sm text-gray-500">{title}</div>
+    <div className="rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted">
+      <div className="text-sm text-muted-foreground">{title}</div>
       <div className="mt-1 text-2xl font-bold">{value}</div>
     </div>
   );
@@ -70,11 +70,11 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-2">
         <h2 className="font-semibold">최근 출석</h2>
         {trend.length === 0 ? (
-          <p className="text-sm text-gray-500">출석 데이터가 없습니다.</p>
+          <p className="text-sm text-muted-foreground">출석 데이터가 없습니다.</p>
         ) : (
           <ul className="flex flex-col gap-1 text-sm">
             {trend.map((t, i) => (
-              <li key={i} className="flex justify-between border-b border-black/5 py-1 dark:border-white/10">
+              <li key={i} className="flex justify-between border-b border-border py-1">
                 <span>
                   {t.date} · {SERVICE_TYPE_LABELS[t.serviceType as ServiceType] ?? t.serviceType}
                 </span>

@@ -26,6 +26,14 @@ export async function setSiteStatus(churchId: string, status: string) {
   );
 }
 
+/** 공개 사이트 색상 테마(modern/warm/minimal/dark). */
+export async function setSiteTheme(churchId: string, theme: string) {
+  await ensureSite(churchId);
+  await withTenant(churchId, (tx) =>
+    tx.update(site).set({ theme }).where(eq(site.churchId, churchId)),
+  );
+}
+
 // ── BOARD ──
 export async function listBoards(churchId: string) {
   return withTenant(churchId, (tx) =>

@@ -26,22 +26,22 @@ export default async function OfferingsAdminPage() {
     <section className="flex max-w-2xl flex-col gap-4">
       <h1 className="text-2xl font-bold">온라인 헌금 ({offerings.length})</h1>
       {offerings.length === 0 ? (
-        <p className="text-sm text-gray-500">접수된 온라인 헌금이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">접수된 온라인 헌금이 없습니다.</p>
       ) : (
         <ul className="flex flex-col gap-2 text-sm">
           {offerings.map((o) => (
-            <li key={o.offeringId} className="flex items-center justify-between gap-4 border-b border-black/5 py-2 dark:border-white/10">
+            <li key={o.offeringId} className="flex items-center justify-between gap-4 border-b border-border py-2">
               <div>
                 <div className="font-medium">
                   {o.donorName ?? "익명"} · {formatWon(o.amount)}
                 </div>
-                <div className="text-gray-500">
+                <div className="text-muted-foreground">
                   {o.offeringKind ?? "헌금"} · {STATUS_LABELS[o.status] ?? o.status}
                 </div>
               </div>
               {o.status === "paid" && accounts.length > 0 && (
                 <form action={reflectOfferingAction.bind(null, o.offeringId)} className="flex shrink-0 gap-1">
-                  <select name="accountId" required defaultValue="" className="rounded-md border border-black/15 px-2 py-1 text-xs dark:border-white/20 dark:bg-transparent">
+                  <select name="accountId" required defaultValue="" className="rounded-md border border-border px-2 py-1 text-xs dark:bg-transparent">
                     <option value="" disabled>계정…</option>
                     {accounts.map((a) => (
                       <option key={a.accountId} value={a.accountId}>{a.code} {a.name}</option>

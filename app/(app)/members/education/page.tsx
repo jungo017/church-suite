@@ -9,7 +9,7 @@ import {
 } from "@/lib/members/constants";
 
 const input =
-  "rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
 export default async function EducationPage() {
   const user = await requirePermission(PERMISSIONS.MEMBERS_WRITE);
@@ -32,18 +32,18 @@ export default async function EducationPage() {
       </form>
 
       {programs.length === 0 ? (
-        <p className="text-sm text-gray-500">교육 과정이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">교육 과정이 없습니다.</p>
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {programs.map((p) => (
             <li
               key={p.programId}
-              className="flex items-center justify-between border-b border-black/5 py-2 dark:border-white/10"
+              className="flex items-center justify-between border-b border-border py-2"
             >
               <Link href={`/members/education/${p.programId}`} className="font-medium underline">
                 {p.name}
               </Link>
-              <span className="text-gray-500">
+              <span className="text-muted-foreground">
                 {PROGRAM_STATUS_LABELS[p.status as ProgramStatus] ?? p.status}
               </span>
             </li>

@@ -12,7 +12,7 @@ export default async function MyGivingPage() {
     return (
       <section className="flex flex-col gap-3">
         <h1 className="text-2xl font-bold">나의 헌금내역</h1>
-        <p className="text-sm text-gray-500">연결된 교인 정보가 없습니다.</p>
+        <p className="text-sm text-muted-foreground">연결된 교인 정보가 없습니다.</p>
       </section>
     );
   }
@@ -23,12 +23,12 @@ export default async function MyGivingPage() {
   return (
     <section className="flex max-w-xl flex-col gap-4">
       <h1 className="text-2xl font-bold">나의 헌금내역</h1>
-      <p className="text-sm text-gray-500">누계 {formatWon(total)}</p>
+      <p className="text-sm text-muted-foreground">누계 {formatWon(total)}</p>
       {giving.length === 0 ? (
-        <p className="text-sm text-gray-500">헌금내역이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">헌금내역이 없습니다.</p>
       ) : (
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-black/10 text-gray-500 dark:border-white/15">
+          <thead className="border-b border-border text-muted-foreground">
             <tr>
               <th className="py-2">일자</th>
               <th className="py-2">항목</th>
@@ -37,7 +37,7 @@ export default async function MyGivingPage() {
           </thead>
           <tbody>
             {giving.map((g, i) => (
-              <tr key={i} className="border-b border-black/5 dark:border-white/10">
+              <tr key={i} className="border-b border-border">
                 <td className="py-2">{g.voucherDate}</td>
                 <td className="py-2">{g.accountName ?? "헌금"}</td>
                 <td className="py-2 text-right">{formatWon(g.amount)}</td>

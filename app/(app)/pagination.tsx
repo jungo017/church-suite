@@ -21,7 +21,7 @@ export function Pagination({
     return `${basePath}?${sp.toString()}`;
   };
   const linkCls =
-    "rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20";
+    "rounded-md border border-border px-3 py-1.5";
   const disabledCls = "rounded-md px-3 py-1.5 opacity-40";
 
   return (
@@ -31,7 +31,7 @@ export function Pagination({
       ) : (
         <span className={disabledCls}>← 이전</span>
       )}
-      <span className="text-gray-500">
+      <span className="text-muted-foreground">
         {page} / {totalPages}
       </span>
       {page < totalPages ? (

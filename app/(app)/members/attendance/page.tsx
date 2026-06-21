@@ -46,27 +46,27 @@ export default async function AttendancePage({
           name="date"
           type="date"
           defaultValue={serviceDate}
-          className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20 dark:bg-transparent"
+          className="rounded-md border border-border px-3 py-1.5 dark:bg-transparent"
         />
         <select
           name="type"
           defaultValue={serviceType}
-          className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20 dark:bg-transparent"
+          className="rounded-md border border-border px-3 py-1.5 dark:bg-transparent"
         >
           {SERVICE_TYPES.map((s) => (
             <option key={s} value={s}>{SERVICE_TYPE_LABELS[s]}</option>
           ))}
         </select>
-        <button className="rounded-md border border-black/15 px-3 py-1.5 dark:border-white/20">조회</button>
+        <button className="rounded-md border border-border px-3 py-1.5">조회</button>
       </form>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-muted-foreground">
         {serviceDate} · {SERVICE_TYPE_LABELS[serviceType]} · 출석 {presentCount}/
         {members.length}
       </p>
 
       {members.length === 0 ? (
-        <p className="text-sm text-gray-500">재적 교인이 없습니다.</p>
+        <p className="text-sm text-muted-foreground">재적 교인이 없습니다.</p>
       ) : (
         <form
           action={saveAttendanceAction.bind(null, serviceDate, serviceType)}
@@ -86,7 +86,7 @@ export default async function AttendancePage({
                 <label htmlFor={`a-${m.memberId}`}>
                   {m.name}
                   {m.position ? (
-                    <span className="text-gray-500"> · {m.position}</span>
+                    <span className="text-muted-foreground"> · {m.position}</span>
                   ) : null}
                 </label>
               </li>

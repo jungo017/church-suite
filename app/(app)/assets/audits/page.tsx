@@ -16,7 +16,7 @@ export default async function AuditsPage() {
         <input
           name="name"
           placeholder="조사명 (예: 2026 상반기 전수조사)"
-          className="flex-1 rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/20 dark:bg-transparent"
+          className="flex-1 rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent"
         />
         <button className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">
           새 전수조사 시작
@@ -24,18 +24,18 @@ export default async function AuditsPage() {
       </form>
 
       {audits.length === 0 ? (
-        <p className="text-sm text-gray-500">진행한 전수조사가 없습니다.</p>
+        <p className="text-sm text-muted-foreground">진행한 전수조사가 없습니다.</p>
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {audits.map((a) => (
             <li
               key={a.auditId}
-              className="flex items-center justify-between border-b border-black/5 py-2 dark:border-white/10"
+              className="flex items-center justify-between border-b border-border py-2"
             >
               <Link href={`/assets/audits/${a.auditId}`} className="font-medium underline">
                 {a.name}
               </Link>
-              <span className="text-gray-500">
+              <span className="text-muted-foreground">
                 {a.status === "open" ? "진행중" : "마감"}
               </span>
             </li>

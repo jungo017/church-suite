@@ -6,7 +6,7 @@ import { accountSummary } from "@/lib/finance/report";
 import { formatWon } from "@/lib/finance/constants";
 
 const ctrl =
-  "rounded-md border border-black/15 px-3 py-1.5 text-sm dark:border-white/20 dark:bg-transparent";
+  "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";
 
 function SummaryTable({
   title,
@@ -20,14 +20,14 @@ function SummaryTable({
     <div className="flex flex-col gap-1">
       <h2 className="font-semibold">{title}</h2>
       {rows.length === 0 ? (
-        <p className="text-sm text-gray-500">내역 없음</p>
+        <p className="text-sm text-muted-foreground">내역 없음</p>
       ) : (
         <table className="w-full text-left text-sm">
           <tbody>
             {rows.map((r) => (
-              <tr key={r.code} className="border-b border-black/5 dark:border-white/10">
+              <tr key={r.code} className="border-b border-border">
                 <td className="py-1.5">{r.code} {r.name}</td>
-                <td className="py-1.5 text-right text-gray-500">{r.cnt}건</td>
+                <td className="py-1.5 text-right text-muted-foreground">{r.cnt}건</td>
                 <td className="py-1.5 text-right font-medium">{formatWon(r.total)}</td>
               </tr>
             ))}
@@ -75,7 +75,7 @@ export default async function FinanceReportPage({
 
       <div className="flex gap-6 text-sm">
         <span>총수입 <strong className="text-blue-600">{formatWon(incomeTotal)}</strong></span>
-        <span>총지출 <strong className="text-red-600">{formatWon(expenseTotal)}</strong></span>
+        <span>총지출 <strong className="text-destructive">{formatWon(expenseTotal)}</strong></span>
         <span>잔액 <strong>{formatWon(incomeTotal - expenseTotal)}</strong></span>
       </div>
 

@@ -25,7 +25,7 @@ export default async function PublicPostPage({
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
         <article className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold">{post.title}</h1>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             {post.publishedAt ? new Date(post.publishedAt).toISOString().slice(0, 10) : ""}
           </p>
           <div className="whitespace-pre-wrap text-sm leading-relaxed">{post.body}</div>

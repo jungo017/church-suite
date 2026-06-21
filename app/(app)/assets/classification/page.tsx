@@ -25,7 +25,7 @@ function Manager({
     <div className="flex flex-col gap-2">
       <h2 className="font-semibold">{title}</h2>
       <ul className="flex flex-col gap-1 text-sm">
-        {items.length === 0 && <li className="text-gray-500">없음</li>}
+        {items.length === 0 && <li className="text-muted-foreground">없음</li>}
         {items.map((i) => (
           <li key={i.id}>{i.name}</li>
         ))}
@@ -35,7 +35,7 @@ function Manager({
           name="name"
           required
           placeholder="새 항목"
-          className="rounded-md border border-black/15 px-2 py-1 text-sm dark:border-white/20 dark:bg-transparent"
+          className="rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent"
         />
         <button className="rounded-md bg-foreground px-3 py-1 text-sm text-background">
           추가
