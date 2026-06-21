@@ -17,7 +17,8 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: Phase 4(홈페이지/온라인교인센터) 진행 중 — `P4.1 CMS` 완료. 다음: `P4.2 공개 홈페이지`.** (작업 브랜치: `feat/phase-4-site`. Phase 0·1·2·3 main 병합 완료.)
+- **단계: Phase 4(홈페이지/온라인교인센터) 진행 중 — `P4.2 공개 홈페이지` 완료. 다음: `P4.3 새가족 등록`.** (작업 브랜치: `feat/phase-4-site`. Phase 0·1·2·3 main 병합 완료.)
+- **Phase 4 구현됨(P4.2):** 공개 홈페이지. `lib/site/public.ts`(발행 콘텐츠만, `getPublicContext`). `app/(public)`: 홈(루트=마케팅 / 서브도메인=교회사이트 / 미발행=준비중), `/b/[slug]`·`/b/[slug]/[postId]`·`/p/[slug]`, `site-header`. 공개경계 테스트(미발행 숨김).
 - **RBAC 추가(P4.1):** `site:read`/`site:write` 권한(admin·staff write, viewer read). 역할맵 갱신.
 - **Phase 4 구현됨(P4.1):** CMS. `site`·`board`·`post`·`page` 스키마+RLS(0023/0024). `lib/site/admin.ts`+`actions.ts`. `/site`(개요·게시판/페이지 생성·공개여부)·`/site/boards/[id]`(글 등록·발행)·`/site/pages/[id]`(편집). site:write 가드. 테스트.
 - **Phase 3 구현됨(P3.1):** 단식부기 모델. `account`(계정과목)·`voucher`(전표) 스키마+RLS(0021/0022), 금액 numeric. `lib/finance/`(constants·accounts). `/finance/accounts` 계정과목 관리(finance:read 보기, finance:write 추가). 테스트.
