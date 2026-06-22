@@ -8,7 +8,8 @@ type MemberValues = {
   phone: string | null;
   email: string | null;
   address: string | null;
-  position: string | null;
+  position: string | null; // 레거시 텍스트(positionId 없을 때 표시 대체)
+  positionId: string | null;
   departmentId: string | null;
   familyId: string | null;
   registeredDate: string | null;
@@ -35,12 +36,14 @@ export function MemberForm({
   member,
   departments,
   families,
+  positions,
   submitLabel,
 }: {
   action: (fd: FormData) => Promise<void>;
   member?: MemberValues | null;
   departments: Opt[];
   families: Opt[];
+  positions: Opt[];
   submitLabel: string;
 }) {
   return (
@@ -85,7 +88,7 @@ export function MemberForm({
       <div className="grid grid-cols-2 gap-4">
         <label className={label}>
           직분
-          <input name="position" defaultValue={member?.position ?? ""} placeholder="예: 집사, 권사, 장로" className={input} />
+          <Select name="positionId" defaultValue={member?.positionId ?? null} options={positions} placeholder="(없음)" />
         </label>
         <label className={label}>
           상태

@@ -13,7 +13,8 @@ export type MemberInput = {
   phone?: string | null;
   email?: string | null;
   address?: string | null;
-  position?: string | null;
+  position?: string | null; // 레거시 자유텍스트(신규 입력은 positionId 사용)
+  positionId?: string | null; // 직분 마스터 참조(PRE-1)
   departmentId?: string | null;
   familyId?: string | null;
   registeredDate?: string | null;
@@ -94,6 +95,7 @@ export async function createMember(
         email: input.email ?? null,
         address: input.address ?? null,
         position: input.position ?? null,
+        positionId: input.positionId ?? null,
         departmentId: input.departmentId ?? null,
         familyId: input.familyId ?? null,
         registeredDate: input.registeredDate ?? null,
@@ -112,6 +114,7 @@ const UPDATABLE = [
   "email",
   "address",
   "position",
+  "positionId",
   "departmentId",
   "familyId",
   "registeredDate",

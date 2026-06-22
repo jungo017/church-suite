@@ -1,7 +1,7 @@
 import "server-only";
-import { count, desc, sql } from "drizzle-orm";
+import { count, desc, eq, sql } from "drizzle-orm";
 import { withTenant } from "@/lib/db/tenant";
-import { member, attendance } from "@/lib/db/schema";
+import { member, attendance, position } from "@/lib/db/schema";
 
 /**
  * 교적 통계 (스펙 §7.2). 집계는 RLS 스코프(withTenant) 안에서 수행.
@@ -24,10 +24,15 @@ export async function memberStats(churchId: string): Promise<{
       .select({ key: member.gender, n: count() })
       .from(member)
       .groupBy(member.gender);
+    // 직분: 코드 마스터 라벨 우선, positionId 없으면 레거시 텍스트로 집계
+    const posKey = sql<
+      string | null
+    >`coalesce(${position.label}, ${member.position})`;
     const byPosition = await tx
-      .select({ key: member.position, n: count() })
+      .select({ key: posKey, n: count() })
       .from(member)
-      .groupBy(member.position);
+      .leftJoin(position, eq(member.positionId, position.positionId))
+      .groupBy(posKey);
 
     const total = byStatus.reduce((s, r) => s + Number(r.n), 0);
     const sortDesc = (a: Bucket, b: Bucket) => b.n - a.n;

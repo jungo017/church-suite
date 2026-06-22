@@ -38,7 +38,7 @@ function parseMemberForm(fd: FormData): MemberInput {
     phone: str(fd, "phone"),
     email: str(fd, "email"),
     address: str(fd, "address"),
-    position: str(fd, "position"),
+    positionId: str(fd, "positionId"), // 직분 마스터(PRE-1). 레거시 position 텍스트는 폼에서 입력 안 함
     departmentId: str(fd, "departmentId"),
     familyId: str(fd, "familyId"),
     registeredDate: str(fd, "registeredDate"),

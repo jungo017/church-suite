@@ -51,6 +51,14 @@ export async function listPositions(
   });
 }
 
+/** positionId → 라벨 맵(비활성 포함) — 교인 목록/상세의 직분 표시용. */
+export async function positionLabelMap(
+  churchId: string,
+): Promise<Record<string, string>> {
+  const rows = await listPositions(churchId, { includeInactive: true });
+  return Object.fromEntries(rows.map((p) => [p.positionId, p.label]));
+}
+
 export async function createPosition(
   churchId: string,
   input: { label: string; code?: string; sort?: number },
