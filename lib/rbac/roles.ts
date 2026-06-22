@@ -20,6 +20,8 @@ export const PERMISSIONS = {
   ASSETS_WRITE: "assets:write",
   SITE_READ: "site:read",
   SITE_WRITE: "site:write", // 홈페이지/CMS·접수 관리
+  FORMS_READ: "forms:read",
+  FORMS_WRITE: "forms:write", // 설문·보고 템플릿/배정/집계 관리
   CHURCH_MANAGE: "church:manage", // 사용자·역할·교회 설정 관리
 } as const;
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
@@ -36,12 +38,15 @@ export const ROLE_PERMISSIONS: Record<RoleName, Permission[]> = {
     PERMISSIONS.FINANCE_READ,
     PERMISSIONS.SITE_READ,
     PERMISSIONS.SITE_WRITE,
+    PERMISSIONS.FORMS_READ,
+    PERMISSIONS.FORMS_WRITE,
   ],
   viewer: [
     PERMISSIONS.MEMBERS_READ,
     PERMISSIONS.FINANCE_READ,
     PERMISSIONS.ASSETS_READ,
     PERMISSIONS.SITE_READ,
+    PERMISSIONS.FORMS_READ,
   ],
   // 교인: 관리 권한 없음(셀프 포털에서 본인 데이터만 — 앱 레벨에서 보장)
   member: [],

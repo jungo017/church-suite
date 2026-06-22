@@ -84,6 +84,16 @@ const MODULES: ModuleDef[] = [
       { href: "/site/offerings", label: "온라인 헌금" },
     ],
   },
+  {
+    key: "forms",
+    label: "설문/보고",
+    href: "/forms",
+    basePath: "/forms",
+    perm: PERMISSIONS.FORMS_READ,
+    sub: [
+      { href: "/forms", label: "폼 목록", exact: true },
+    ],
+  },
 ];
 
 export default async function AppLayout({
