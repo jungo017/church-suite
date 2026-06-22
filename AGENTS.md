@@ -17,7 +17,8 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마) + 설문·보고 모듈(셀프 제출·파일첨부 포함) + 교적 직분 연동. 82 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
+- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마) + 설문·보고 모듈(셀프 제출·파일첨부·xlsx 포함) + 교적 직분 연동. 83 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
+- **구현됨(설문 xlsx 내보내기):** 응답 Excel(xlsx) 내보내기. `exceljs` 의존성 추가. `lib/forms/aggregate.ts`의 `buildResponseRows`(헤더+행, CSV/xlsx 공유)로 추출, `lib/forms/xlsx.ts`(exceljs 워크북→Buffer, 화면 번들 제외 위해 별도 모듈). 내보내기 라우트 `?format=xlsx` 분기. 집계 화면에 CSV/Excel 링크. 테스트(83 tests).
 - **구현됨(설문 파일 첨부 · file 문항):** `file` 문항 실제 업로드(`lib/storage` 어댑터 경유, 쿼터 `reserveUsage` 확인). `lib/storage` 어댑터에 `get()` 추가(다운로드용). `lib/forms/files.ts`(storeFormFile·collectAnswers — 텍스트/선택/파일 통합 수집, parseFileAnswer). 제출 액션(public·my) collectAnswers로 통합. 다운로드 라우트 `app/(app)/files`(인증+교회 프리픽스 검증). 응답 상세/셀프 읽기전용/CSV에서 파일=파일명 다운로드 링크. 답변 value=JSON{key,name,size}. 테스트(82 tests).
 - **구현됨(설문 셀프 제출 · §6 워크플로 완성):** 배정된 교인이 로그인해 본인 보고서를 작성·제출. `lib/forms/my.ts`(listMyAssignments·getMyFillForm·submitMyResponse·myResponseDetail — **memberId 소유권 강제**, 발행/중복 검증)+`my-actions.ts`(requireUser+getUserMember). `/my/forms`(내 배정 목록)·`/my/forms/[assignmentId]`(작성/제출, 제출 후 읽기전용). 셀프포털 네비/`/my`에 링크. forms 권한 불필요(본인 데이터). 격리·소유권·중복·미발행 테스트(80 tests).
 - **구현됨(교적 직분 연동 · PRE-1 후속):** 교인 폼의 직분을 자유텍스트 → **직분 마스터(`position`) 드롭다운**으로. `member.position_id` 사용. service `MemberInput.positionId`+UPDATABLE, member-form `positions` 셀렉트, new/edit 페이지 `listPositions` 전달, 상세/목록은 `positionLabelMap`로 라벨 표시(legacy 텍스트 fallback). 통계 `byPosition`은 `coalesce(position.label, member.position)` 집계(코드 우선·레거시 fallback). 레거시 `position` 텍스트는 보존(편집 시 미덮어씀). 78 tests.

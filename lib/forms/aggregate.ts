@@ -117,11 +117,13 @@ function csvCell(v: string): string {
   return v;
 }
 
-/** 응답 전체를 CSV 로 — 헤더=문항 라벨, 행=응답별 답변. Excel 호환(BOM). */
-export async function exportResponsesCsv(
+export type ResponseRows = { header: string[]; rows: string[][] };
+
+/** 응답을 표(헤더 + 행)로 — CSV/xlsx 내보내기 공유. 파일=파일명, 다중선택=합치기. */
+export async function buildResponseRows(
   churchId: string,
   formId: string,
-): Promise<string> {
+): Promise<ResponseRows> {
   const [fields, responses] = await Promise.all([
     listFields(churchId, formId),
     listResponses(churchId, formId),
@@ -147,11 +149,9 @@ export async function exportResponsesCsv(
   });
 
   const header = ["제출자", "제출시각", ...fields.map((f) => f.label)];
-  const lines = [header.map(csvCell).join(",")];
-
-  for (const resp of responses) {
+  const rows = responses.map((resp) => {
     const ans = answerMap.get(resp.responseId) ?? new Map<string, string>();
-    const row = [
+    return [
       resp.memberName ?? "익명",
       resp.submittedAt ? new Date(resp.submittedAt).toISOString() : "",
       ...fields.map((f) => {
@@ -162,7 +162,17 @@ export async function exportResponsesCsv(
         return raw;
       }),
     ];
-    lines.push(row.map(csvCell).join(","));
-  }
+  });
+  return { header, rows };
+}
+
+/** 응답 전체를 CSV 로. Excel 호환(BOM). */
+export async function exportResponsesCsv(
+  churchId: string,
+  formId: string,
+): Promise<string> {
+  const { header, rows } = await buildResponseRows(churchId, formId);
+  const lines = [header.map(csvCell).join(",")];
+  for (const row of rows) lines.push(row.map(csvCell).join(","));
   return "﻿" + lines.join("\n"); // BOM: Excel 한글 인코딩
 }

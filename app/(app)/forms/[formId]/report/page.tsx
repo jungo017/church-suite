@@ -32,12 +32,20 @@ export default async function FormReportPage({
     <section className="flex max-w-3xl flex-col gap-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{f.title} — 집계</h1>
-        <a
-          href={`/forms/${formId}/export`}
-          className="rounded-md border border-border px-3 py-2 text-sm"
-        >
-          CSV 내보내기
-        </a>
+        <div className="flex gap-2">
+          <a
+            href={`/forms/${formId}/export`}
+            className="rounded-md border border-border px-3 py-2 text-sm"
+          >
+            CSV
+          </a>
+          <a
+            href={`/forms/${formId}/export?format=xlsx`}
+            className="rounded-md border border-border px-3 py-2 text-sm"
+          >
+            Excel
+          </a>
+        </div>
       </div>
 
       {/* 속/구역별 제출률 (보고서) */}

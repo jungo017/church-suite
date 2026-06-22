@@ -2,10 +2,11 @@ import { checkPermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { getForm } from "@/lib/forms/service";
 import { exportResponsesCsv } from "@/lib/forms/aggregate";
+import { exportResponsesXlsx } from "@/lib/forms/xlsx";
 
-/** 응답 CSV 내보내기 (S.5). forms:read. */
+/** 응답 내보내기 (S.5). forms:read. ?format=xlsx 또는 기본 csv. */
 export async function GET(
-  _req: Request,
+  req: Request,
   ctx: { params: Promise<{ formId: string }> },
 ) {
   const { formId } = await ctx.params;
@@ -17,6 +18,19 @@ export async function GET(
   }
   const form = await getForm(res.user.church_id, formId);
   if (!form) return new Response("Not Found", { status: 404 });
+
+  const format = new URL(req.url).searchParams.get("format");
+
+  if (format === "xlsx") {
+    const buf = await exportResponsesXlsx(res.user.church_id, formId);
+    return new Response(new Uint8Array(buf), {
+      headers: {
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename="responses-${formId}.xlsx"`,
+      },
+    });
+  }
 
   const csv = await exportResponsesCsv(res.user.church_id, formId);
   return new Response(csv, {
