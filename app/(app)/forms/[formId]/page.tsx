@@ -73,6 +73,7 @@ export default async function FormBuilderPage({
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <Link href={`/forms/${formId}/assignments`} className="underline">배정/제출현황</Link>
         <Link href={`/forms/${formId}/responses`} className="underline">응답 보기</Link>
+        <Link href={`/forms/${formId}/report`} className="underline">집계</Link>
         {f.anonymous && f.status === "published" && (
           <span className="text-muted-foreground">
             공개 링크: <code className="rounded bg-muted px-1">/online/forms/{formId}</code>
