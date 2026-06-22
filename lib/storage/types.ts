@@ -2,6 +2,7 @@
 
 export interface StorageAdapter {
   put(key: string, data: Buffer | Uint8Array, contentType?: string): Promise<void>;
+  get(key: string): Promise<Uint8Array | null>;
   delete(key: string): Promise<void>;
   url(key: string): string;
 }

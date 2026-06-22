@@ -4,15 +4,28 @@ import { requireUser } from "@/lib/auth/session";
 import { getUserMember } from "@/lib/members/portal";
 import { getMyFillForm, myResponseDetail } from "@/lib/forms/my";
 import { parseOptions } from "@/lib/forms/service";
+import { parseFileAnswer } from "@/lib/forms/files";
 import { submitMyResponseAction } from "@/lib/forms/my-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
 
-function showValue(type: string, value: string | null): string {
-  if (value == null || value === "") return "—";
-  if (type === "multi_choice") return parseOptions(value).join(", ") || "—";
-  return value;
+function fileHref(key: string, name: string): string {
+  return `/files?key=${encodeURIComponent(key)}&name=${encodeURIComponent(name)}`;
+}
+
+function AnswerValue({ type, value }: { type: string; value: string | null }) {
+  if (type === "file") {
+    const ref = parseFileAnswer(value);
+    return ref ? (
+      <a href={fileHref(ref.key, ref.name)} className="underline">{ref.name}</a>
+    ) : (
+      <>—</>
+    );
+  }
+  if (value == null || value === "") return <>—</>;
+  if (type === "multi_choice") return <>{parseOptions(value).join(", ") || "—"}</>;
+  return <>{value}</>;
 }
 
 export default async function MyFillPage({
@@ -52,7 +65,7 @@ export default async function MyFillPage({
             {detail.answers.map((aw) => (
               <div key={aw.answerId} className="border-b border-border pb-2">
                 <dt className="font-medium">{aw.label}</dt>
-                <dd className="mt-1 text-muted-foreground">{showValue(aw.type, aw.value)}</dd>
+                <dd className="mt-1 text-muted-foreground"><AnswerValue type={aw.type} value={aw.value} /></dd>
               </div>
             ))}
           </dl>
@@ -70,9 +83,17 @@ export default async function MyFillPage({
           <p className="mt-1 text-sm text-muted-foreground">{pf.assignment.description}</p>
         )}
       </div>
-      {error && <p className="text-sm text-destructive">필수 문항을 입력해 주세요.</p>}
+      {error && (
+        <p className="text-sm text-destructive">
+          {error === "quota" ? "저장 용량을 초과했습니다." : "필수 문항을 입력해 주세요."}
+        </p>
+      )}
 
-      <form action={submitMyResponseAction.bind(null, assignmentId)} className="flex flex-col gap-4">
+      <form
+        action={submitMyResponseAction.bind(null, assignmentId)}
+        encType="multipart/form-data"
+        className="flex flex-col gap-4"
+      >
         {pf.fields.map((f) => {
           const name = `field_${f.fieldId}`;
           const opts = parseOptions(f.options);
@@ -115,7 +136,7 @@ export default async function MyFillPage({
                   </label>
                 ))}
               {f.type === "file" && (
-                <p className="text-xs text-muted-foreground">(파일 업로드는 추후 제공)</p>
+                <input name={name} type="file" required={f.required} className={input} />
               )}
             </div>
           );

@@ -1,5 +1,5 @@
 import "server-only";
-import { mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { StorageAdapter } from "./types";
 
@@ -14,6 +14,14 @@ export class LocalDiskAdapter implements StorageAdapter {
     const path = join(ROOT, key);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, data);
+  }
+
+  async get(key: string): Promise<Uint8Array | null> {
+    try {
+      return await readFile(join(ROOT, key));
+    } catch {
+      return null; // 미존재 등
+    }
   }
 
   async delete(key: string): Promise<void> {

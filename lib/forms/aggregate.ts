@@ -3,6 +3,7 @@ import { sql } from "drizzle-orm";
 import { withTenant } from "@/lib/db/tenant";
 import { listFields, parseOptions } from "./service";
 import { listResponses } from "./responses";
+import { parseFileAnswer } from "./files";
 
 /**
  * 설문·보고 집계/통계 + 내보내기 (S.5, module-survey-report.md §4.1·§9).
@@ -145,9 +146,6 @@ export async function exportResponsesCsv(
     }
   });
 
-  const choiceFieldIds = new Set(
-    fields.filter((f) => f.type === "multi_choice").map((f) => f.fieldId),
-  );
   const header = ["제출자", "제출시각", ...fields.map((f) => f.label)];
   const lines = [header.map(csvCell).join(",")];
 
@@ -158,9 +156,10 @@ export async function exportResponsesCsv(
       resp.submittedAt ? new Date(resp.submittedAt).toISOString() : "",
       ...fields.map((f) => {
         const raw = ans.get(f.fieldId) ?? "";
-        return choiceFieldIds.has(f.fieldId) && raw
-          ? parseOptions(raw).join(" / ")
-          : raw;
+        if (!raw) return "";
+        if (f.type === "multi_choice") return parseOptions(raw).join(" / ");
+        if (f.type === "file") return parseFileAnswer(raw)?.name ?? "";
+        return raw;
       }),
     ];
     lines.push(row.map(csvCell).join(","));
