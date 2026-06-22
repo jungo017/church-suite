@@ -4,12 +4,25 @@ import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { getResponseDetail } from "@/lib/forms/responses";
 import { parseOptions } from "@/lib/forms/service";
+import { parseFileAnswer } from "@/lib/forms/files";
 
-/** 다중선택 값(JSON 배열 문자열)·단일값 표시 정규화. */
-function showValue(type: string, value: string | null): string {
-  if (value == null || value === "") return "—";
-  if (type === "multi_choice") return parseOptions(value).join(", ") || "—";
-  return value;
+function fileHref(key: string, name: string): string {
+  return `/files?key=${encodeURIComponent(key)}&name=${encodeURIComponent(name)}`;
+}
+
+/** 답변 표시 — 파일은 다운로드 링크, 다중선택은 합치기. */
+function AnswerValue({ type, value }: { type: string; value: string | null }) {
+  if (type === "file") {
+    const ref = parseFileAnswer(value);
+    return ref ? (
+      <a href={fileHref(ref.key, ref.name)} className="underline">{ref.name}</a>
+    ) : (
+      <>—</>
+    );
+  }
+  if (value == null || value === "") return <>—</>;
+  if (type === "multi_choice") return <>{parseOptions(value).join(", ") || "—"}</>;
+  return <>{value}</>;
 }
 
 export default async function ResponseDetailPage({
@@ -38,7 +51,7 @@ export default async function ResponseDetailPage({
         {detail.answers.map((a) => (
           <div key={a.answerId} className="border-b border-border pb-2">
             <dt className="font-medium">{a.label}</dt>
-            <dd className="mt-1 text-muted-foreground">{showValue(a.type, a.value)}</dd>
+            <dd className="mt-1 text-muted-foreground"><AnswerValue type={a.type} value={a.value} /></dd>
           </div>
         ))}
         {detail.answers.length === 0 && (

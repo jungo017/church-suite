@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { getUserMember } from "@/lib/members/portal";
 import { getMyFillForm, submitMyResponse } from "./my";
-import type { AnswerInput } from "./responses";
+import { collectAnswers } from "./files";
 
 /**
  * 교인 셀프 제출 액션. 로그인 교인 본인의 배정만 제출(소유권은 서비스에서 강제).
@@ -21,30 +21,14 @@ export async function submitMyResponseAction(
   const pf = await getMyFillForm(user.church_id, me.memberId, assignmentId);
   if (!pf) redirect("/my/forms");
 
-  const answers: AnswerInput[] = [];
-  for (const field of pf.fields) {
-    if (field.type === "multi_choice") {
-      const vals = fd
-        .getAll(`field_${field.fieldId}`)
-        .map(String)
-        .filter(Boolean);
-      if (field.required && vals.length === 0) {
-        redirect(`/my/forms/${assignmentId}?error=1`);
-      }
-      answers.push({
-        fieldId: field.fieldId,
-        value: vals.length > 0 ? JSON.stringify(vals) : null,
-      });
-    } else {
-      const raw = fd.get(`field_${field.fieldId}`);
-      const value = raw == null ? null : String(raw).trim() || null;
-      if (field.required && !value) {
-        redirect(`/my/forms/${assignmentId}?error=1`);
-      }
-      answers.push({ fieldId: field.fieldId, value });
-    }
-  }
+  const r = await collectAnswers(
+    user.church_id,
+    pf.assignment.formId,
+    pf.fields,
+    fd,
+  );
+  if (!r.ok) redirect(`/my/forms/${assignmentId}?error=${r.error}`);
 
-  await submitMyResponse(user.church_id, me.memberId, assignmentId, answers);
+  await submitMyResponse(user.church_id, me.memberId, assignmentId, r.answers);
   redirect("/my/forms?submitted=1");
 }

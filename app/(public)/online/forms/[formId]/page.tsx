@@ -41,9 +41,17 @@ export default async function PublicFormPage({
           <p className="mt-1 text-sm text-muted-foreground">{pf.form.description}</p>
         )}
       </div>
-      {error && <p className="text-sm text-destructive">필수 문항을 입력해 주세요.</p>}
+      {error && (
+        <p className="text-sm text-destructive">
+          {error === "quota" ? "저장 용량을 초과했습니다." : "필수 문항을 입력해 주세요."}
+        </p>
+      )}
 
-      <form action={submitPublicFormAction.bind(null, formId)} className="flex flex-col gap-4">
+      <form
+        action={submitPublicFormAction.bind(null, formId)}
+        encType="multipart/form-data"
+        className="flex flex-col gap-4"
+      >
         {pf.fields.map((f) => {
           const name = `field_${f.fieldId}`;
           const opts = parseOptions(f.options);
@@ -86,7 +94,7 @@ export default async function PublicFormPage({
                   </label>
                 ))}
               {f.type === "file" && (
-                <p className="text-xs text-muted-foreground">(파일 업로드는 추후 제공)</p>
+                <input name={name} type="file" required={f.required} className={input} />
               )}
             </div>
           );
