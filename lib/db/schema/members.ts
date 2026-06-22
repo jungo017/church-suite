@@ -7,7 +7,7 @@ import {
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { church } from "./church";
-import { department } from "./org";
+import { department, position } from "./org";
 import { timestamps } from "./_shared";
 
 /**
@@ -35,10 +35,13 @@ export const member = pgTable(
     phone: text(),
     email: text(),
     address: text(),
-    position: text(), // 직분
+    position: text(), // 직분(레거시 자유텍스트 — positionId 로 대체 예정, PRE-1)
+    positionId: uuid().references(() => position.positionId, {
+      onDelete: "set null",
+    }), // 직분(코드 마스터 참조, PRE-1)
     departmentId: uuid().references(() => department.departmentId, {
       onDelete: "set null",
-    }), // 구역/부서
+    }), // 구역/부서 — "올해 주 소속" 캐시(연도별 편성 원본은 org_membership, PRE-3)
     registeredDate: date(), // 등록일
     status: text().notNull().default("active"), // active | inactive | transferred | deceased
     ...timestamps,
@@ -46,6 +49,7 @@ export const member = pgTable(
   (t) => [
     index("member_church_idx").on(t.churchId),
     index("member_family_idx").on(t.familyId),
+    index("member_position_idx").on(t.positionId),
     index("member_department_idx").on(t.departmentId),
   ],
 );

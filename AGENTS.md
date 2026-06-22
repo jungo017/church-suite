@@ -17,7 +17,8 @@
 
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
-- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마). 55 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
+- **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마). 58 tests, CI green, 모두 main 병합.** (다음 후보: §14 외부연동 / §12 배포 — 계정·환경 필요.)
+- **구현됨(PRE.0 · 설문/보고 모듈 선행보강 — `module-survey-report.md` §5.1):** 교적 조직/직분 보강. `position`(직분 마스터)·`org_role`(직책 마스터, `is_leader`)·`org_membership`(연도별 편성) 스키마+RLS(0031/0032). `member.position_id` FK(기존 `position` 텍스트는 레거시). `lib/members/org.ts`(직분/직책 CRUD·연도별 편성 upsert·`listLeaders`=리더 보고 타게팅 근거)+`org-actions.ts`(members:write)+`org-constants.ts`(기본 직분/직책 시드, 온보딩 트랜잭션에 포함). `/members/org`(직분·직책 관리)·`/members/org/assignments`(연도별 편성). 매년 속회 개편·다중 소속·이력 지원. 격리·멱등시드·연도분리·리더식별 테스트(58 tests). → 다음: 설문 엔진 스키마(S.1).
 - **UX 보강 — 페이지네이션:** `lib/db/pagination`(pageParams/toPaged) + `app/(app)/pagination`(필터 보존). 교적·비품·재정 목록 limit/offset+count. 재정 합계는 전체 필터 기준(`voucherTotals`). 55 tests.
 - **UX 보강 — 디자인 시스템/테마:** 색상=CSS 토큰(`app/globals.css`), `data-theme`로 테마 교체(modern/warm/minimal/dark). Pretendard 폰트(layout `<link>`). 프리미티브 `lib/ui`(Button/Card/form/Badge) + `cn`(`lib/utils`, clsx+tailwind-merge). 앱: 사이드바 테마 토글(localStorage, `useSyncExternalStore`). 공개사이트: 교회별 `site.theme`(`/site`에서 선택 → 공개 래퍼 `data-theme`, `getPublicSiteTheme`). 고정색상→토큰 일괄 치환(39파일). 의미색(수입=파랑·성공=초록·경고=앰버)은 의도적 고정. **새 화면은 `lib/ui` 프리미티브와 토큰 색(bg-background/foreground/card/muted/border/primary/destructive)만 사용 — `text-gray-*`·`border-black/*` 금지.**
 - **Phase 5 구현됨(P5.3):** 문자/알림. `notification` 스키마+RLS(0027/0028). `lib/notify`(활성교인 일괄 발송 mock + 로그). `/members/notify`. 실제 SMS/알림톡 송출은 §14 추후. 테스트(46 tests).
