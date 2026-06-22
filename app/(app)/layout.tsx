@@ -122,6 +122,7 @@ export default async function AppLayout({
     basePath: "/my",
     sub: [
       { href: "/my", label: "내 정보", exact: true },
+      { href: "/my/forms", label: "설문/보고" },
       { href: "/my/giving", label: "나의 헌금내역" },
     ],
   };
