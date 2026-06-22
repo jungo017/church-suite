@@ -33,6 +33,7 @@
 - **Phase 5 구현됨(P5.2):** QR 키오스크 출석. `/members/kiosk`(탭 토글, 오늘 주일예배), `/members/kiosk/[memberId]`(QR 스캔 체크인), `/members/labels`(교인 QR=키오스크 딥링크). `kioskSetAction`(saveAttendance 재사용).
 - **Phase 6 구현됨(P6.1):** 교인 셀프포털. `member` 역할, `lib/members/portal`(계정발급·본인정보·본인 헌금내역), `/my`·`/my/giving`. (app) 네비 권한별 필터.
 - **Phase 6 구현됨(P6.2):** 저장소 어댑터(`lib/storage` 인터페이스+로컬+사용량/쿼터, §10) · 백그라운드 잡(`lib/jobs`+`jobs/worker.ts` pg-boss, `npm run worker`, §11).
+- **구현됨(S3/SeaweedFS 어댑터 · §10):** `lib/storage/s3.ts`(`@aws-sdk/client-s3`, path-style=SeaweedFS/MinIO). `STORAGE_DRIVER=s3`로 활성. `getStorage()` 분기(local/s3). docker-compose `seaweedfs` 서비스(profile `storage`, S3 :8333). 실 SeaweedFS 대상 put/get/delete 라운드트립 검증(통합 테스트 `STORAGE_S3_TEST=1`, 평소 skip). url 와이어링·env 누락 단위 테스트. 87 tests.
 - **Phase 6 구현됨(P6.3):** PIPA. `access_log`(접근로그)·`consent`(동의) 스키마+RLS(0029/0030). `lib/compliance`. 교인 상세 조회 시 접근기록, 새가족 폼 동의 수집, `/members/compliance`(admin) 감사. 51 tests.
 - **Phase 5 구현됨(P5.1):** 통합 대시보드. `lib/dashboard.ts`(교인/자산 카운트). `/dashboard` 교인·자산·올해 재정요약(finance:read)·최근 출석 카드. 테스트.
 - **Phase 4 구현됨(P4.3):** 새가족 접수. `newfamily_req` intake(0025/0026). `lib/site/intake.ts`. 공개 `/online/new-family` 폼 → `/site/new-family` 어드민 승인(→교인 전환)/거절.
