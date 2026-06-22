@@ -1,0 +1,21 @@
+# 빌드 컨텍스트에서 제외(이미지 안에서 재생성/불필요).
+node_modules
+.next
+.git
+.github
+.storage
+coverage
+
+# 로컬 환경/시크릿 (.env.example 만 유지)
+.env
+.env.*
+!.env.example
+deploy/.env.prod
+deploy/.env.prod.*
+!deploy/.env.prod.example
+
+# 잡동사니
+*.log
+npm-debug.log*
+.DS_Store
+.vscode
