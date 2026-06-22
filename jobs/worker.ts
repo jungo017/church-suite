@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { getBoss, JOBS } from "@/lib/jobs/queue";
 import { remindPending } from "@/lib/forms/remind";
+import { processNotifications } from "@/lib/notify/service";
 
 /**
  * 백그라운드 잡 워커 (스펙 §11). 웹 인스턴스와 분리된 프로세스로 실행.
@@ -15,10 +16,16 @@ async function main() {
     await boss.createQueue(name);
   }
 
-  await boss.work<Record<string, unknown>>(JOBS.NOTIFY_SEND, async (jobs) => {
-    for (const job of jobs) console.log("[notify.send]", job.data);
-    // TODO(§14): SMS/알림톡 채널 송출 + notification.status 갱신
-  });
+  await boss.work<{ churchId: string; notificationIds: string[] }>(
+    JOBS.NOTIFY_SEND,
+    async (jobs) => {
+      for (const job of jobs) {
+        const { churchId, notificationIds } = job.data;
+        const r = await processNotifications(churchId, notificationIds ?? []);
+        console.log("[notify.send]", { churchId, ...r });
+      }
+    },
+  );
   await boss.work<Record<string, unknown>>(JOBS.RECEIPTS_ISSUE, async (jobs) => {
     for (const job of jobs) console.log("[receipts.issue]", job.data);
     // TODO: 기간/교회별 기부금영수증 일괄 생성

@@ -15,7 +15,8 @@ export default async function NotifyPage() {
     <section className="flex max-w-2xl flex-col gap-5">
       <h1 className="text-2xl font-bold">문자/알림 발송</h1>
       <p className="text-xs text-muted-foreground">
-        ※ 실제 SMS/알림톡 송출은 외부 채널 연동 후 제공됩니다. 현재는 발송 로그(mock)만 생성됩니다.
+        ※ 발송은 큐에 적재되어 워커(<code className="rounded bg-muted px-1">npm run worker</code>)가 채널 프로바이더로 송출합니다.
+        기본 드라이버는 mock(log)이며, 실제 SMS/알림톡은 <code className="rounded bg-muted px-1">NOTIFY_DRIVER</code> 채널 연동 후 동작합니다(§14).
       </p>
 
       <form action={sendNotificationAction} className="flex flex-col gap-2">
@@ -41,7 +42,9 @@ export default async function NotifyPage() {
                 <span>
                   [{CHANNEL_LABELS[n.channel as Channel] ?? n.channel}] {n.recipientName ?? n.recipient} · {n.message.slice(0, 20)}
                 </span>
-                <span className="text-muted-foreground">{n.status}</span>
+                <span className="text-muted-foreground">
+                  {n.status === "queued" ? "대기" : n.status === "sent" ? "발송" : n.status === "failed" ? "실패" : n.status}
+                </span>
               </li>
             ))}
           </ul>
