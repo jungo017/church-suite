@@ -12,6 +12,7 @@ export * from "./audit";
 export * from "./attendance";
 export * from "./care";
 export * from "./education";
+export * from "./forms";
 export * from "./finance";
 export * from "./site";
 export * from "./intake";
