@@ -10,9 +10,12 @@ import {
   subscription,
   churchStorageUsage,
   plan,
+  position,
+  orgRole,
 } from "@/lib/db/schema";
 import { hashPassword } from "@/lib/auth/password";
 import { DEFAULT_ROLES, ROLES } from "@/lib/rbac/roles";
+import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@/lib/members/org-constants";
 import { resolveChurchByCode } from "@/lib/tenant/resolve";
 
 /**
@@ -76,6 +79,25 @@ export async function onboardChurch(opts: {
       await tx.insert(church).values({ churchId, code, name });
       await tx.insert(subscription).values({ churchId, planId, status: "active" });
       await tx.insert(churchStorageUsage).values({ churchId });
+
+      // 기본 직분/직책 마스터 시드(PRE-1·PRE-3). 교회가 이후 추가/수정 가능.
+      await tx.insert(position).values(
+        DEFAULT_POSITIONS.map((p) => ({
+          churchId,
+          code: p.code,
+          label: p.label,
+          sort: p.sort,
+        })),
+      );
+      await tx.insert(orgRole).values(
+        DEFAULT_ORG_ROLES.map((r) => ({
+          churchId,
+          code: r.code,
+          label: r.label,
+          isLeader: r.isLeader,
+          sort: r.sort,
+        })),
+      );
 
       const roleRows = await tx
         .insert(role)

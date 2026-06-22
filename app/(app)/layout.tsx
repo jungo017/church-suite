@@ -36,6 +36,8 @@ const MODULES: ModuleDef[] = [
       { href: "/members/kiosk", label: "키오스크", perm: PERMISSIONS.MEMBERS_WRITE },
       { href: "/members/labels", label: "QR 라벨", perm: PERMISSIONS.MEMBERS_WRITE },
       { href: "/members/education", label: "교육", perm: PERMISSIONS.MEMBERS_WRITE },
+      { href: "/members/org", label: "직분/직책", perm: PERMISSIONS.MEMBERS_WRITE },
+      { href: "/members/org/assignments", label: "조직 편성", perm: PERMISSIONS.MEMBERS_WRITE },
       { href: "/members/families", label: "가족 관리", perm: PERMISSIONS.MEMBERS_WRITE },
       { href: "/members/notify", label: "문자/알림", perm: PERMISSIONS.MEMBERS_WRITE },
       { href: "/members/compliance", label: "컴플라이언스", perm: PERMISSIONS.CHURCH_MANAGE },
