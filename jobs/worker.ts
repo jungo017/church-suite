@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { getBoss, JOBS } from "@/lib/jobs/queue";
+import { remindPending } from "@/lib/forms/remind";
 
 /**
  * 백그라운드 잡 워커 (스펙 §11). 웹 인스턴스와 분리된 프로세스로 실행.
@@ -27,6 +28,16 @@ async function main() {
     async (jobs) => {
       for (const job of jobs) console.log("[storage.reconcile]", job.data);
       // TODO: church_storage_usage ↔ 실제 저장량 대조 보정
+    },
+  );
+  await boss.work<{ churchId: string; formId: string; message?: string }>(
+    JOBS.FORMS_REMIND,
+    async (jobs) => {
+      for (const job of jobs) {
+        const { churchId, formId, message } = job.data;
+        const r = await remindPending(churchId, formId, { message });
+        console.log("[forms.remind]", { formId, ...r });
+      }
     },
   );
 

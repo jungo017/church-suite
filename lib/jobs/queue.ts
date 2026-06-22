@@ -9,6 +9,7 @@ export const JOBS = {
   NOTIFY_SEND: "notify.send", // SMS/알림톡 실송출(§14 채널 연동)
   RECEIPTS_ISSUE: "receipts.issue", // 기부금영수증 일괄 발행
   STORAGE_RECONCILE: "storage.reconcile", // 사용량 ↔ 실제 저장량 정합성
+  FORMS_REMIND: "forms.remind", // 설문·보고 미제출 독려(S.6)
 } as const;
 
 export type JobName = (typeof JOBS)[keyof typeof JOBS];

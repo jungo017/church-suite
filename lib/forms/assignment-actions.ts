@@ -11,6 +11,7 @@ import {
   removeAssignment,
 } from "./assignments";
 import { isAssignmentStatus } from "./constants";
+import { sendJob, JOBS } from "@/lib/jobs/queue";
 
 async function requireWrite() {
   const res = await checkPermission(PERMISSIONS.FORMS_WRITE);
@@ -51,5 +52,17 @@ export async function removeAssignmentAction(
 ) {
   const user = await requireWrite();
   await removeAssignment(user.church_id, assignmentId);
+  revalidatePath(`/forms/${formId}/assignments`);
+}
+
+/** 미제출 독려 잡 적재(워커가 발송). */
+export async function remindPendingAction(formId: string, fd: FormData) {
+  const user = await requireWrite();
+  const message = String(fd.get("message") ?? "").trim() || undefined;
+  await sendJob(JOBS.FORMS_REMIND, {
+    churchId: user.church_id,
+    formId,
+    message,
+  });
   revalidatePath(`/forms/${formId}/assignments`);
 }

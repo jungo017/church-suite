@@ -13,6 +13,7 @@ import {
   assignMembersAction,
   setAssignmentStatusAction,
   removeAssignmentAction,
+  remindPendingAction,
 } from "@/lib/forms/assignment-actions";
 import {
   ASSIGNMENT_STATUS_LABELS,
@@ -90,6 +91,16 @@ export default async function AssignmentsPage({
               ))}
             </select>
             <button className="rounded-md border border-border px-3 py-2 text-sm">수동 배정</button>
+          </form>
+          {/* 미제출 독려(잡) */}
+          <form action={remindPendingAction.bind(null, formId)} className="flex items-center gap-2">
+            <input name="message" placeholder="독려 메시지(선택)" className={`${input} flex-1`} />
+            <button
+              className="rounded-md border border-border px-3 py-2 text-sm"
+              disabled={summary.pending === 0}
+            >
+              미제출 {summary.pending}명 독려
+            </button>
           </form>
         </div>
       )}
