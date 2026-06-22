@@ -6,6 +6,7 @@ import { getMember, listFamilies } from "@/lib/members/service";
 import { listMemberCare } from "@/lib/members/care";
 import { listMemberAttendance } from "@/lib/members/attendance";
 import { listDepartments } from "@/lib/assets/classification";
+import { positionLabelMap } from "@/lib/members/org";
 import { logAccess } from "@/lib/compliance/access-log";
 import {
   deleteMemberAction,
@@ -52,10 +53,12 @@ export default async function MemberDetailPage({
   });
   const canWrite = hasPermission(user.roles, PERMISSIONS.MEMBERS_WRITE);
 
-  const [departments, families] = await Promise.all([
+  const [departments, families, posMap] = await Promise.all([
     listDepartments(user.church_id),
     listFamilies(user.church_id),
+    positionLabelMap(user.church_id),
   ]);
+  const positionLabel = m.positionId ? (posMap[m.positionId] ?? null) : m.position;
   const deptName = departments.find((d) => d.departmentId === m.departmentId)?.name;
   const familyName = families.find((f) => f.familyId === m.familyId)?.name;
   const [care, recentAttendance] = await Promise.all([
@@ -82,7 +85,7 @@ export default async function MemberDetailPage({
         <Row label="상태" value={MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status} />
         <Row label="성별" value={m.gender ? GENDER_LABELS[m.gender as Gender] : null} />
         <Row label="생년월일" value={m.birth} />
-        <Row label="직분" value={m.position} />
+        <Row label="직분" value={positionLabel} />
         <Row label="구역/부서" value={deptName} />
         <Row label="가족" value={familyName} />
         <Row label="연락처" value={m.phone} />

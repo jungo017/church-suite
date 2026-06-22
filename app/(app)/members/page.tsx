@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { listMembersPaged } from "@/lib/members/service";
+import { positionLabelMap } from "@/lib/members/org";
 import { pageParams } from "@/lib/db/pagination";
 import { Pagination } from "../pagination";
 import {
@@ -21,6 +22,7 @@ export default async function MembersPage({
   const { page, pageSize } = pageParams({ page: pageParam, size });
   const result = await listMembersPaged(user.church_id, { status, q }, page, pageSize);
   const members = result.items;
+  const posMap = await positionLabelMap(user.church_id);
 
   return (
     <section className="flex flex-col gap-4">
@@ -66,7 +68,7 @@ export default async function MembersPage({
                   <Link href={`/members/${m.memberId}`} className="font-medium underline">{m.name}</Link>
                 </td>
                 <td className="py-2">{m.gender ? GENDER_LABELS[m.gender as Gender] : "—"}</td>
-                <td className="py-2">{m.position ?? "—"}</td>
+                <td className="py-2">{(m.positionId ? posMap[m.positionId] : m.position) ?? "—"}</td>
                 <td className="py-2">{MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status}</td>
                 <td className="py-2">{m.phone ?? "—"}</td>
               </tr>
