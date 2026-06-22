@@ -36,6 +36,9 @@ export default async function MyHomePage() {
         </div>
       </div>
       <div className="flex gap-3 text-sm">
+        <Link href="/my/forms" className="rounded-md border border-border px-3 py-1.5">
+          설문 · 보고
+        </Link>
         <Link href="/my/giving" className="rounded-md border border-border px-3 py-1.5">
           나의 헌금내역
         </Link>
