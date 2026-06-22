@@ -70,6 +70,15 @@ export default async function FormBuilderPage({
         )}
       </div>
 
+      <div className="flex flex-wrap items-center gap-3 text-sm">
+        <Link href={`/forms/${formId}/responses`} className="underline">응답 보기</Link>
+        {f.anonymous && f.status === "published" && (
+          <span className="text-muted-foreground">
+            공개 링크: <code className="rounded bg-muted px-1">/online/forms/{formId}</code>
+          </span>
+        )}
+      </div>
+
       {/* 메타 편집 */}
       {canWrite && (
         <form action={updateFormAction.bind(null, formId)} className="flex flex-col gap-2 rounded-md border border-border p-3">
