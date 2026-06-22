@@ -20,8 +20,10 @@ export const notification = pgTable(
     recipientName: text(),
     channel: text().notNull().default("sms"),
     message: text().notNull(),
-    status: text().notNull().default("queued"),
+    status: text().notNull().default("queued"), // queued | sent | failed
     sentAt: timestamp({ withTimezone: true }),
+    providerRef: text(), // 외부 채널 메시지 ID(송출 성공 시)
+    error: text(), // 실패 사유
     ...timestamps,
   },
   (t) => [
