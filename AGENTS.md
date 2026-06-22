@@ -178,4 +178,5 @@ docker-compose.yml   # 로컬 Postgres
 ## 8. 참고 문서
 
 - **[`church-saas-final-spec.md`](./church-saas-final-spec.md)** — 단일 기준 문서(도메인·아키텍처·ERD·로드맵·컴플라이언스). 충돌 시 항상 우선.
+- **[`module-survey-report.md`](./module-survey-report.md)** — 동반 모듈 설계 문서: 설문·보고(범용 설문 엔진=공유 모듈 + 역할기반 보고=교적 연동). 착수 전 교적 선행보강(직분/직책 마스터·연도별 조직 편성 `org_membership`) 필요. 로드맵 미확정.
 - 한국 특화/컴플라이언스(PIPA 민감정보, PG, 기부금영수증, 소셜로그인)는 스펙 §14 참조.
