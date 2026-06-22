@@ -22,5 +22,21 @@ services:
       timeout: 5s
       retries: 10
 
+  # S3 호환 저장소(SeaweedFS). 기본 비활성 — 명시적 프로파일로만 기동.
+  #   기동:  docker compose --profile storage up -d
+  #   S3 엔드포인트: http://localhost:8333  (.env 의 STORAGE_* 로 연결)
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    container_name: church-suite-s3
+    restart: unless-stopped
+    profiles: ["storage"]
+    command: server -s3 -dir=/data
+    ports:
+      - "8333:8333" # S3 API
+      - "8888:8888" # filer
+    volumes:
+      - seaweeddata:/data
+
 volumes:
   pgdata:
+  seaweeddata:
