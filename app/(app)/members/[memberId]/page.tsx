@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { getMember, listFamilies } from "@/lib/members/service";
@@ -42,6 +42,7 @@ export default async function MemberDetailPage({
 }) {
   const { memberId } = await params;
   const user = await requireUser();
+  if (!hasPermission(user.roles, PERMISSIONS.MEMBERS_READ)) redirect("/forbidden");
   const m = await getMember(user.church_id, memberId);
   if (!m) notFound();
   // 민감정보(교인 상세) 접근 기록 (PIPA §5)

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/rbac/guards";
+import { PERMISSIONS } from "@/lib/rbac/roles";
 import { memberStats, attendanceTrend, type Bucket } from "@/lib/members/stats";
 import {
   MEMBER_STATUS_LABELS,
@@ -42,7 +43,7 @@ function BucketList({
 }
 
 export default async function MemberStatsPage() {
-  const user = await requireUser();
+  const user = await requirePermission(PERMISSIONS.MEMBERS_READ);
   const [stats, trend] = await Promise.all([
     memberStats(user.church_id),
     attendanceTrend(user.church_id),

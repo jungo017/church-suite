@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/rbac/guards";
+import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listAssetsPaged } from "@/lib/assets/service";
 import { pageParams } from "@/lib/db/pagination";
 import { Pagination } from "../pagination";
@@ -37,7 +38,7 @@ export default async function AssetsPage({
   searchParams: Promise<{ status?: string; page?: string; size?: string }>;
 }) {
   const { status, page: pageParam, size } = await searchParams;
-  const user = await requireUser();
+  const user = await requirePermission(PERMISSIONS.ASSETS_READ);
   const { page, pageSize } = pageParams({ page: pageParam, size });
   const result = await listAssetsPaged(
     user.church_id,

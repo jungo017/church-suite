@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { requireUser } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/rbac/guards";
+import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listAssets } from "@/lib/assets/service";
 import { qrDataUrl, assetUrl } from "@/lib/assets/qr";
 import { TENANT_HOST_HEADER } from "@/lib/tenant/host";
@@ -8,7 +9,7 @@ import { PrintButton } from "./print-button";
 
 // QR 라벨 인쇄 페이지 (스펙 §7.1). 스캔 시 자산 상세로 이동.
 export default async function LabelsPage() {
-  const user = await requireUser();
+  const user = await requirePermission(PERMISSIONS.ASSETS_READ);
   const assets = await listAssets(user.church_id);
   const h = await headers();
   const host = h.get(TENANT_HOST_HEADER) ?? h.get("host") ?? "localhost";

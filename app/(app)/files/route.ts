@@ -14,8 +14,8 @@ export async function GET(req: Request) {
   const name = url.searchParams.get("name") || "download";
   if (!key) return new Response("Bad Request", { status: 400 });
 
-  // 테넌트 격리: 본인 교회 프리픽스만 허용
-  if (!key.startsWith(`church-${user.church_id}/`)) {
+  // 테넌트 격리: 본인 교회 프리픽스만 허용 + 경로조작(`..`) 차단
+  if (!key.startsWith(`church-${user.church_id}/`) || key.split("/").includes("..")) {
     return new Response("Forbidden", { status: 403 });
   }
 
