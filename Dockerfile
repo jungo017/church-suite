@@ -26,8 +26,11 @@ RUN npm run build
 
 # ── 런타임 ──
 FROM base AS runner
+# STORAGE_LOCAL_DIR: 기본 드라이버(local)의 저장 루트(컨테이너 내 경로).
+# compose 의 named volume 을 이 경로에 마운트해 영속화/공유한다. s3 사용 시 무시됨.
 ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1
+    NEXT_TELEMETRY_DISABLED=1 \
+    STORAGE_LOCAL_DIR=/data/storage
 COPY --from=build /app /app
 EXPOSE 3000
 # 기본 명령은 앱. 워커는 compose 에서 command 로 override(npm run worker).
