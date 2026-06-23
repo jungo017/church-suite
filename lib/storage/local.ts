@@ -1,6 +1,6 @@
 import "server-only";
 import { mkdir, writeFile, readFile, rm } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import type { StorageAdapter } from "./types";
 
 /**
@@ -9,23 +9,36 @@ import type { StorageAdapter } from "./types";
  */
 const ROOT = process.env.STORAGE_LOCAL_DIR ?? join(process.cwd(), ".storage");
 
+/**
+ * key 를 ROOT 하위 절대경로로 해석. `..`·절대경로 등으로 ROOT 밖을 가리키면 거부.
+ * (경로조작 path traversal 차단 — 저장소 루트 밖 파일 접근 방지.)
+ */
+function resolveKey(key: string): string {
+  const root = resolve(ROOT);
+  const full = resolve(root, key);
+  if (full !== root && !full.startsWith(root + sep)) {
+    throw new Error("invalid storage key");
+  }
+  return full;
+}
+
 export class LocalDiskAdapter implements StorageAdapter {
   async put(key: string, data: Buffer | Uint8Array): Promise<void> {
-    const path = join(ROOT, key);
+    const path = resolveKey(key);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, data);
   }
 
   async get(key: string): Promise<Uint8Array | null> {
     try {
-      return await readFile(join(ROOT, key));
+      return await readFile(resolveKey(key));
     } catch {
-      return null; // 미존재 등
+      return null; // 미존재 / 잘못된 키 등
     }
   }
 
   async delete(key: string): Promise<void> {
-    await rm(join(ROOT, key), { force: true });
+    await rm(resolveKey(key), { force: true });
   }
 
   url(key: string): string {

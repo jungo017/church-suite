@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { getAsset } from "@/lib/assets/service";
@@ -32,6 +32,7 @@ export default async function AssetDetailPage({
 }) {
   const { assetId } = await params;
   const user = await requireUser();
+  if (!hasPermission(user.roles, PERMISSIONS.ASSETS_READ)) redirect("/forbidden");
   const a = await getAsset(user.church_id, assetId);
   if (!a) notFound();
   const canWrite = hasPermission(user.roles, PERMISSIONS.ASSETS_WRITE);

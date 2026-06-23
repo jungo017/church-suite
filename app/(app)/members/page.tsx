@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requirePermission } from "@/lib/rbac/guards";
+import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listMembersPaged } from "@/lib/members/service";
 import { positionLabelMap } from "@/lib/members/org";
 import { pageParams } from "@/lib/db/pagination";
@@ -18,7 +19,7 @@ export default async function MembersPage({
   searchParams: Promise<{ status?: string; q?: string; page?: string; size?: string }>;
 }) {
   const { status, q, page: pageParam, size } = await searchParams;
-  const user = await requireUser();
+  const user = await requirePermission(PERMISSIONS.MEMBERS_READ);
   const { page, pageSize } = pageParams({ page: pageParam, size });
   const result = await listMembersPaged(user.church_id, { status, q }, page, pageSize);
   const members = result.items;
