@@ -55,7 +55,7 @@ $COMPOSE logs -f app worker
 
 ## 스토리지
 
-- 단일 인스턴스: `STORAGE_DRIVER=local`(컨테이너 디스크)로 충분.
+- 단일 인스턴스: `STORAGE_DRIVER=local`(컨테이너 디스크)로 충분. 저장 루트는 `STORAGE_LOCAL_DIR`(필수, 이미지 기본 `/data/storage`)이며 compose 의 `appstorage` 볼륨이 그 경로에 마운트되어 영속화·app/worker 공유된다.
 - **다중 인스턴스: 로컬 디스크는 공유되지 않으므로 `s3` 필수.**
   ```bash
   $COMPOSE --profile storage up -d seaweedfs

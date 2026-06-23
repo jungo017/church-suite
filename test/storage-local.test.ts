@@ -1,27 +1,34 @@
-import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { mkdtemp, rm, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { LocalDiskAdapter } from "@/lib/storage/local";
 
 /**
- * 로컬 디스크 어댑터의 경로조작(path traversal) 방어.
- * key 는 항상 STORAGE_LOCAL_DIR(ROOT) 하위로만 해석되어야 하고,
- * `..`·절대경로 등으로 ROOT 밖을 가리키면 거부해야 한다(저장소 루트 밖 파일 접근 차단).
- * ROOT 는 모듈 로드시 캡처되므로, env 설정 후 모듈을 새로 import 한다.
+ * 로컬 디스크 어댑터: STORAGE_LOCAL_DIR 필수 + 경로조작(path traversal) 방어.
+ * key 는 항상 ROOT 하위로만 해석되어야 하고, `..`·절대경로로 ROOT 밖을 가리키면 거부한다.
+ * 루트는 생성자에서 STORAGE_LOCAL_DIR 을 읽으므로, env 설정 후 인스턴스를 만든다.
  */
-describe("LocalDiskAdapter 경로조작 방어", () => {
+describe("LocalDiskAdapter (필수 루트 + 경로조작 방어)", () => {
   let root: string;
-  let LocalDiskAdapter: typeof import("@/lib/storage/local").LocalDiskAdapter;
 
   beforeAll(async () => {
     root = await mkdtemp(join(tmpdir(), "church-storage-"));
     process.env.STORAGE_LOCAL_DIR = root;
-    vi.resetModules();
-    ({ LocalDiskAdapter } = await import("@/lib/storage/local"));
   });
 
   afterAll(async () => {
     await rm(root, { recursive: true, force: true });
+  });
+
+  it("STORAGE_LOCAL_DIR 미설정 시 생성자가 실패한다", () => {
+    const prev = process.env.STORAGE_LOCAL_DIR;
+    delete process.env.STORAGE_LOCAL_DIR;
+    try {
+      expect(() => new LocalDiskAdapter()).toThrow(/STORAGE_LOCAL_DIR/);
+    } finally {
+      process.env.STORAGE_LOCAL_DIR = prev;
+    }
   });
 
   it("정상 키는 ROOT 하위에 저장/조회된다", async () => {

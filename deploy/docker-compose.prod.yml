@@ -31,6 +31,10 @@ services:
       postgres:
         condition: service_healthy
     expose: ["3000"]
+    # 로컬 스토리지 드라이버(STORAGE_DRIVER=local)의 파일 영속화 + worker 와 공유.
+    # s3 사용 시엔 불필요(SeaweedFS 가 보관).
+    volumes:
+      - appstorage:/data/storage
     command: ["npm", "run", "start"]
 
   worker:
@@ -40,6 +44,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    volumes:
+      - appstorage:/data/storage
     command: ["npm", "run", "worker"]
 
   postgres:
@@ -91,4 +97,5 @@ services:
 
 volumes:
   pgdata:
+  appstorage: # 로컬 스토리지 드라이버 파일(STORAGE_LOCAL_DIR=/data/storage)
   seaweeddata:
