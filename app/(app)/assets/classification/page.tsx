@@ -11,15 +11,18 @@ import {
   createLocationAction,
   createCategoryAction,
 } from "@/lib/assets/actions";
+import { departmentTreeRows } from "@/lib/org/tree";
 
 function Manager({
   title,
   action,
   items,
+  parentOptions,
 }: {
   title: string;
   action: (fd: FormData) => Promise<void>;
   items: { id: string; name: string }[];
+  parentOptions?: { id: string; name: string }[];
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -31,6 +34,21 @@ function Manager({
         ))}
       </ul>
       <form action={action} className="flex gap-2">
+        {parentOptions && (
+          <select
+            name="parentId"
+            className="min-w-0 rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent"
+            defaultValue=""
+            aria-label="상위 조직"
+          >
+            <option value="">상위 없음</option>
+            {parentOptions.map((i) => (
+              <option key={i.id} value={i.id}>
+                {i.name}
+              </option>
+            ))}
+          </select>
+        )}
         <input
           name="name"
           required
@@ -52,6 +70,7 @@ export default async function ClassificationPage() {
     listLocations(user.church_id),
     listCategories(user.church_id),
   ]);
+  const departmentRows = departmentTreeRows(departments);
 
   return (
     <section className="flex flex-col gap-8">
@@ -63,9 +82,16 @@ export default async function ClassificationPage() {
           items={categories.map((c) => ({ id: c.categoryId, name: c.name }))}
         />
         <Manager
-          title="부서"
+          title="부서/구역/속"
           action={createDepartmentAction}
-          items={departments.map((d) => ({ id: d.departmentId, name: d.name }))}
+          items={departmentRows.map((d) => ({
+            id: d.departmentId,
+            name: d.label,
+          }))}
+          parentOptions={departmentRows.map((d) => ({
+            id: d.departmentId,
+            name: d.label,
+          }))}
         />
         <Manager
           title="장소"

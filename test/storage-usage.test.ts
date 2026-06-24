@@ -15,7 +15,7 @@ describe("저장소 사용량/쿼터", () => {
     const { churchId } = await onboardChurch({
       churchName: "스토리지",
       churchCode: uniqueCode("st"),
-      adminLoginId: "admin",
+      adminLoginId: "churchadmin",
       adminPassword: "pw12345678",
     });
     created.push(churchId);

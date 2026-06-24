@@ -4,6 +4,7 @@ import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listMemberships, listOrgRoles } from "@/lib/members/org";
 import { listMembers } from "@/lib/members/service";
 import { listDepartments } from "@/lib/assets/classification";
+import { departmentTreeRows } from "@/lib/org/tree";
 import {
   assignMembershipAction,
   removeMembershipAction,
@@ -29,9 +30,16 @@ export default async function OrgAssignmentsPage({
     listDepartments(user.church_id),
     listOrgRoles(user.church_id),
   ]);
+  const departmentRows = departmentTreeRows(departments);
+  const membershipsByDepartment = new Map<string, typeof memberships>();
+  for (const membership of memberships) {
+    const rows = membershipsByDepartment.get(membership.departmentId) ?? [];
+    rows.push(membership);
+    membershipsByDepartment.set(membership.departmentId, rows);
+  }
 
   return (
-    <section className="flex max-w-3xl flex-col gap-6">
+    <section className="flex max-w-5xl flex-col gap-6">
       <div>
         <h1 className="text-2xl font-bold">연도별 조직 편성</h1>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -62,8 +70,8 @@ export default async function OrgAssignmentsPage({
           조직(부서/구역/속)
           <select name="departmentId" required className={input} defaultValue="">
             <option value="" disabled>선택</option>
-            {departments.map((d) => (
-              <option key={d.departmentId} value={d.departmentId}>{d.name}</option>
+            {departmentRows.map((d) => (
+              <option key={d.departmentId} value={d.departmentId}>{d.label}</option>
             ))}
           </select>
         </label>
@@ -86,6 +94,62 @@ export default async function OrgAssignmentsPage({
           먼저 <Link href="/assets/classification" className="underline">부서/구역</Link>을 등록하세요.
         </p>
       )}
+
+      <div className="rounded-md border border-border p-4">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold">조직 트리</h2>
+          <span className="text-xs text-muted-foreground">
+            {year}년 편성 기준
+          </span>
+        </div>
+        {departmentRows.length === 0 ? (
+          <p className="text-sm text-muted-foreground">등록된 조직이 없습니다.</p>
+        ) : (
+          <div className="flex flex-col gap-2 text-sm">
+            {departmentRows.map((dept) => {
+              const rows = membershipsByDepartment.get(dept.departmentId) ?? [];
+              const leaders = rows.filter((m) => m.isLeader);
+              const members = rows.filter((m) => !m.isLeader);
+              return (
+                <div
+                  key={dept.departmentId}
+                  className="border-l border-border py-1 pl-3"
+                  style={{ marginLeft: `${dept.depth * 20}px` }}
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-medium">{dept.name}</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                      {rows.length}명
+                    </span>
+                  </div>
+                  {rows.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1 text-xs">
+                      {leaders.map((m) => (
+                        <span
+                          key={m.membershipId}
+                          className="rounded-full border border-primary/30 px-2 py-0.5 text-primary"
+                        >
+                          {m.memberName}
+                          {m.orgRoleLabel ? ` · ${m.orgRoleLabel}` : ""}
+                        </span>
+                      ))}
+                      {members.map((m) => (
+                        <span
+                          key={m.membershipId}
+                          className="rounded-full border border-border px-2 py-0.5 text-muted-foreground"
+                        >
+                          {m.memberName}
+                          {m.orgRoleLabel ? ` · ${m.orgRoleLabel}` : ""}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* 편성 목록 */}
       {memberships.length === 0 ? (

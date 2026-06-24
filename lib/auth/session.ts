@@ -10,6 +10,7 @@ import {
 import { signAccessToken, verifyAccessToken, type AccessClaims } from "./jwt";
 import { verifyPassword } from "./password";
 import { findUserByLogin, findUserById, getUserRoleNames } from "./users";
+import { findPlatformUserByLogin } from "@/lib/platform/users";
 import {
   issueRefreshToken,
   findRefreshToken,
@@ -24,6 +25,13 @@ async function setAuthCookies(access: string, refresh: string): Promise<void> {
   const base = { httpOnly: true, sameSite: "lax" as const, secure: isProd, path: "/" };
   c.set(ACCESS_COOKIE, access, { ...base, maxAge: ACCESS_TTL_SEC });
   c.set(REFRESH_COOKIE, refresh, { ...base, maxAge: REFRESH_TTL_SEC });
+}
+
+async function setAccessCookie(access: string): Promise<void> {
+  const c = await cookies();
+  const base = { httpOnly: true, sameSite: "lax" as const, secure: isProd, path: "/" };
+  c.set(ACCESS_COOKIE, access, { ...base, maxAge: ACCESS_TTL_SEC });
+  c.delete(REFRESH_COOKIE);
 }
 
 async function clearAuthCookies(): Promise<void> {
@@ -43,6 +51,7 @@ async function issueSession(user: {
     church_id: user.churchId,
     roles,
     name: user.name,
+    scope: "tenant",
   });
   const ua = (await headers()).get("user-agent");
   const refresh = await issueRefreshToken({
@@ -55,7 +64,7 @@ async function issueSession(user: {
 }
 
 export type LoginResult =
-  | { ok: true; userId: string; roles: string[] }
+  | { ok: true; userId: string; roles: string[]; scope: "tenant" | "platform" }
   | { ok: false; error: string };
 
 /** 로그인: 자격 검증 후 액세스+리프레시 발급(쿠키 설정). */
@@ -71,7 +80,33 @@ export async function login(opts: {
   const valid = await verifyPassword(opts.password, user.passwordHash);
   if (!valid) return { ok: false, error: "invalid_credentials" };
   const { roles } = await issueSession(user);
-  return { ok: true, userId: user.userId, roles };
+  return { ok: true, userId: user.userId, roles, scope: "tenant" };
+}
+
+/** 플랫폼 로그인: 루트 도메인 전체관리자/유지보수 사용자. */
+export async function loginPlatform(opts: {
+  loginId: string;
+  password: string;
+}): Promise<LoginResult> {
+  const user = await findPlatformUserByLogin(opts.loginId);
+  if (!user) return { ok: false, error: "invalid_credentials" };
+  const valid = await verifyPassword(opts.password, user.passwordHash);
+  if (!valid) return { ok: false, error: "invalid_credentials" };
+
+  const access = await signAccessToken({
+    sub: user.platformUserId,
+    church_id: "",
+    roles: [user.role],
+    name: user.name,
+    scope: "platform",
+  });
+  await setAccessCookie(access);
+  return {
+    ok: true,
+    userId: user.platformUserId,
+    roles: [user.role],
+    scope: "platform",
+  };
 }
 
 /** 리프레시: 회전(기존 취소 + 새 발급). 재사용 탐지 시 전체 취소. */

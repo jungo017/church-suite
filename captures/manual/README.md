@@ -5,6 +5,11 @@ Demo tenant:
 - Login: `admin`
 - Password: `manual1234`
 
+Platform admin:
+- URL: http://localhost:3000
+- Login: `sadmin`
+- Password: `manual1234`
+
 Recommended screenshots for the manual:
 
 | File | Screen |
@@ -46,7 +51,9 @@ Recommended screenshots for the manual:
 | `40-form-record-detail.png` | 설문/보고: 폼 상세 |
 | `41-form-record-assignments.png` | 설문/보고: 제출현황 |
 | `42-form-record-report.png` | 설문/보고: 집계 |
+| `43-platform-login.png` | 전체관리자: 로그인 |
+| `44-platform-dashboard.png` | 전체관리자: 대시보드 |
 
 Notes:
 - `28-member-detail.png`, `29-asset-detail.png`, `30-form-detail.png`, `31-form-assignments.png`, and `32-form-report.png` are earlier navigation captures. Use the corrected record captures `38` through `42` for manual detail pages.
-- Screenshots were captured at 1440x1000 using the `manualdemo` demo tenant.
+- Screenshots were captured at 1440x1000 using the `manualdemo` demo tenant and the root-domain platform admin.

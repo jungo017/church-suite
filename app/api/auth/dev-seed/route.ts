@@ -13,7 +13,7 @@ import { ROLES, type RoleName } from "@/lib/rbac/roles";
  * 정식 온보딩은 Phase 0.8 에서 구현되며 이 라우트를 대체한다.
  *   curl -XPOST localhost:3000/api/auth/dev-seed \
  *     -H 'content-type: application/json' \
- *     -d '{"code":"cityhope","name":"City Hope","loginId":"admin","password":"pw123456","role":"admin"}'
+ *     -d '{"code":"cityhope","name":"City Hope","loginId":"churchadmin","password":"pw123456","role":"admin"}'
  */
 export async function POST(req: Request) {
   if (process.env.NODE_ENV === "production") notFound();
@@ -46,12 +46,21 @@ export async function POST(req: Request) {
 
   await seedDefaultRoles(churchId);
 
-  const { userId } = await createUser({
-    churchId,
-    loginId,
-    password,
-    name: loginId,
-  });
+  let userId: string;
+  try {
+    const created = await createUser({
+      churchId,
+      loginId,
+      password,
+      name: loginId,
+    });
+    userId = created.userId;
+  } catch (e) {
+    if (e instanceof Error && e.message === "reserved_login_id") {
+      return NextResponse.json({ error: "reserved_login_id" }, { status: 400 });
+    }
+    throw e;
+  }
   await assignRole(churchId, userId, role ?? ROLES.ADMIN);
 
   return NextResponse.json({ churchId, userId, role: role ?? ROLES.ADMIN });

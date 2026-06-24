@@ -2,6 +2,7 @@ import "server-only";
 import { and, eq } from "drizzle-orm";
 import { withTenant } from "@/lib/db/tenant";
 import { appUser, role, userRole } from "@/lib/db/schema";
+import { assertUsableLoginId, normalizeLoginId } from "./login-id";
 import { hashPassword } from "./password";
 
 /** 사용자 생성(비밀번호 해시). 테넌트 스코프로 삽입. */
@@ -12,13 +13,14 @@ export async function createUser(opts: {
   name: string;
   memberId?: string | null;
 }): Promise<{ userId: string }> {
+  const loginId = assertUsableLoginId(opts.loginId);
   const passwordHash = await hashPassword(opts.password);
   return withTenant(opts.churchId, async (tx) => {
     const rows = await tx
       .insert(appUser)
       .values({
         churchId: opts.churchId,
-        loginId: opts.loginId,
+        loginId,
         passwordHash,
         name: opts.name,
         memberId: opts.memberId ?? null,
@@ -40,6 +42,7 @@ export async function findUserByLogin(
   churchId: string,
   loginId: string,
 ): Promise<AuthUser | null> {
+  const normalizedLoginId = normalizeLoginId(loginId);
   const rows = await withTenant(churchId, (tx) =>
     tx
       .select({
@@ -50,7 +53,7 @@ export async function findUserByLogin(
         passwordHash: appUser.passwordHash,
       })
       .from(appUser)
-      .where(and(eq(appUser.churchId, churchId), eq(appUser.loginId, loginId)))
+      .where(and(eq(appUser.churchId, churchId), eq(appUser.loginId, normalizedLoginId)))
       .limit(1),
   );
   return rows[0] ?? null;

@@ -253,6 +253,20 @@
       "when": 1782109789823,
       "tag": "0035_shallow_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1782226140487,
+      "tag": "0036_outstanding_sharon_carter",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1782268581559,
+      "tag": "0037_fresh_carmella_unuscione",
+      "breakpoints": true
     }
   ]
 }
