@@ -14,9 +14,11 @@ import {
   orgRole,
 } from "@/lib/db/schema";
 import { hashPassword } from "@/lib/auth/password";
+import { assertUsableLoginId } from "@/lib/auth/login-id";
 import { DEFAULT_ROLES, ROLES } from "@/lib/rbac/roles";
 import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@/lib/members/org-constants";
 import { resolveChurchByCode } from "@/lib/tenant/resolve";
+import { RESERVED_SUBDOMAINS } from "@/lib/tenant/host";
 
 /**
  * 교회 온보딩 (스펙 §5, 작업 0.8).
@@ -60,11 +62,18 @@ export async function onboardChurch(opts: {
 }): Promise<{ churchId: string; userId: string; code: string }> {
   const code = opts.churchCode.trim().toLowerCase();
   const name = opts.churchName.trim();
-  const loginId = opts.adminLoginId.trim();
+  let loginId: string;
 
   if (!CODE_RE.test(code)) throw new OnboardError("invalid_code");
+  // 예약 서브도메인(인프라/시스템 경로)은 코드로 선점 불가 — 라우팅 하이재킹 방지.
+  if (RESERVED_SUBDOMAINS.has(code)) throw new OnboardError("reserved_code");
   if (!name) throw new OnboardError("invalid_name");
-  if (!loginId || opts.adminPassword.length < 8) {
+  try {
+    loginId = assertUsableLoginId(opts.adminLoginId);
+  } catch {
+    throw new OnboardError("invalid_admin_login");
+  }
+  if (opts.adminPassword.length < 8) {
     throw new OnboardError("invalid_admin");
   }
   if (await resolveChurchByCode(code)) throw new OnboardError("code_taken");

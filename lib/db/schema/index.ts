@@ -3,6 +3,7 @@
 export * from "./church";
 export * from "./members";
 export * from "./users";
+export * from "./platform";
 export * from "./auth";
 export * from "./billing";
 export * from "./org";
@@ -18,3 +19,4 @@ export * from "./site";
 export * from "./intake";
 export * from "./notify";
 export * from "./compliance";
+export * from "./security";

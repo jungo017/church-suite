@@ -17,6 +17,7 @@ export type AccessClaims = {
   church_id: string;
   roles: string[];
   name: string;
+  scope?: "tenant" | "platform";
 };
 
 export async function signAccessToken(claims: AccessClaims): Promise<string> {
@@ -24,6 +25,7 @@ export async function signAccessToken(claims: AccessClaims): Promise<string> {
     church_id: claims.church_id,
     roles: claims.roles,
     name: claims.name,
+    scope: claims.scope ?? "tenant",
   })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setSubject(claims.sub)
@@ -43,6 +45,7 @@ export async function verifyAccessToken(
       church_id: String(payload.church_id ?? ""),
       roles: Array.isArray(payload.roles) ? (payload.roles as string[]) : [],
       name: String(payload.name ?? ""),
+      scope: payload.scope === "platform" ? "platform" : "tenant",
     };
   } catch {
     return null;

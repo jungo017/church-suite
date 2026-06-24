@@ -18,7 +18,7 @@ describe("교회 온보딩", () => {
     const { churchId, userId } = await onboardChurch({
       churchName: "온보딩 교회",
       churchCode: code,
-      adminLoginId: "admin",
+      adminLoginId: "churchadmin",
       adminPassword: "pw12345678",
       adminName: "관리자",
     });
@@ -48,7 +48,7 @@ describe("교회 온보딩", () => {
     const { churchId } = await onboardChurch({
       churchName: "첫 교회",
       churchCode: code,
-      adminLoginId: "admin",
+      adminLoginId: "churchadmin",
       adminPassword: "pw12345678",
     });
     created.push(churchId);
@@ -57,7 +57,7 @@ describe("교회 온보딩", () => {
       onboardChurch({
         churchName: "둘째 교회",
         churchCode: code,
-        adminLoginId: "admin",
+        adminLoginId: "churchadmin",
         adminPassword: "pw12345678",
       }),
     ).rejects.toBeInstanceOf(OnboardError);
@@ -68,7 +68,7 @@ describe("교회 온보딩", () => {
       onboardChurch({
         churchName: "x",
         churchCode: "Invalid Code!",
-        adminLoginId: "admin",
+        adminLoginId: "churchadmin",
         adminPassword: "pw12345678",
       }),
     ).rejects.toBeInstanceOf(OnboardError);
@@ -77,28 +77,52 @@ describe("교회 온보딩", () => {
       onboardChurch({
         churchName: "x",
         churchCode: uniqueCode("ob"),
-        adminLoginId: "admin",
+        adminLoginId: "churchadmin",
         adminPassword: "short",
       }),
     ).rejects.toBeInstanceOf(OnboardError);
+  });
+
+  it("예약 서브도메인은 교회 코드로 거부한다", async () => {
+    for (const code of ["admin", "api", "www", "platform", "mail"]) {
+      await expect(
+        onboardChurch({
+          churchName: "예약 코드",
+          churchCode: code,
+          adminLoginId: "churchadmin",
+          adminPassword: "pw12345678",
+        }),
+      ).rejects.toMatchObject({ code: "reserved_code" });
+    }
+  });
+
+  it("예약된 관리자 로그인 아이디는 거부한다", async () => {
+    await expect(
+      onboardChurch({
+        churchName: "예약 아이디",
+        churchCode: uniqueCode("ob"),
+        adminLoginId: "admin",
+        adminPassword: "pw12345678",
+      }),
+    ).rejects.toMatchObject({ code: "invalid_admin_login" });
   });
 
   it("온보딩한 교회는 다른 교회 데이터와 격리된다", async () => {
     const c1 = await onboardChurch({
       churchName: "격리1",
       churchCode: uniqueCode("ob"),
-      adminLoginId: "admin",
+      adminLoginId: "churchadmin",
       adminPassword: "pw12345678",
     });
     const c2 = await onboardChurch({
       churchName: "격리2",
       churchCode: uniqueCode("ob"),
-      adminLoginId: "admin",
+      adminLoginId: "churchadmin",
       adminPassword: "pw12345678",
     });
     created.push(c1.churchId, c2.churchId);
 
-    // c1 스코프에서는 c1 사용자만 보인다(c2 의 admin 도 loginId 'admin' 이지만 격리됨)
+    // c1 스코프에서는 c1 사용자만 보인다(c2 의 churchadmin 도 같은 loginId 이지만 격리됨)
     const c1Users = await withTenant(c1.churchId, (tx) =>
       tx.select().from(appUser),
     );

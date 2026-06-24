@@ -21,8 +21,27 @@ export const ROOT_DOMAIN = (
   process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? "localhost"
 ).toLowerCase();
 
-/** 테넌트로 인정하지 않는 예약 서브도메인. */
-const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "static"]);
+/**
+ * 테넌트로 인정하지 않는 예약 서브도메인 = 교회 코드로도 선점 불가.
+ *
+ * 인프라/시스템 경로(메일·인증·결제 등)와의 충돌과 서브도메인 하이재킹을 막는다.
+ * 라우팅(parseTenantHost)은 이 집합을 root 로 떨어뜨리고,
+ * 온보딩(lib/onboarding/onboard.ts)은 가입 단계에서 동일 집합을 거부한다(단일 출처).
+ */
+export const RESERVED_SUBDOMAINS = new Set([
+  // 핵심 인프라/라우팅
+  "www", "app", "api", "admin", "administrator", "static", "assets", "cdn",
+  // 메일·DNS
+  "mail", "smtp", "imap", "pop", "ftp", "dns", "ns", "ns1", "ns2",
+  // 플랫폼/인증/계정
+  "platform", "login", "logout", "auth", "signin", "signup", "onboard",
+  "register", "account", "accounts", "dashboard", "console",
+  // 결제·웹훅·시스템
+  "status", "billing", "pay", "payment", "payments", "webhook", "webhooks",
+  "internal", "system", "root", "support", "help", "security",
+  // 환경
+  "test", "dev", "staging",
+]);
 
 /** 포트 제거 + 소문자화. */
 export function normalizeHost(rawHost: string | null | undefined): string {

@@ -82,8 +82,9 @@ export async function deleteAssetAction(assetId: string) {
 export async function createDepartmentAction(fd: FormData) {
   const user = await requireWrite();
   const name = str(fd, "name");
-  if (name) await createDepartment(user.church_id, name);
+  if (name) await createDepartment(user.church_id, name, str(fd, "parentId"));
   revalidatePath("/assets/classification");
+  revalidatePath("/members/org/assignments");
 }
 
 export async function createLocationAction(fd: FormData) {
