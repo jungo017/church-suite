@@ -1,9 +1,22 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { listAccessLogs } from "@/lib/compliance/access-log";
 import { listConsents } from "@/lib/compliance/consent";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 
 // 개인정보 컴플라이언스(접근로그·동의) — 관리자 전용 (스펙 §5).
 export default async function CompliancePage() {
@@ -17,45 +30,86 @@ export default async function CompliancePage() {
 
   return (
     <section className="flex max-w-3xl flex-col gap-8">
-      <h1 className="text-2xl font-bold">개인정보 컴플라이언스</h1>
+      <PageHeader>
+        <PageTitle>개인정보 컴플라이언스</PageTitle>
+      </PageHeader>
 
-      <div className="flex flex-col gap-2">
-        <h2 className="font-semibold">접근 기록 (민감정보)</h2>
+      <div className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">접근 기록 (민감정보)</h2>
         {logs.length === 0 ? (
-          <p className="text-sm text-muted-foreground">기록 없음</p>
+          <EmptyState title="접근 기록이 없습니다" />
         ) : (
-          <ul className="flex flex-col gap-1 text-sm">
-            {logs.map((l) => (
-              <li key={l.logId} className="flex justify-between border-b border-border py-1">
-                <span>{l.action} · {l.targetType}/{l.targetId?.slice(0, 8)}</span>
-                <span className="text-muted-foreground">
-                  {new Date(l.createdAt).toISOString().slice(0, 19).replace("T", " ")}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>활동</TableHead>
+                  <TableHead>대상</TableHead>
+                  <TableHead>시각</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {logs.map((l) => (
+                  <TableRow key={l.logId}>
+                    <TableCell>{l.action}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {l.targetType}/{l.targetId?.slice(0, 8)}
+                    </TableCell>
+                    <TableCell className="tabular-nums text-muted-foreground">
+                      {new Date(l.createdAt).toISOString().slice(0, 19).replace("T", " ")}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <h2 className="font-semibold">동의 기록</h2>
+      <div className="flex flex-col gap-3">
+        <h2 className="text-lg font-semibold">동의 기록</h2>
         {consents.length === 0 ? (
-          <p className="text-sm text-muted-foreground">기록 없음</p>
+          <EmptyState title="동의 기록이 없습니다" />
         ) : (
-          <ul className="flex flex-col gap-1 text-sm">
-            {consents.map((c) => (
-              <li key={c.consentId} className="flex justify-between border-b border-border py-1">
-                <span>{c.subjectName ?? c.memberId?.slice(0, 8) ?? "—"} · {c.consentType} · {c.source ?? ""}</span>
-                <span className={c.agreed ? "text-success" : "text-muted-foreground"}>
-                  {c.agreed ? "동의" : "거부"}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>대상</TableHead>
+                  <TableHead>유형</TableHead>
+                  <TableHead>출처</TableHead>
+                  <TableHead>동의 여부</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {consents.map((c) => (
+                  <TableRow key={c.consentId}>
+                    <TableCell>
+                      {c.subjectName ?? c.memberId?.slice(0, 8) ?? "—"}
+                    </TableCell>
+                    <TableCell>{c.consentType}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {c.source ?? "—"}
+                    </TableCell>
+                    <TableCell>
+                      <Badge tone={c.agreed ? "success" : "muted"}>
+                        {c.agreed ? "동의" : "거부"}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 
-      <Link href="/members" className="text-sm underline">← 목록으로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/members">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listAssets } from "@/lib/assets/service";
 import { qrDataUrl, assetUrl } from "@/lib/assets/qr";
 import { TENANT_HOST_HEADER } from "@/lib/tenant/host";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
 import { PrintButton } from "./print-button";
 
 // QR 라벨 인쇄 페이지 (스펙 §7.1). 스캔 시 자산 상세로 이동.
@@ -23,21 +27,24 @@ export default async function LabelsPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between print:hidden">
-        <h1 className="text-2xl font-bold">QR 라벨</h1>
-        <div className="flex gap-2 text-sm">
-          <Link
-            href="/assets"
-            className="rounded-md border border-border px-3 py-1.5"
-          >
-            ← 목록
-          </Link>
+      <PageHeader className="print:hidden">
+        <PageTitle>QR 라벨</PageTitle>
+        <PageActions>
+          <Button asChild variant="outline">
+            <Link href="/assets">
+              <ArrowLeft />
+              목록
+            </Link>
+          </Button>
           <PrintButton />
-        </div>
-      </div>
+        </PageActions>
+      </PageHeader>
 
       {assets.length === 0 ? (
-        <p className="text-sm text-muted-foreground">자산이 없습니다.</p>
+        <EmptyState
+          title="자산이 없습니다"
+          description="자산을 등록하면 QR 라벨을 출력할 수 있습니다."
+        />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {labels.map(({ a, qr }) => (

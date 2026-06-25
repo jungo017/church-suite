@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { memberStats, attendanceTrend, type Bucket } from "@/lib/members/stats";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
 import {
   MEMBER_STATUS_LABELS,
   GENDER_LABELS,
@@ -24,7 +28,7 @@ function BucketList({
     <div className="flex flex-col gap-1">
       <h2 className="font-semibold">{title}</h2>
       {buckets.length === 0 ? (
-        <p className="text-sm text-muted-foreground">데이터 없음</p>
+        <EmptyState title="데이터가 없습니다" />
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {buckets.map((b, i) => (
@@ -33,7 +37,7 @@ function BucketList({
               className="flex justify-between border-b border-border py-1"
             >
               <span>{label(b.key)}</span>
-              <span className="font-medium">{b.n}</span>
+              <span className="font-medium tabular-nums">{b.n}</span>
             </li>
           ))}
         </ul>
@@ -51,8 +55,12 @@ export default async function MemberStatsPage() {
 
   return (
     <section className="flex max-w-3xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">교적 통계</h1>
-      <p className="text-sm text-muted-foreground">전체 교인 {stats.total}명</p>
+      <PageHeader>
+        <div>
+          <PageTitle>교적 통계</PageTitle>
+          <PageDescription>전체 교인 {stats.total}명</PageDescription>
+        </div>
+      </PageHeader>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <BucketList
@@ -75,7 +83,7 @@ export default async function MemberStatsPage() {
       <div className="flex flex-col gap-1">
         <h2 className="font-semibold">최근 출석 추이</h2>
         {trend.length === 0 ? (
-          <p className="text-sm text-muted-foreground">출석 데이터 없음</p>
+          <EmptyState title="출석 데이터가 없습니다" />
         ) : (
           <ul className="flex flex-col gap-1 text-sm">
             {trend.map((t, i) => (
@@ -88,14 +96,19 @@ export default async function MemberStatsPage() {
                   {SERVICE_TYPE_LABELS[t.serviceType as ServiceType] ??
                     t.serviceType}
                 </span>
-                <span className="font-medium">{t.present}명</span>
+                <span className="font-medium tabular-nums">{t.present}명</span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <Link href="/members" className="text-sm underline">← 목록으로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/members">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }
