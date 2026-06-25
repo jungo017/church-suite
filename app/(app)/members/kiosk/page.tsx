@@ -4,6 +4,7 @@ import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listMembers } from "@/lib/members/service";
 import { listServiceAttendance } from "@/lib/members/attendance";
 import { kioskSetAction } from "@/lib/members/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
 
 // 탭 키오스크 — 교인을 탭하면 오늘 주일예배 출석 토글.
 export default async function KioskPage() {
@@ -16,12 +17,12 @@ export default async function KioskPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">출석 키오스크</h1>
+      <PageHeader className="sm:items-center">
+        <PageTitle>출석 키오스크</PageTitle>
         <div className="text-sm text-muted-foreground">
           {today} 주일예배 · 출석 {count}/{members.length}
         </div>
-      </div>
+      </PageHeader>
       <p className="text-sm text-muted-foreground">이름을 눌러 출석을 체크하세요.</p>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {members.map((m) => {
@@ -31,7 +32,7 @@ export default async function KioskPage() {
               <button
                 className={`w-full rounded-lg border p-4 text-center text-lg font-medium ${
                   isPresent
-                    ? "border-green-400 bg-green-50 text-green-700 dark:bg-green-950"
+                    ? "border-success/30 bg-success/10 text-success"
                     : "border-border"
                 }`}
               >

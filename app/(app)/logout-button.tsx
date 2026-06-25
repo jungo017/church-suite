@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LogOut } from "lucide-react";
 
 export function LogoutButton() {
   const router = useRouter();
@@ -15,8 +16,9 @@ export function LogoutButton() {
         router.refresh();
       }}
       disabled={loading}
-      className="rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
+      className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
     >
+      <LogOut className="size-4" />
       {loading ? "로그아웃 중…" : "로그아웃"}
     </button>
   );

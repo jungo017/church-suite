@@ -5,6 +5,16 @@ import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { getTenant } from "@/lib/tenant/context";
 import { memberAnnualGiving } from "@/lib/finance/receipts";
 import { formatWon } from "@/lib/finance/constants";
+import { PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 import { PrintButton } from "../print-button";
 
 export default async function ReceiptPage({
@@ -29,9 +39,11 @@ export default async function ReceiptPage({
   return (
     <section className="flex max-w-2xl flex-col gap-4">
       <div className="flex items-center justify-between print:hidden">
-        <h1 className="text-2xl font-bold">기부금영수증</h1>
+        <PageTitle>기부금영수증</PageTitle>
         <div className="flex gap-2">
-          <Link href={`/finance/receipts?year=${year}`} className="rounded-md border border-border px-3 py-1.5 text-sm">← 목록</Link>
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/finance/receipts?year=${year}`}>← 목록</Link>
+          </Button>
           <PrintButton />
         </div>
       </div>
@@ -52,24 +64,26 @@ export default async function ReceiptPage({
         </div>
 
         {data.items.length > 0 && (
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-border text-muted-foreground">
-              <tr>
-                <th className="py-1.5">일자</th>
-                <th className="py-1.5">항목</th>
-                <th className="py-1.5 text-right">금액</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.items.map((it, i) => (
-                <tr key={i} className="border-b border-border">
-                  <td className="py-1.5">{it.voucherDate}</td>
-                  <td className="py-1.5">{it.accountName ?? "헌금"}</td>
-                  <td className="py-1.5 text-right">{formatWon(it.amount)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>일자</TableHead>
+                  <TableHead>항목</TableHead>
+                  <TableHead className="text-right tabular-nums">금액</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.items.map((it, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="tabular-nums">{it.voucherDate}</TableCell>
+                    <TableCell>{it.accountName ?? "헌금"}</TableCell>
+                    <TableCell className="text-right tabular-nums">{formatWon(it.amount)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
 
         <p className="text-xs text-muted-foreground">

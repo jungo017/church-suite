@@ -1,8 +1,14 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listAudits } from "@/lib/assets/audit";
 import { createAuditAction } from "@/lib/assets/actions";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import { Input } from "@/lib/ui/form";
 
 export default async function AuditsPage() {
   const user = await requirePermission(PERMISSIONS.ASSETS_WRITE);
@@ -10,21 +16,29 @@ export default async function AuditsPage() {
 
   return (
     <section className="flex max-w-2xl flex-col gap-5">
-      <h1 className="text-2xl font-bold">전수조사</h1>
+      <PageHeader>
+        <div>
+          <PageTitle>전수조사</PageTitle>
+          <PageDescription>
+            자산 태그를 스캔하며 실물 보유 여부를 확인합니다.
+          </PageDescription>
+        </div>
+      </PageHeader>
 
       <form action={createAuditAction} className="flex gap-2">
-        <input
+        <Input
           name="name"
           placeholder="조사명 (예: 2026 상반기 전수조사)"
-          className="flex-1 rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent"
+          className="flex-1"
         />
-        <button className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">
-          새 전수조사 시작
-        </button>
+        <Button type="submit">새 전수조사 시작</Button>
       </form>
 
       {audits.length === 0 ? (
-        <p className="text-sm text-muted-foreground">진행한 전수조사가 없습니다.</p>
+        <EmptyState
+          title="진행한 전수조사가 없습니다"
+          description="새 전수조사를 시작하면 자산을 하나씩 확인할 수 있습니다."
+        />
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {audits.map((a) => (
@@ -32,20 +46,26 @@ export default async function AuditsPage() {
               key={a.auditId}
               className="flex items-center justify-between border-b border-border py-2"
             >
-              <Link href={`/assets/audits/${a.auditId}`} className="font-medium underline">
+              <Link
+                href={`/assets/audits/${a.auditId}`}
+                className="font-medium text-foreground hover:underline"
+              >
                 {a.name}
               </Link>
-              <span className="text-muted-foreground">
+              <Badge tone={a.status === "open" ? "success" : "muted"}>
                 {a.status === "open" ? "진행중" : "마감"}
-              </span>
+              </Badge>
             </li>
           ))}
         </ul>
       )}
 
-      <Link href="/assets" className="text-sm underline">
-        ← 목록으로
-      </Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/assets">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

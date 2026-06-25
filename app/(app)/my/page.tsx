@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { getUserMember } from "@/lib/members/portal";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
+import { DescriptionList, DescriptionItem } from "@/lib/ui/description-list";
 
 // 교인 셀프 포털 홈 (온라인교인센터). 로그인한 교인의 본인 정보.
 export default async function MyHomePage() {
@@ -9,42 +13,40 @@ export default async function MyHomePage() {
 
   if (!me) {
     return (
-      <section className="flex flex-col gap-3">
-        <h1 className="text-2xl font-bold">내 정보</h1>
-        <p className="text-sm text-muted-foreground">
-          연결된 교인 정보가 없습니다. 교회 관리자에게 문의하세요.
-        </p>
+      <section className="flex flex-col gap-5">
+        <PageHeader>
+          <PageTitle>내 정보</PageTitle>
+        </PageHeader>
+        <EmptyState
+          title="연결된 교인 정보가 없습니다"
+          description="교회 관리자에게 문의하세요."
+        />
       </section>
     );
   }
 
   return (
     <section className="flex max-w-xl flex-col gap-5">
-      <h1 className="text-2xl font-bold">{me.name} 님</h1>
-      <div className="text-sm">
-        <div className="flex gap-4 border-b border-border py-2">
-          <span className="w-24 text-muted-foreground">직분</span>
-          <span>{me.position ?? "—"}</span>
-        </div>
-        <div className="flex gap-4 border-b border-border py-2">
-          <span className="w-24 text-muted-foreground">연락처</span>
-          <span>{me.phone ?? "—"}</span>
-        </div>
-        <div className="flex gap-4 border-b border-border py-2">
-          <span className="w-24 text-muted-foreground">등록일</span>
-          <span>{me.registeredDate ?? "—"}</span>
-        </div>
-      </div>
-      <div className="flex gap-3 text-sm">
-        <Link href="/my/forms" className="rounded-md border border-border px-3 py-1.5">
-          설문 · 보고
-        </Link>
-        <Link href="/my/giving" className="rounded-md border border-border px-3 py-1.5">
-          나의 헌금내역
-        </Link>
-        <Link href="/" className="rounded-md border border-border px-3 py-1.5">
-          교회 홈페이지
-        </Link>
+      <PageHeader>
+        <PageTitle>{me.name} 님</PageTitle>
+      </PageHeader>
+
+      <DescriptionList>
+        <DescriptionItem label="직분">{me.position ?? "—"}</DescriptionItem>
+        <DescriptionItem label="연락처">{me.phone ?? "—"}</DescriptionItem>
+        <DescriptionItem label="등록일">{me.registeredDate ?? "—"}</DescriptionItem>
+      </DescriptionList>
+
+      <div className="flex flex-wrap gap-2">
+        <Button asChild variant="outline">
+          <Link href="/my/forms">설문 · 보고</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/my/giving">나의 헌금내역</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/">교회 홈페이지</Link>
+        </Button>
       </div>
     </section>
   );

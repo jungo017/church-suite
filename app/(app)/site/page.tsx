@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ExternalLink } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { getSite, listBoards, listPages } from "@/lib/site/admin";
@@ -9,7 +10,11 @@ import {
   createBoardAction,
   createPageAction,
 } from "@/lib/site/actions";
-import { controlClass } from "@/lib/ui/form";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { Field, FieldLabel, Input, Select } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
 
 const THEME_LABELS: Record<string, string> = {
   modern: "모던",
@@ -17,10 +22,6 @@ const THEME_LABELS: Record<string, string> = {
   minimal: "미니멀",
   dark: "다크",
 };
-const btnPrimary =
-  "rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90";
-const btnOutline =
-  "rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-muted";
 
 export default async function SiteAdminPage() {
   const user = await requireUser();
@@ -31,75 +32,108 @@ export default async function SiteAdminPage() {
     listBoards(user.church_id),
     listPages(user.church_id),
   ]);
+  const published = site?.status === "published";
 
   return (
     <section className="flex max-w-2xl flex-col gap-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">홈페이지 관리</h1>
-        <div className="flex flex-wrap items-center gap-4">
-          <form action={setSiteThemeAction} className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground">테마</span>
-            <select
+      <PageHeader>
+        <PageTitle>홈페이지 관리</PageTitle>
+        <PageActions>
+          <Button asChild variant="outline">
+            <Link href="/" target="_blank" rel="noopener noreferrer">
+              <ExternalLink />
+              공개 사이트 미리보기
+            </Link>
+          </Button>
+        </PageActions>
+      </PageHeader>
+
+      <div className="flex flex-wrap items-end gap-6">
+        <form action={setSiteThemeAction} className="flex items-end gap-2">
+          <Field>
+            <FieldLabel htmlFor="theme">테마</FieldLabel>
+            <Select
+              id="theme"
               name="theme"
               defaultValue={site?.theme ?? "modern"}
-              className={controlClass + " w-28"}
+              className="w-28"
             >
               {Object.entries(THEME_LABELS).map(([v, l]) => (
                 <option key={v} value={v}>{l}</option>
               ))}
-            </select>
-            <button className={btnOutline}>적용</button>
-          </form>
-          <form action={setSiteStatusAction} className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground">
-              상태: {site?.status === "published" ? "공개" : "비공개"}
-            </span>
+            </Select>
+          </Field>
+          <Button type="submit" variant="outline">적용</Button>
+        </form>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">상태</span>
+          <Badge tone={published ? "success" : "muted"}>
+            {published ? "공개" : "비공개"}
+          </Badge>
+          <form action={setSiteStatusAction}>
             <input
               type="hidden"
               name="status"
-              value={site?.status === "published" ? "draft" : "published"}
+              value={published ? "draft" : "published"}
             />
-            <button className={btnOutline}>
-              {site?.status === "published" ? "비공개로 전환" : "공개로 전환"}
-            </button>
+            <Button type="submit" variant="outline" size="sm">
+              {published ? "비공개로 전환" : "공개로 전환"}
+            </Button>
           </form>
         </div>
       </div>
 
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold">게시판</h2>
-        <form action={createBoardAction} className="flex flex-wrap gap-2">
-          <input name="slug" placeholder="slug (예: notice)" className={controlClass + " w-40"} required />
-          <input name="name" placeholder="이름 (예: 공지사항)" className={controlClass + " flex-1"} required />
-          <button className={btnPrimary}>추가</button>
+        <form action={createBoardAction} className="flex flex-wrap items-end gap-2">
+          <Input name="slug" placeholder="slug (예: notice)" className="w-40" required />
+          <Input name="name" placeholder="이름 (예: 공지사항)" className="flex-1" required />
+          <Button type="submit">추가</Button>
         </form>
-        <ul className="flex flex-col gap-1 text-sm">
-          {boards.length === 0 && <li className="text-muted-foreground">게시판이 없습니다.</li>}
-          {boards.map((b) => (
-            <li key={b.boardId} className="flex justify-between border-b border-border py-1.5">
-              <Link href={`/site/boards/${b.boardId}`} className="underline">{b.name}</Link>
-              <span className="text-muted-foreground">/{b.slug}</span>
-            </li>
-          ))}
-        </ul>
+        {boards.length === 0 ? (
+          <EmptyState
+            title="게시판이 없습니다"
+            description="위 입력란에서 첫 게시판을 추가하세요."
+          />
+        ) : (
+          <ul className="flex flex-col gap-1 text-sm">
+            {boards.map((b) => (
+              <li key={b.boardId} className="flex justify-between border-b border-border py-1.5">
+                <Link href={`/site/boards/${b.boardId}`} className="underline">{b.name}</Link>
+                <span className="text-muted-foreground">/{b.slug}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold">페이지</h2>
-        <form action={createPageAction} className="flex flex-wrap gap-2">
-          <input name="slug" placeholder="slug (예: about)" className={controlClass + " w-40"} required />
-          <input name="title" placeholder="제목 (예: 교회소개)" className={controlClass + " flex-1"} required />
-          <button className={btnPrimary}>추가</button>
+        <form action={createPageAction} className="flex flex-wrap items-end gap-2">
+          <Input name="slug" placeholder="slug (예: about)" className="w-40" required />
+          <Input name="title" placeholder="제목 (예: 교회소개)" className="flex-1" required />
+          <Button type="submit">추가</Button>
         </form>
-        <ul className="flex flex-col gap-1 text-sm">
-          {pages.length === 0 && <li className="text-muted-foreground">페이지가 없습니다.</li>}
-          {pages.map((p) => (
-            <li key={p.pageId} className="flex justify-between border-b border-border py-1.5">
-              <Link href={`/site/pages/${p.pageId}`} className="underline">{p.title}</Link>
-              <span className="text-muted-foreground">/{p.slug} · {p.published ? "공개" : "비공개"}</span>
-            </li>
-          ))}
-        </ul>
+        {pages.length === 0 ? (
+          <EmptyState
+            title="페이지가 없습니다"
+            description="위 입력란에서 첫 페이지를 추가하세요."
+          />
+        ) : (
+          <ul className="flex flex-col gap-1 text-sm">
+            {pages.map((p) => (
+              <li key={p.pageId} className="flex items-center justify-between gap-2 border-b border-border py-1.5">
+                <Link href={`/site/pages/${p.pageId}`} className="underline">{p.title}</Link>
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  /{p.slug}
+                  <Badge tone={p.published ? "success" : "muted"}>
+                    {p.published ? "공개" : "비공개"}
+                  </Badge>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

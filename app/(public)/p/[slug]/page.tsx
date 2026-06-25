@@ -1,6 +1,12 @@
 import { notFound } from "next/navigation";
 import { getPublicContext, getPublicPageBySlug } from "@/lib/site/public";
-import { SiteHeader } from "../../site-header";
+import { PublicHeader } from "@/lib/ui/public-site/public-header";
+import {
+  PublicShell,
+  PublicContainer,
+  PublicFooter,
+} from "@/lib/ui/public-site/public-container";
+import { PublicPageTitle } from "@/lib/ui/public-site/public-section";
 
 export default async function PublicPagePage({
   params,
@@ -14,19 +20,22 @@ export default async function PublicPagePage({
   const pageRow = await getPublicPageBySlug(ctx.tenant.churchId, slug);
   if (!pageRow) notFound();
 
+  const churchName = ctx.site.title || ctx.tenant.name;
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader
-        churchName={ctx.site.title || ctx.tenant.name}
+    <PublicShell>
+      <PublicHeader
+        churchName={churchName}
         pages={ctx.pages.map((p) => ({ slug: p.slug, title: p.title }))}
         boards={ctx.boards.map((b) => ({ slug: b.slug, name: b.name }))}
       />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
+      <PublicContainer>
         <article className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold">{pageRow.title}</h1>
+          <PublicPageTitle>{pageRow.title}</PublicPageTitle>
           <div className="whitespace-pre-wrap text-sm leading-relaxed">{pageRow.body}</div>
         </article>
-      </main>
-    </div>
+      </PublicContainer>
+      <PublicFooter name={churchName} />
+    </PublicShell>
   );
 }

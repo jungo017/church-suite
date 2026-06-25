@@ -7,6 +7,9 @@ import {
   approveNewFamilyAction,
   rejectNewFamilyAction,
 } from "@/lib/site/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { EmptyState } from "@/lib/ui/empty-state";
+import { Button } from "@/lib/ui/button";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "대기",
@@ -21,9 +24,11 @@ export default async function NewFamilyAdminPage() {
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-bold">새가족 신청 ({reqs.length})</h1>
+      <PageHeader>
+        <PageTitle>새가족 신청 ({reqs.length})</PageTitle>
+      </PageHeader>
       {reqs.length === 0 ? (
-        <p className="text-sm text-muted-foreground">신청이 없습니다.</p>
+        <EmptyState title="신청이 없습니다." />
       ) : (
         <ul className="flex flex-col gap-2 text-sm">
           {reqs.map((r) => (
@@ -39,10 +44,10 @@ export default async function NewFamilyAdminPage() {
               {r.status === "pending" && (
                 <div className="flex shrink-0 gap-2">
                   <form action={approveNewFamilyAction.bind(null, r.reqId)}>
-                    <button className="rounded-md border border-green-300 px-2 py-1 text-xs text-green-700">승인</button>
+                    <Button type="submit" variant="outline" size="sm" className="text-success">승인</Button>
                   </form>
                   <form action={rejectNewFamilyAction.bind(null, r.reqId)}>
-                    <button className="rounded-md border border-red-300 px-2 py-1 text-xs text-destructive">거절</button>
+                    <Button type="submit" variant="destructive" size="sm">거절</Button>
                   </form>
                 </div>
               )}

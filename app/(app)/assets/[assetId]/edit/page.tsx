@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { getAsset } from "@/lib/assets/service";
@@ -9,6 +10,8 @@ import {
   listCategories,
 } from "@/lib/assets/classification";
 import { updateAssetAction } from "@/lib/assets/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
 import { AssetForm } from "../../asset-form";
 
 export default async function EditAssetPage({
@@ -29,7 +32,9 @@ export default async function EditAssetPage({
 
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">자산 편집</h1>
+      <PageHeader>
+        <PageTitle>자산 편집</PageTitle>
+      </PageHeader>
       <AssetForm
         action={updateAssetAction.bind(null, assetId)}
         asset={a}
@@ -38,9 +43,12 @@ export default async function EditAssetPage({
         categories={categories.map((c) => ({ id: c.categoryId, name: c.name }))}
         submitLabel="저장"
       />
-      <Link href={`/assets/${assetId}`} className="text-sm underline">
-        ← 상세로
-      </Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href={`/assets/${assetId}`}>
+          <ArrowLeft />
+          상세로
+        </Link>
+      </Button>
     </section>
   );
 }

@@ -8,6 +8,8 @@ import {
   setPostPublishedAction,
   deletePostAction,
 } from "@/lib/site/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Badge } from "@/lib/ui/badge";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
@@ -27,7 +29,9 @@ export default async function BoardPostsPage({
 
   return (
     <section className="flex max-w-2xl flex-col gap-5">
-      <h1 className="text-2xl font-bold">{board.name}</h1>
+      <PageHeader>
+        <PageTitle>{board.name}</PageTitle>
+      </PageHeader>
 
       <form action={createPostAction.bind(null, boardId)} className="flex flex-col gap-2">
         <input name="title" required placeholder="제목" className={input} />
@@ -44,9 +48,9 @@ export default async function BoardPostsPage({
           <li key={p.postId} className="flex items-center justify-between gap-2 border-b border-border py-1.5">
             <span className="font-medium">{p.title}</span>
             <div className="flex items-center gap-2">
-              <span className={p.published ? "text-green-600" : "text-muted-foreground"}>
+              <Badge tone={p.published ? "success" : "muted"}>
                 {p.published ? "공개" : "비공개"}
-              </span>
+              </Badge>
               <form action={setPostPublishedAction.bind(null, boardId, p.postId, !p.published)}>
                 <button className="text-xs underline">{p.published ? "비공개" : "공개"}</button>
               </form>

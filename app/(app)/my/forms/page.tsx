@@ -8,6 +8,8 @@ import {
   type AssignmentStatus,
   type FormCategory,
 } from "@/lib/forms/constants";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { EmptyState } from "@/lib/ui/empty-state";
 
 export default async function MyFormsPage({
   searchParams,
@@ -21,8 +23,10 @@ export default async function MyFormsPage({
   if (!me) {
     return (
       <section className="flex flex-col gap-3">
-        <h1 className="text-2xl font-bold">설문 · 보고</h1>
-        <p className="text-sm text-muted-foreground">연결된 교인 정보가 없습니다.</p>
+        <PageHeader>
+          <PageTitle>설문 · 보고</PageTitle>
+        </PageHeader>
+        <EmptyState title="연결된 교인 정보가 없습니다." />
       </section>
     );
   }
@@ -31,11 +35,13 @@ export default async function MyFormsPage({
 
   return (
     <section className="flex max-w-2xl flex-col gap-5">
-      <h1 className="text-2xl font-bold">설문 · 보고</h1>
-      {submitted && <p className="text-sm text-green-600">제출이 완료되었습니다. 감사합니다!</p>}
+      <PageHeader>
+        <PageTitle>설문 · 보고</PageTitle>
+      </PageHeader>
+      {submitted && <p className="text-sm text-success">제출이 완료되었습니다. 감사합니다!</p>}
 
       {assignments.length === 0 ? (
-        <p className="text-sm text-muted-foreground">배정된 설문·보고가 없습니다.</p>
+        <EmptyState title="배정된 설문·보고가 없습니다." />
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {assignments.map((a) => {

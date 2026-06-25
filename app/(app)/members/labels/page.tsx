@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { listMembers } from "@/lib/members/service";
 import { qrDataUrl } from "@/lib/assets/qr";
 import { TENANT_HOST_HEADER } from "@/lib/tenant/host";
 import { PrintButton } from "@/app/(app)/assets/labels/print-button";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
 
 // 교인 QR 라벨(키오스크 체크인 딥링크). 스캔 → /members/kiosk/{memberId}.
 export default async function MemberLabelsPage() {
@@ -24,15 +28,23 @@ export default async function MemberLabelsPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between print:hidden">
-        <h1 className="text-2xl font-bold">교인 QR (키오스크)</h1>
-        <div className="flex gap-2 text-sm">
-          <Link href="/members" className="rounded-md border border-border px-3 py-1.5">← 목록</Link>
+      <PageHeader className="print:hidden">
+        <PageTitle>교인 QR (키오스크)</PageTitle>
+        <PageActions>
+          <Button asChild variant="outline">
+            <Link href="/members">
+              <ArrowLeft />
+              목록
+            </Link>
+          </Button>
           <PrintButton />
-        </div>
-      </div>
+        </PageActions>
+      </PageHeader>
       {labels.length === 0 ? (
-        <p className="text-sm text-muted-foreground">교인이 없습니다.</p>
+        <EmptyState
+          title="교인이 없습니다"
+          description="활성 교인이 있으면 키오스크 체크인용 QR 라벨이 표시됩니다."
+        />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
           {labels.map(({ m, qr }) => (

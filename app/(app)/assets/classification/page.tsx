@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import {
@@ -12,6 +13,9 @@ import {
   createCategoryAction,
 } from "@/lib/assets/actions";
 import { departmentTreeRows } from "@/lib/org/tree";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { Input, Select } from "@/lib/ui/form";
 
 function Manager({
   title,
@@ -35,9 +39,9 @@ function Manager({
       </ul>
       <form action={action} className="flex gap-2">
         {parentOptions && (
-          <select
+          <Select
             name="parentId"
-            className="min-w-0 rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent"
+            className="min-w-0"
             defaultValue=""
             aria-label="상위 조직"
           >
@@ -47,17 +51,10 @@ function Manager({
                 {i.name}
               </option>
             ))}
-          </select>
+          </Select>
         )}
-        <input
-          name="name"
-          required
-          placeholder="새 항목"
-          className="rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent"
-        />
-        <button className="rounded-md bg-foreground px-3 py-1 text-sm text-background">
-          추가
-        </button>
+        <Input name="name" required placeholder="새 항목" />
+        <Button type="submit">추가</Button>
       </form>
     </div>
   );
@@ -74,7 +71,14 @@ export default async function ClassificationPage() {
 
   return (
     <section className="flex flex-col gap-8">
-      <h1 className="text-2xl font-bold">자산 분류 관리</h1>
+      <PageHeader>
+        <div>
+          <PageTitle>자산 분류 관리</PageTitle>
+          <PageDescription>
+            품목·부서·장소를 관리해 자산을 분류합니다.
+          </PageDescription>
+        </div>
+      </PageHeader>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <Manager
           title="품목"
@@ -99,9 +103,12 @@ export default async function ClassificationPage() {
           items={locations.map((l) => ({ id: l.locationId, name: l.name }))}
         />
       </div>
-      <Link href="/assets" className="text-sm underline">
-        ← 목록으로
-      </Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/assets">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

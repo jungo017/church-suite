@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { LogIn } from "lucide-react";
 import { Button } from "@/lib/ui/button";
-import { Input } from "@/lib/ui/form";
+import { Field, FieldLabel, Input } from "@/lib/ui/form";
 
 export function LoginForm() {
   const router = useRouter();
@@ -33,24 +34,38 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <Input
-        placeholder="아이디"
-        value={loginId}
-        onChange={(e) => setLoginId(e.target.value)}
-        autoComplete="username"
-      />
-      <Input
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        autoComplete="current-password"
-      />
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      <Field>
+        <FieldLabel htmlFor="loginId">아이디</FieldLabel>
+        <Input
+          id="loginId"
+          placeholder="아이디"
+          value={loginId}
+          onChange={(e) => setLoginId(e.target.value)}
+          autoComplete="username"
+        />
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="password">비밀번호</FieldLabel>
+        <Input
+          id="password"
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
+        />
+      </Field>
       {error && (
-        <p className="text-sm text-destructive">로그인 실패: {error}</p>
+        <p
+          role="alert"
+          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+        >
+          로그인 실패: {error}
+        </p>
       )}
       <Button type="submit" disabled={loading}>
+        <LogIn />
         {loading ? "로그인 중..." : "로그인"}
       </Button>
     </form>
