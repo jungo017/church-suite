@@ -63,7 +63,7 @@ export default async function AuditDetailPage({
             className="flex items-center justify-between border-b border-border py-1.5"
           >
             <span>
-              <span className={i.checked ? "text-green-600" : "text-muted-foreground"}>
+              <span className={i.checked ? "text-success" : "text-muted-foreground"}>
                 {i.checked ? "✓" : "○"}
               </span>{" "}
               {i.name}
@@ -83,7 +83,7 @@ export default async function AuditDetailPage({
       </ul>
 
       {total > 0 && checked < total && (
-        <p className="text-sm text-amber-600">
+        <p className="text-sm text-warning">
           미확인 {total - checked}건
         </p>
       )}

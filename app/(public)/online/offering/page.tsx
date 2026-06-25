@@ -20,7 +20,7 @@ export default async function OfferingPublicPage({
       <h1 className="text-2xl font-bold">{tenant.name} 온라인 헌금</h1>
       {submitted ? (
         <div className="flex flex-col gap-3">
-          <p className="text-sm text-green-600">헌금이 접수되었습니다. 감사합니다!</p>
+          <p className="text-sm text-success">헌금이 접수되었습니다. 감사합니다!</p>
           <Link href="/" className="text-sm underline">← 홈으로</Link>
         </div>
       ) : (

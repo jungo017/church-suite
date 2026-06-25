@@ -28,7 +28,7 @@ export default async function NewVoucherPage() {
       <h1 className="text-2xl font-bold">전표 등록</h1>
 
       {accounts.length === 0 ? (
-        <p className="text-sm text-amber-600">
+        <p className="text-sm text-warning">
           먼저 <Link href="/finance/accounts" className="underline">계정과목</Link>을 등록하세요.
         </p>
       ) : (

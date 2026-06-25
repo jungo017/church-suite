@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { getMember, listFamilies } from "@/lib/members/service";
@@ -8,6 +9,18 @@ import { listMemberAttendance } from "@/lib/members/attendance";
 import { listDepartments } from "@/lib/assets/classification";
 import { positionLabelMap } from "@/lib/members/org";
 import { logAccess } from "@/lib/compliance/access-log";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { DescriptionList, DescriptionItem } from "@/lib/ui/description-list";
+import { Badge, type BadgeTone } from "@/lib/ui/badge";
+import { Button } from "@/lib/ui/button";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 import {
   deleteMemberAction,
   addCareAction,
@@ -26,14 +39,13 @@ import {
   type ServiceType,
 } from "@/lib/members/constants";
 
-function Row({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex gap-4 border-b border-border py-2">
-      <span className="w-24 shrink-0 text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm">{value ?? "—"}</span>
-    </div>
-  );
-}
+// 교인 상태 → Badge 톤 (색만으로 의미 전달하지 않도록 라벨과 함께 사용, §11).
+const STATUS_TONE: Record<string, BadgeTone> = {
+  active: "success",
+  inactive: "muted",
+  transferred: "muted",
+  deceased: "destructive",
+};
 
 export default async function MemberDetailPage({
   params,
@@ -70,57 +82,88 @@ export default async function MemberDetailPage({
     "rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent";
 
   return (
-    <section className="flex max-w-2xl flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{m.name}</h1>
+    <section className="flex max-w-2xl flex-col gap-6">
+      <PageHeader>
+        <PageTitle>{m.name}</PageTitle>
         {canWrite && (
-          <div className="flex gap-2">
-            <Link href={`/members/${m.memberId}/edit`} className="rounded-md border border-border px-3 py-1.5 text-sm">편집</Link>
+          <PageActions>
+            <Button asChild variant="outline">
+              <Link href={`/members/${m.memberId}/edit`}>
+                <Pencil />
+                편집
+              </Link>
+            </Button>
             <form action={deleteMemberAction.bind(null, m.memberId)}>
-              <button className="rounded-md border border-red-300 px-3 py-1.5 text-sm text-destructive">삭제</button>
+              <Button type="submit" variant="destructive">
+                <Trash2 />
+                삭제
+              </Button>
             </form>
-          </div>
+          </PageActions>
         )}
-      </div>
-      <div>
-        <Row label="상태" value={MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status} />
-        <Row label="성별" value={m.gender ? GENDER_LABELS[m.gender as Gender] : null} />
-        <Row label="생년월일" value={m.birth} />
-        <Row label="직분" value={positionLabel} />
-        <Row label="구역/부서" value={deptName} />
-        <Row label="가족" value={familyName} />
-        <Row label="연락처" value={m.phone} />
-        <Row label="이메일" value={m.email} />
-        <Row label="주소" value={m.address} />
-        <Row label="등록일" value={m.registeredDate} />
-      </div>
+      </PageHeader>
 
-      <section className="flex flex-col gap-2">
+      <DescriptionList>
+        <DescriptionItem label="상태">
+          <Badge tone={STATUS_TONE[m.status] ?? "muted"}>
+            {MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status}
+          </Badge>
+        </DescriptionItem>
+        <DescriptionItem label="성별">
+          {m.gender ? GENDER_LABELS[m.gender as Gender] : null}
+        </DescriptionItem>
+        <DescriptionItem label="생년월일">{m.birth}</DescriptionItem>
+        <DescriptionItem label="직분">{positionLabel}</DescriptionItem>
+        <DescriptionItem label="구역/부서">{deptName}</DescriptionItem>
+        <DescriptionItem label="가족">{familyName}</DescriptionItem>
+        <DescriptionItem label="연락처">{m.phone}</DescriptionItem>
+        <DescriptionItem label="이메일">{m.email}</DescriptionItem>
+        <DescriptionItem label="주소">{m.address}</DescriptionItem>
+        <DescriptionItem label="등록일">{m.registeredDate}</DescriptionItem>
+      </DescriptionList>
+
+      <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">목양 기록</h2>
         {care.length === 0 ? (
           <p className="text-sm text-muted-foreground">기록이 없습니다.</p>
         ) : (
-          <ul className="flex flex-col gap-2">
-            {care.map((c) => (
-              <li
-                key={c.careId}
-                className="flex items-start justify-between gap-4 border-b border-border pb-2 text-sm"
-              >
-                <div>
-                  <span className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                    {CARE_TYPE_LABELS[c.careType as CareType] ?? c.careType}
-                  </span>{" "}
-                  <span className="text-muted-foreground">{c.careDate ?? ""}</span>
-                  <div>{c.content}</div>
-                </div>
-                {canWrite && (
-                  <form action={deleteCareAction.bind(null, m.memberId, c.careId)}>
-                    <button className="text-xs text-destructive">삭제</button>
-                  </form>
-                )}
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>구분</TableHead>
+                  <TableHead>날짜</TableHead>
+                  <TableHead>내용</TableHead>
+                  {canWrite && <TableHead className="text-right">관리</TableHead>}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {care.map((c) => (
+                  <TableRow key={c.careId}>
+                    <TableCell>
+                      <Badge tone="muted">
+                        {CARE_TYPE_LABELS[c.careType as CareType] ?? c.careType}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="tabular-nums text-muted-foreground">
+                      {c.careDate ?? "—"}
+                    </TableCell>
+                    <TableCell>{c.content}</TableCell>
+                    {canWrite && (
+                      <TableCell className="text-right">
+                        <form action={deleteCareAction.bind(null, m.memberId, c.careId)}>
+                          <Button type="submit" variant="destructive" size="sm">
+                            <Trash2 />
+                            삭제
+                          </Button>
+                        </form>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
         {canWrite && (
           <form action={addCareAction.bind(null, m.memberId)} className="flex flex-wrap items-end gap-2">
@@ -131,24 +174,42 @@ export default async function MemberDetailPage({
             </select>
             <input name="careDate" type="date" className={careInput} />
             <input name="content" required placeholder="내용" className={`${careInput} flex-1`} />
-            <button className="rounded-md bg-foreground px-3 py-1.5 text-sm text-background">기록 추가</button>
+            <Button type="submit">기록 추가</Button>
           </form>
         )}
       </section>
 
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">최근 출석</h2>
         {recentAttendance.length === 0 ? (
           <p className="text-sm text-muted-foreground">출석 기록이 없습니다.</p>
         ) : (
-          <ul className="flex flex-col gap-1 text-sm">
-            {recentAttendance.map((r) => (
-              <li key={r.attendanceId} className="text-muted-foreground">
-                {r.serviceDate} · {SERVICE_TYPE_LABELS[r.serviceType as ServiceType] ?? r.serviceType} ·{" "}
-                {r.present ? "출석" : "결석"}
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>일자</TableHead>
+                  <TableHead>예배</TableHead>
+                  <TableHead>출결</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {recentAttendance.map((r) => (
+                  <TableRow key={r.attendanceId}>
+                    <TableCell className="tabular-nums">{r.serviceDate}</TableCell>
+                    <TableCell>
+                      {SERVICE_TYPE_LABELS[r.serviceType as ServiceType] ?? r.serviceType}
+                    </TableCell>
+                    <TableCell>
+                      <Badge tone={r.present ? "success" : "muted"}>
+                        {r.present ? "출석" : "결석"}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </section>
 
@@ -161,12 +222,17 @@ export default async function MemberDetailPage({
           <form action={createMemberUserAction.bind(null, m.memberId)} className="flex flex-wrap items-end gap-2">
             <input name="loginId" required placeholder="로그인 아이디" className={careInput} />
             <input name="password" type="password" required placeholder="비밀번호(8자+)" className={careInput} />
-            <button className="rounded-md bg-foreground px-3 py-1.5 text-sm text-background">계정 발급</button>
+            <Button type="submit">계정 발급</Button>
           </form>
         </section>
       )}
 
-      <Link href="/members" className="text-sm underline">← 목록으로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/members">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

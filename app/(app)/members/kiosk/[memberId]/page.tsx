@@ -26,7 +26,7 @@ export default async function KioskCheckinPage({
       <h1 className="text-3xl font-bold">{m.name}</h1>
       <p className="text-sm text-muted-foreground">{today} 주일예배</p>
       {isPresent ? (
-        <p className="text-2xl font-semibold text-green-600">✓ 출석 확인됨</p>
+        <p className="text-2xl font-semibold text-success">✓ 출석 확인됨</p>
       ) : (
         <form action={kioskSetAction.bind(null, memberId, true)}>
           <button className="rounded-lg bg-foreground px-8 py-4 text-lg font-medium text-background">

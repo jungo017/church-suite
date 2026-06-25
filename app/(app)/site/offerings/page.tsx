@@ -6,6 +6,9 @@ import { listOnlineOfferings } from "@/lib/site/offering";
 import { listAccounts } from "@/lib/finance/accounts";
 import { reflectOfferingAction } from "@/lib/site/actions";
 import { formatWon } from "@/lib/finance/constants";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { EmptyState } from "@/lib/ui/empty-state";
+import { Button } from "@/lib/ui/button";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "대기",
@@ -24,9 +27,11 @@ export default async function OfferingsAdminPage() {
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-bold">온라인 헌금 ({offerings.length})</h1>
+      <PageHeader>
+        <PageTitle>온라인 헌금 ({offerings.length})</PageTitle>
+      </PageHeader>
       {offerings.length === 0 ? (
-        <p className="text-sm text-muted-foreground">접수된 온라인 헌금이 없습니다.</p>
+        <EmptyState title="접수된 온라인 헌금이 없습니다." />
       ) : (
         <ul className="flex flex-col gap-2 text-sm">
           {offerings.map((o) => (
@@ -47,7 +52,7 @@ export default async function OfferingsAdminPage() {
                       <option key={a.accountId} value={a.accountId}>{a.code} {a.name}</option>
                     ))}
                   </select>
-                  <button className="rounded-md border border-blue-300 px-2 py-1 text-xs text-blue-700">재정 반영</button>
+                  <Button type="submit" variant="outline" size="sm" className="text-info">재정 반영</Button>
                 </form>
               )}
             </li>

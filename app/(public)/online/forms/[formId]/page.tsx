@@ -27,7 +27,7 @@ export default async function PublicFormPage({
     return (
       <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-4 px-6 py-12">
         <h1 className="text-2xl font-bold">{pf.form.title}</h1>
-        <p className="text-sm text-green-600">응답이 제출되었습니다. 감사합니다!</p>
+        <p className="text-sm text-success">응답이 제출되었습니다. 감사합니다!</p>
         <Link href="/" className="text-sm underline">← 홈으로</Link>
       </main>
     );
