@@ -1,11 +1,17 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getPublicContext,
   getPublicBoardBySlug,
   listPublicPosts,
 } from "@/lib/site/public";
-import { SiteHeader } from "../../site-header";
+import { PublicHeader } from "@/lib/ui/public-site/public-header";
+import {
+  PublicShell,
+  PublicContainer,
+  PublicFooter,
+} from "@/lib/ui/public-site/public-container";
+import { PublicPageTitle } from "@/lib/ui/public-site/public-section";
+import { PublicPostList } from "@/lib/ui/public-site/public-post-list";
 
 export default async function PublicBoardPage({
   params,
@@ -19,31 +25,30 @@ export default async function PublicBoardPage({
   const board = await getPublicBoardBySlug(ctx.tenant.churchId, slug);
   if (!board) notFound();
   const posts = await listPublicPosts(ctx.tenant.churchId, board.boardId);
+  const churchName = ctx.site.title || ctx.tenant.name;
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader
-        churchName={ctx.site.title || ctx.tenant.name}
+    <PublicShell>
+      <PublicHeader
+        churchName={churchName}
         pages={ctx.pages.map((p) => ({ slug: p.slug, title: p.title }))}
         boards={ctx.boards.map((b) => ({ slug: b.slug, name: b.name }))}
       />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-        <h1 className="mb-4 text-2xl font-bold">{board.name}</h1>
-        {posts.length === 0 ? (
-          <p className="text-sm text-muted-foreground">게시된 글이 없습니다.</p>
-        ) : (
-          <ul className="flex flex-col gap-2 text-sm">
-            {posts.map((p) => (
-              <li key={p.postId} className="flex justify-between border-b border-border py-2">
-                <Link href={`/b/${slug}/${p.postId}`} className="underline">{p.title}</Link>
-                <span className="text-muted-foreground">
-                  {p.publishedAt ? new Date(p.publishedAt).toISOString().slice(0, 10) : ""}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </main>
-    </div>
+      <PublicContainer>
+        <PublicPageTitle>{board.name}</PublicPageTitle>
+        <div className="mt-6">
+          <PublicPostList
+            items={posts.map((p) => ({
+              href: `/b/${slug}/${p.postId}`,
+              title: p.title,
+              meta: p.publishedAt
+                ? new Date(p.publishedAt).toISOString().slice(0, 10)
+                : undefined,
+            }))}
+          />
+        </div>
+      </PublicContainer>
+      <PublicFooter name={churchName} />
+    </PublicShell>
   );
 }
