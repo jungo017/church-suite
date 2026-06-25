@@ -1,12 +1,23 @@
 import Link from "next/link";
+import { Search } from "lucide-react";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { annualGivingByMember } from "@/lib/finance/receipts";
 import { formatWon } from "@/lib/finance/constants";
-
-const ctrl =
-  "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { FilterBar } from "@/lib/ui/filter-bar";
+import { Input, Label } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 
 export default async function ReceiptsPage({
   searchParams,
@@ -22,49 +33,58 @@ export default async function ReceiptsPage({
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-2xl font-bold">기부금영수증</h1>
+      <PageHeader>
+        <PageTitle>기부금영수증</PageTitle>
+      </PageHeader>
 
-      <form className="flex items-end gap-2 text-sm">
-        <label className="flex flex-col gap-1">
+      <FilterBar>
+        <Label>
           연도
-          <input name="year" type="number" defaultValue={year} className={ctrl} />
-        </label>
-        <button className={ctrl}>조회</button>
-      </form>
+          <Input name="year" type="number" defaultValue={year} className="w-auto" />
+        </Label>
+        <Button type="submit" variant="outline">
+          <Search />
+          조회
+        </Button>
+      </FilterBar>
 
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{year}년 헌금 내역(헌금자 지정)이 없습니다.</p>
+        <EmptyState
+          title="헌금 내역이 없습니다"
+          description={`${year}년 헌금 내역(헌금자 지정)이 없습니다. 전표에 헌금자를 지정하면 영수증을 발급할 수 있습니다.`}
+        />
       ) : (
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-border text-muted-foreground">
-            <tr>
-              <th className="py-2">교인</th>
-              <th className="py-2 text-right">건수</th>
-              <th className="py-2 text-right">연간 합계</th>
-              <th className="py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.memberId} className="border-b border-border">
-                <td className="py-2 font-medium">{r.name}</td>
-                <td className="py-2 text-right text-muted-foreground">{r.cnt}건</td>
-                <td className="py-2 text-right">{formatWon(r.total)}</td>
-                <td className="py-2 text-right">
-                  <Link
-                    href={`/finance/receipts/${r.memberId}?year=${year}`}
-                    className="text-xs underline"
-                  >
-                    영수증
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>교인</TableHead>
+                <TableHead className="text-right tabular-nums">건수</TableHead>
+                <TableHead className="text-right tabular-nums">연간 합계</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.map((r) => (
+                <TableRow key={r.memberId}>
+                  <TableCell className="font-medium">{r.name}</TableCell>
+                  <TableCell className="text-right tabular-nums text-muted-foreground">{r.cnt}건</TableCell>
+                  <TableCell className="text-right tabular-nums">{formatWon(r.total)}</TableCell>
+                  <TableCell className="text-right">
+                    <Button asChild variant="ghost" size="sm">
+                      <Link href={`/finance/receipts/${r.memberId}?year=${year}`}>
+                        영수증
+                      </Link>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
-      <Link href="/finance" className="text-sm underline">← 재정</Link>
+      <Link href="/finance" className="text-sm text-muted-foreground hover:underline">← 재정</Link>
     </section>
   );
 }
