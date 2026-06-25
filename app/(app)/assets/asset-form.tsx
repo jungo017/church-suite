@@ -4,6 +4,8 @@ import {
   ASSET_STATUSES,
   ASSET_STATUS_LABELS,
 } from "@/lib/assets/constants";
+import { Field, FieldLabel, Input, Select, Textarea } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
 
 type Opt = { id: string; name: string };
 type AssetValues = {
@@ -20,30 +22,28 @@ type AssetValues = {
   note: string | null;
 };
 
-const input =
-  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
-const label = "flex flex-col gap-1 text-sm";
-
-function Select({
+function OptSelect({
+  id,
   name,
   defaultValue,
   options,
   placeholder,
 }: {
+  id: string;
   name: string;
   defaultValue: string | null;
   options: Opt[];
   placeholder: string;
 }) {
   return (
-    <select name={name} defaultValue={defaultValue ?? ""} className={input}>
+    <Select id={id} name={name} defaultValue={defaultValue ?? ""}>
       <option value="">{placeholder}</option>
       {options.map((o) => (
         <option key={o.id} value={o.id}>
           {o.name}
         </option>
       ))}
-    </select>
+    </Select>
   );
 }
 
@@ -65,82 +65,79 @@ export function AssetForm({
 }) {
   return (
     <form action={action} className="flex max-w-xl flex-col gap-4">
-      <label className={label}>
-        이름 *
-        <input name="name" required defaultValue={asset?.name ?? ""} className={input} />
-      </label>
+      <Field>
+        <FieldLabel htmlFor="name" required>이름</FieldLabel>
+        <Input id="name" name="name" required defaultValue={asset?.name ?? ""} />
+      </Field>
 
       <div className="grid grid-cols-2 gap-4">
-        <label className={label}>
-          종류
-          <select name="assetType" defaultValue={asset?.assetType ?? "equipment"} className={input}>
+        <Field>
+          <FieldLabel htmlFor="assetType">종류</FieldLabel>
+          <Select id="assetType" name="assetType" defaultValue={asset?.assetType ?? "equipment"}>
             {ASSET_TYPES.map((t) => (
               <option key={t} value={t}>
                 {ASSET_TYPE_LABELS[t]}
               </option>
             ))}
-          </select>
-        </label>
-        <label className={label}>
-          상태
-          <select name="status" defaultValue={asset?.status ?? "in_use"} className={input}>
+          </Select>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="status">상태</FieldLabel>
+          <Select id="status" name="status" defaultValue={asset?.status ?? "in_use"}>
             {ASSET_STATUSES.map((s) => (
               <option key={s} value={s}>
                 {ASSET_STATUS_LABELS[s]}
               </option>
             ))}
-          </select>
-        </label>
+          </Select>
+        </Field>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <label className={label}>
-          수량
-          <input name="quantity" type="number" min="0" defaultValue={asset?.quantity ?? 1} className={input} />
-        </label>
-        <label className={label}>
-          자산 태그 (QR)
-          <input name="tag" defaultValue={asset?.tag ?? ""} className={input} />
-        </label>
+        <Field>
+          <FieldLabel htmlFor="quantity">수량</FieldLabel>
+          <Input id="quantity" name="quantity" type="number" min="0" inputMode="numeric" defaultValue={asset?.quantity ?? 1} />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="tag">자산 태그 (QR)</FieldLabel>
+          <Input id="tag" name="tag" defaultValue={asset?.tag ?? ""} />
+        </Field>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <label className={label}>
-          품목
-          <Select name="categoryId" defaultValue={asset?.categoryId ?? null} options={categories} placeholder="(없음)" />
-        </label>
-        <label className={label}>
-          부서
-          <Select name="departmentId" defaultValue={asset?.departmentId ?? null} options={departments} placeholder="(없음)" />
-        </label>
-        <label className={label}>
-          장소
-          <Select name="locationId" defaultValue={asset?.locationId ?? null} options={locations} placeholder="(없음)" />
-        </label>
+        <Field>
+          <FieldLabel htmlFor="categoryId">품목</FieldLabel>
+          <OptSelect id="categoryId" name="categoryId" defaultValue={asset?.categoryId ?? null} options={categories} placeholder="(없음)" />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="departmentId">부서</FieldLabel>
+          <OptSelect id="departmentId" name="departmentId" defaultValue={asset?.departmentId ?? null} options={departments} placeholder="(없음)" />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="locationId">장소</FieldLabel>
+          <OptSelect id="locationId" name="locationId" defaultValue={asset?.locationId ?? null} options={locations} placeholder="(없음)" />
+        </Field>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <label className={label}>
-          취득일
-          <input name="acquiredAt" type="date" defaultValue={asset?.acquiredAt ?? ""} className={input} />
-        </label>
-        <label className={label}>
-          취득가액 (원)
-          <input name="acquiredCost" type="number" step="0.01" min="0" defaultValue={asset?.acquiredCost ?? ""} className={input} />
-        </label>
+        <Field>
+          <FieldLabel htmlFor="acquiredAt">취득일</FieldLabel>
+          <Input id="acquiredAt" name="acquiredAt" type="date" defaultValue={asset?.acquiredAt ?? ""} />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="acquiredCost">취득가액 (원)</FieldLabel>
+          <Input id="acquiredCost" name="acquiredCost" type="number" step="0.01" min="0" inputMode="numeric" defaultValue={asset?.acquiredCost ?? ""} />
+        </Field>
       </div>
 
-      <label className={label}>
-        비고
-        <textarea name="note" rows={3} defaultValue={asset?.note ?? ""} className={input} />
-      </label>
+      <Field>
+        <FieldLabel htmlFor="note">비고</FieldLabel>
+        <Textarea id="note" name="note" rows={3} defaultValue={asset?.note ?? ""} />
+      </Field>
 
-      <button
-        type="submit"
-        className="w-fit rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
-      >
+      <Button type="submit" className="w-fit">
         {submitLabel}
-      </button>
+      </Button>
     </form>
   );
 }
