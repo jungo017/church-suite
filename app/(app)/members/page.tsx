@@ -1,10 +1,25 @@
 import Link from "next/link";
+import { Search, UserPlus } from "lucide-react";
 import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
 import { listMembersPaged } from "@/lib/members/service";
 import { positionLabelMap } from "@/lib/members/org";
 import { pageParams } from "@/lib/db/pagination";
 import { Pagination } from "../pagination";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { FilterBar } from "@/lib/ui/filter-bar";
+import { Input, Select } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { Badge, type BadgeTone } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 import {
   MEMBER_STATUSES,
   MEMBER_STATUS_LABELS,
@@ -13,6 +28,14 @@ import {
   type Gender,
 } from "@/lib/members/constants";
 
+// 교인 상태 → Badge 톤 (색만으로 의미 전달하지 않도록 라벨과 함께 사용, §11).
+const STATUS_TONE: Record<string, BadgeTone> = {
+  active: "success",
+  inactive: "muted",
+  transferred: "info",
+  deceased: "muted",
+};
+
 export default async function MembersPage({
   searchParams,
 }: {
@@ -20,62 +43,114 @@ export default async function MembersPage({
 }) {
   const { status, q, page: pageParam, size } = await searchParams;
   const user = await requirePermission(PERMISSIONS.MEMBERS_READ);
+  const canWrite = hasPermission(user.roles, PERMISSIONS.MEMBERS_WRITE);
   const { page, pageSize } = pageParams({ page: pageParam, size });
   const result = await listMembersPaged(user.church_id, { status, q }, page, pageSize);
   const members = result.items;
   const posMap = await positionLabelMap(user.church_id);
+  const filtered = Boolean(q || status);
 
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">교적 ({result.total})</h1>
+      <PageHeader>
+        <PageTitle>교적 ({result.total})</PageTitle>
+        {canWrite && (
+          <PageActions>
+            <Button asChild>
+              <Link href="/members/new">
+                <UserPlus />
+                교인 등록
+              </Link>
+            </Button>
+          </PageActions>
+        )}
+      </PageHeader>
 
-      <form className="flex flex-wrap gap-2 text-sm">
-        <input
+      <FilterBar>
+        <Input
           name="q"
           defaultValue={q ?? ""}
           placeholder="이름 검색"
-          className="rounded-md border border-border px-3 py-1.5 dark:bg-transparent"
+          className="w-auto"
         />
-        <select
-          name="status"
-          defaultValue={status ?? ""}
-          className="rounded-md border border-border px-3 py-1.5 dark:bg-transparent"
-        >
+        <Select name="status" defaultValue={status ?? ""} className="w-auto">
           <option value="">전체 상태</option>
           {MEMBER_STATUSES.map((s) => (
-            <option key={s} value={s}>{MEMBER_STATUS_LABELS[s]}</option>
+            <option key={s} value={s}>
+              {MEMBER_STATUS_LABELS[s]}
+            </option>
           ))}
-        </select>
-        <button className="rounded-md border border-border px-3 py-1.5">검색</button>
-      </form>
+        </Select>
+        <Button type="submit" variant="outline">
+          <Search />
+          검색
+        </Button>
+        {filtered && (
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/members">초기화</Link>
+          </Button>
+        )}
+      </FilterBar>
 
       {members.length === 0 ? (
-        <p className="py-8 text-sm text-muted-foreground">교인이 없습니다.</p>
+        <EmptyState
+          title="교인이 없습니다"
+          description={
+            filtered
+              ? "검색 조건에 맞는 교인이 없습니다. 필터를 변경해 보세요."
+              : "첫 교인을 등록하면 교적, 출석, 헌금 내역을 함께 관리할 수 있습니다."
+          }
+          action={
+            canWrite && !filtered ? (
+              <Button asChild>
+                <Link href="/members/new">
+                  <UserPlus />
+                  교인 등록
+                </Link>
+              </Button>
+            ) : undefined
+          }
+        />
       ) : (
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-border text-muted-foreground">
-            <tr>
-              <th className="py-2">이름</th>
-              <th className="py-2">성별</th>
-              <th className="py-2">직분</th>
-              <th className="py-2">상태</th>
-              <th className="py-2">연락처</th>
-            </tr>
-          </thead>
-          <tbody>
-            {members.map((m) => (
-              <tr key={m.memberId} className="border-b border-border hover:bg-muted">
-                <td className="py-2">
-                  <Link href={`/members/${m.memberId}`} className="font-medium underline">{m.name}</Link>
-                </td>
-                <td className="py-2">{m.gender ? GENDER_LABELS[m.gender as Gender] : "—"}</td>
-                <td className="py-2">{(m.positionId ? posMap[m.positionId] : m.position) ?? "—"}</td>
-                <td className="py-2">{MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status}</td>
-                <td className="py-2">{m.phone ?? "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>이름</TableHead>
+                <TableHead>성별</TableHead>
+                <TableHead>직분</TableHead>
+                <TableHead>상태</TableHead>
+                <TableHead>연락처</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {members.map((m) => (
+                <TableRow key={m.memberId}>
+                  <TableCell>
+                    <Link
+                      href={`/members/${m.memberId}`}
+                      className="font-medium text-foreground hover:underline"
+                    >
+                      {m.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {m.gender ? GENDER_LABELS[m.gender as Gender] : "—"}
+                  </TableCell>
+                  <TableCell>
+                    {(m.positionId ? posMap[m.positionId] : m.position) ?? "—"}
+                  </TableCell>
+                  <TableCell>
+                    <Badge tone={STATUS_TONE[m.status] ?? "muted"}>
+                      {MEMBER_STATUS_LABELS[m.status as MemberStatus] ?? m.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{m.phone ?? "—"}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
       <Pagination
