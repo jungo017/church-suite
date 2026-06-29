@@ -8,6 +8,9 @@ import {
   allModules,
   getModule,
   resetRegistry,
+  registerReadContract,
+  getReadContract,
+  resetReadContracts,
 } from "@church/core";
 import { assetsManifest } from "@/lib/assets/manifest";
 
@@ -82,5 +85,32 @@ describe("registry — 명시 등록 / 중복 거부", () => {
   it("같은 키 중복 등록은 throw", () => {
     registerModule(assetsManifest);
     expect(() => registerModule(assetsManifest)).toThrow(/already registered/);
+  });
+});
+
+describe("read-contracts — 모듈 간 통합 매개", () => {
+  beforeEach(() => resetReadContracts());
+
+  it("등록 후 호출, 미등록은 undefined", async () => {
+    expect(getReadContract("assets", "count")).toBeUndefined();
+    registerReadContract("assets", "count", async (churchId: string) =>
+      churchId === "c1" ? 7 : 0,
+    );
+    const fn = getReadContract<number>("assets", "count");
+    expect(fn).toBeTypeOf("function");
+    expect(await fn!("c1")).toBe(7);
+    expect(await fn!("other")).toBe(0);
+  });
+
+  it("같은 (모듈,이름)은 멱등 덮어쓰기", () => {
+    registerReadContract("assets", "count", async () => 1);
+    registerReadContract("assets", "count", async () => 2);
+    expect(getReadContract("assets", "count")).toBeTypeOf("function");
+  });
+
+  it("모듈/이름 네임스페이스 분리", () => {
+    registerReadContract("assets", "count", async () => 1);
+    expect(getReadContract("finance", "count")).toBeUndefined();
+    expect(getReadContract("assets", "other")).toBeUndefined();
   });
 });
