@@ -4,17 +4,35 @@ import {
   getModule,
   registerReadContract,
   getReadContract,
+  type ModuleManifest,
 } from "@church/core";
+import { membersManifest } from "@/lib/members/manifest";
+import { financeManifest } from "@/lib/finance/manifest";
 import { assetsManifest } from "@/lib/assets/manifest";
+import { siteManifest } from "@/lib/site/manifest";
+import { formsManifest } from "@/lib/forms/manifest";
 import { getAssetCount } from "@/lib/assets/contract";
 
 // 호스트 모듈 합성(스펙 §1 P-1) — 설치/등록된 모듈의 매니페스트 + 읽기 계약을
 // 코어 레지스트리에 등록한다. 호스트는 이 합성 계층에서만 모듈을 import 하고,
-// 기능 코드(대시보드 등)는 레지스트리를 통해 소비한다(직접 결합 금지, AGENTS §4.1-1).
+// 기능 코드(셸·대시보드 등)는 레지스트리를 통해 소비한다(직접 결합 금지, AGENTS §4.1-1).
 //
-// 멱등: 테스트/HMR/중복 호출 안전. 셸 전면 배선은 M2, 모듈 물리 추출은 코어 기반 추출 후.
+// 멱등: 테스트/HMR/중복 호출 안전. 모듈 물리 추출은 코어 기반 추출(M1.5) 후.
+
+// 등록 순서 = 셸 제품 스위처 노출 순서.
+const MANIFESTS: ModuleManifest[] = [
+  membersManifest,
+  financeManifest,
+  assetsManifest,
+  siteManifest,
+  formsManifest,
+];
+
 export function ensureModulesRegistered(): void {
-  if (!getModule("assets")) registerModule(assetsManifest);
+  for (const m of MANIFESTS) {
+    if (!getModule(m.key)) registerModule(m);
+  }
+  // 모듈 읽기 계약(호스트/타 모듈이 직접 테이블 접근 없이 소비).
   if (!getReadContract("assets", "count")) {
     registerReadContract("assets", "count", getAssetCount);
   }
