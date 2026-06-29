@@ -4,7 +4,7 @@
 // 셸 재배선(레지스트리 기반 합성)은 M2, 코어/스키마 물리 추출은 M0b/M4 — 여기서는 계약 적합성 검증용 선언.
 
 import { PERMISSIONS } from "@/lib/rbac/roles";
-import type { ModuleManifest } from "@/lib/core/module-contract";
+import type { ModuleManifest } from "@church/core";
 
 export const assetsManifest: ModuleManifest = {
   key: "assets",

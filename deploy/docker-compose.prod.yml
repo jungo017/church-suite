@@ -2,7 +2,7 @@
 #   1) cp deploy/.env.prod.example deploy/.env.prod  (값 채우기)
 #   2) docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod build
 #   3) 최초 1회 마이그레이션:
-#      docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod run --rm app npm run db:migrate
+#      docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod run --rm app pnpm run db:migrate
 #   4) docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env.prod up -d
 #
 # 기본은 단일 인스턴스(스펙 §12 "초기 단순 구성"). 다중 인스턴스 확장은 README 참고.
@@ -35,7 +35,7 @@ services:
     # s3 사용 시엔 불필요(SeaweedFS 가 보관).
     volumes:
       - appstorage:/data/storage
-    command: ["npm", "run", "start"]
+    command: ["pnpm", "run", "start"]
 
   worker:
     image: church-suite:latest # app 이 빌드한 이미지 재사용
@@ -46,7 +46,7 @@ services:
         condition: service_healthy
     volumes:
       - appstorage:/data/storage
-    command: ["npm", "run", "worker"]
+    command: ["pnpm", "run", "worker"]
 
   postgres:
     image: postgres:16-alpine

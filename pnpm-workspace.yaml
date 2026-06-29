@@ -1,0 +1,10 @@
+# pnpm 워크스페이스 (스펙 §1 P-1, module-platform.md §8).
+# 호스트 앱은 루트(단일 배포 = 모듈러 모놀리식), 코어/모듈은 packages/* 패키지로 경계 분리.
+packages:
+  - "packages/*"
+
+# 네이티브 빌드 스크립트 승인(pnpm 11 형식). esbuild=tsx·vitest / sharp=Next 이미지 / unrs-resolver=eslint.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

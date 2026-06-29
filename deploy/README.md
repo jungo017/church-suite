@@ -25,7 +25,7 @@ cd deploy
 COMPOSE="docker compose -f docker-compose.prod.yml --env-file .env.prod"
 
 $COMPOSE build
-$COMPOSE run --rm app npm run db:migrate         # 최초 1회(+스키마 변경 시) 마이그레이션
+$COMPOSE run --rm app pnpm run db:migrate        # 최초 1회(+스키마 변경 시) 마이그레이션
 $COMPOSE up -d
 $COMPOSE logs -f app worker
 ```

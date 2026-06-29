@@ -18,22 +18,25 @@ nginx · **Next.js 16**(App Router, Turbopack) · React 19 · TypeScript · Tail
 ## 빠른 시작
 
 ```bash
+corepack enable          # pnpm 활성화(워크스페이스)
 cp .env.example .env     # 로컬 기본값으로 충분
-npm install
-npm run db:up            # Postgres 16 (docker compose)
-npm run db:migrate       # 마이그레이션 적용
-npm run dev              # http://localhost:3000
+pnpm install
+pnpm run db:up           # Postgres 16 (docker compose)
+pnpm run db:migrate      # 마이그레이션 적용
+pnpm run dev             # http://localhost:3000
 ```
 
-백그라운드 잡 워커: `npm run worker`
+백그라운드 잡 워커: `pnpm run worker`
 
 ## 명령어
 
+> 패키지 매니저 = **pnpm 워크스페이스**(코어/모듈 `packages/*`, 스펙 §1 P-1).
+
 | 구분 | 명령 |
 |---|---|
-| 개발/빌드 | `npm run dev` · `npm run build` · `npm run start` |
-| DB | `npm run db:generate` · `db:migrate` · `db:studio` · `db:up`/`db:down` |
-| 품질 게이트 | `npm run lint` · `npm run typecheck` · `npm run test` |
+| 개발/빌드 | `pnpm run dev` · `pnpm run build` · `pnpm run start` |
+| DB | `pnpm run db:generate` · `db:migrate` · `db:studio` · `db:up`/`db:down` |
+| 품질 게이트 | `pnpm run lint` · `pnpm run typecheck` · `pnpm run test` |
 
 ## 멀티테넌시 (중요)
 
@@ -43,7 +46,7 @@ npm run dev              # http://localhost:3000
 
 ## 테스트
 
-멀티테넌트 격리·권한·공개 경계를 테스트로 증명. 현재 **92 tests**(+1 skipped: 실 S3 라운드트립). 실행에는 Postgres 가 필요(`npm run test`).
+멀티테넌트 격리·권한·공개 경계를 테스트로 증명. 현재 **109 tests**(+1 skipped: 실 S3 라운드트립). 실행에는 Postgres 가 필요(`pnpm run test`).
 
 ## 배포
 

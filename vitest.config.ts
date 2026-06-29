@@ -7,6 +7,8 @@ const root = fileURLToPath(new URL("./", import.meta.url));
 export default defineConfig({
   resolve: {
     alias: [
+      // "@church/core" → 코어 패키지 소스(workspace 패키지)
+      { find: "@church/core", replacement: `${root}packages/core/src/index.ts` },
       // "@/..." → 프로젝트 루트
       { find: /^@\/(.*)$/, replacement: `${root}$1` },
       // "server-only" 가드는 테스트(Node)에서 빈 모듈로 대체

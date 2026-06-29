@@ -199,7 +199,7 @@ packages/
 | 단계 | 내용 | 게이트 |
 |---|---|---|
 | **M0a** ✅ | 모듈 계약·레지스트리·파일럿(assets) 매니페스트 + 단위테스트 (순수 추가, 동작 불변). 위치 `lib/core/`(추출 시드) | typecheck·lint·109 tests green |
-| **M0b** | pnpm workspace 전환 + 물리적 `packages/core` 추출 + `@/` 별칭/CI/Dockerfile 갱신 (패키지매니저·CI 변경) | 빌드·테스트·CI green |
+| **M0b** ✅(로컬) | pnpm workspace 전환(`packageManager` 고정, `allowBuilds`) + 물리적 `packages/core`(`@church/core`) 추출 + tsconfig/vitest 별칭 + CI·Dockerfile·compose·문서 pnpm화. core 는 의존성 0(권한검사 DI). lib 기반(db/auth/rbac) 이전은 M4. | 로컬 typecheck·lint·test(109)·build green. **CI/Docker는 푸시 시 실검증** |
 | **M1** | **파일럿 1개 모듈 추출**(가장 작은 **비품/assets** 권장) → 매니페스트·소유 마이그레이션·readContract | assets 격리/권한 테스트 green |
 | **M2** | **레지스트리 기반 셸** — 하드코딩 `MODULES` 제거, 제품 스위처/사이드바를 매니페스트로 | E2E 네비/권한 |
 | **M3** | **엔타이틀먼트 배선** — `plan`→설치모듈, 컨텍스트 주입, 가드, 온보딩 확장 | 설치/해제 테스트 |
