@@ -73,7 +73,7 @@
 ### Next.js 16 주의사항
 - **Turbopack**이 기본 번들러(개발·빌드). 커스텀 webpack 설정 시 점검.
 - 캐싱이 **명시적(Cache Components)** 모델 — ISR/캐시를 의도적으로 선언.
-- **Node 20+** 필요.
+- **Node 22+** 필요(Next 16 은 20+이지만 pnpm 11 이 `node:sqlite`=Node 22+ 를 사용 — P-1/M0b 이후 22+ 고정).
 - `cookies()` · `headers()` 등 요청 API가 **async**.
 
 ---

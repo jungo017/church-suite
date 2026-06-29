@@ -160,7 +160,7 @@ pnpm run typecheck     # tsc --noEmit
 pnpm run test          # vitest (Postgres 필요)
 ```
 
-**환경 요건:** Node 20+ (Next 16) · **pnpm**(corepack). Docker(로컬 Postgres). `.env`로 `DATABASE_URL` 등 설정.
+**환경 요건:** **Node 22+** (pnpm 11 이 `node:sqlite` 사용 — Node 20 불가; Next 16) · **pnpm**(corepack). Docker(로컬 Postgres). `.env`로 `DATABASE_URL` 등 설정.
 
 ---
 
