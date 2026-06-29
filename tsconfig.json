@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@church/core": ["./packages/core/src/index.ts"]
     }
   },
   "include": [
