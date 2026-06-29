@@ -47,6 +47,7 @@
 | **(0.6) RBAC = 역할→권한 정적 맵 (PERMISSION 테이블 보류)** | 기본 역할 admin/staff/viewer + 코드 내 ROLE_PERMISSIONS. 가드는 JWT roles 클레임 기준(역할변경은 재로그인/리프레시 반영). 세밀해지면 PERMISSION 테이블 추가(스펙 §6.1) |
 | **(0.7) 테스트 = vitest + 라이브 Postgres, CI = GitHub Actions** | vitest 에서 `server-only` 가드는 빈 모듈로 alias. 격리 테스트는 church_app(RLS 적용)으로 라이브 DB 검증. CI: Postgres 서비스 → migrate → lint/typecheck/test/build |
 | **(0.8) 온보딩 = 단일 트랜잭션 원자적 생성, 요금제 = free 자동 시드** | 교회+역할+관리자+구독+사용량을 withTenant 한 트랜잭션으로 생성(부분 실패 방지). 교회 코드=서브도메인 규칙(`^[a-z0-9][a-z0-9-]{1,30}$`). `plan` 은 전역 참조 데이터(RLS 미적용), 'free' 자동 upsert. 가입은 루트 도메인 공개 `/api/onboard` |
+| **(P-1) 모듈 플랫폼 = 모듈러 모놀리식 + 모듈 계약** | 교적/재정/비품/홈페이지/설문/대시보드는 "메뉴"가 아니라 독립 제품(모듈). 단일 배포 유지하되 모듈 계약(Manifest)·모듈별 소유(스키마/마이그레이션/네비)·교회별 설치(엔타이틀먼트) 도입. 통합 seam(공유 Postgres + `church_id`/RLS + `member_id` 단일 원본, §2-3) 고정 → 모듈별 독립 배포(B안)는 재작성 없이 추출 가능하도록 설계만. 세부: ①pnpm workspace(`apps/web` + `packages/{core,module-*}`) ②모듈 Postgres 스키마(`finance.*` 등) ③파일럿=비품(assets) ④엔타이틀먼트 `Set` 기반(번들 출시·애드온 확장은 가격 정책 레이어) ⑤대시보드=코어 합성 화면. 상세·마이그레이션 경로(M0~M5)는 [`module-platform.md`](./module-platform.md) |
 
 ---
 
