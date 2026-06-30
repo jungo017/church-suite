@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { getInstalledModules } from "@/lib/billing/entitlement";
 import { dashboardCounts } from "@/lib/dashboard";
 import { attendanceTrend } from "@/lib/members/stats";
 import { accountSummary } from "@/lib/finance/report";
@@ -28,17 +29,20 @@ function Card({
 
 export default async function DashboardPage() {
   const user = await requireUser();
-  // 관리 권한이 전혀 없는 교인 역할은 셀프 포털로
-  const isStaff =
-    hasPermission(user.roles, PERMISSIONS.MEMBERS_READ) ||
-    hasPermission(user.roles, PERMISSIONS.FINANCE_READ) ||
-    hasPermission(user.roles, PERMISSIONS.ASSETS_READ);
-  if (!isStaff) redirect("/my");
+  // 카드 노출 = 설치 모듈(엔타이틀먼트) ∩ 읽기 권한(RBAC). 둘 다 통과해야 표시(M3).
+  const installed = await getInstalledModules(user.church_id);
+  const canMembers =
+    installed.has("members") && hasPermission(user.roles, PERMISSIONS.MEMBERS_READ);
+  const canAssets =
+    installed.has("assets") && hasPermission(user.roles, PERMISSIONS.ASSETS_READ);
+  const canFinance =
+    installed.has("finance") && hasPermission(user.roles, PERMISSIONS.FINANCE_READ);
+  // 표시할 카드가 전혀 없는(설치/권한 모두 없는) 교인 역할은 셀프 포털로
+  if (!canMembers && !canAssets && !canFinance) redirect("/my");
 
   const counts = await dashboardCounts(user.church_id);
-  const trend = await attendanceTrend(user.church_id, 3);
+  const trend = canMembers ? await attendanceTrend(user.church_id, 3) : [];
 
-  const canFinance = hasPermission(user.roles, PERMISSIONS.FINANCE_READ);
   const year = new Date().getFullYear();
   const fin = canFinance
     ? await accountSummary(user.church_id, `${year}-01-01`, `${year}-12-31`)
@@ -55,9 +59,15 @@ export default async function DashboardPage() {
       <h1 className="text-2xl font-bold">대시보드</h1>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-        <Card title="재적 교인" value={`${counts.activeMembers}명`} href="/members" />
-        <Card title="전체 교인" value={`${counts.members}명`} href="/members" />
-        <Card title="자산" value={`${counts.assets}건`} href="/assets" />
+        {canMembers && (
+          <>
+            <Card title="재적 교인" value={`${counts.activeMembers}명`} href="/members" />
+            <Card title="전체 교인" value={`${counts.members}명`} href="/members" />
+          </>
+        )}
+        {canAssets && (
+          <Card title="자산" value={`${counts.assets}건`} href="/assets" />
+        )}
         {canFinance && (
           <>
             <Card title={`${year} 수입`} value={formatWon(income)} href="/finance/report" />
@@ -67,6 +77,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
+      {canMembers && (
       <div className="flex flex-col gap-2">
         <h2 className="font-semibold">최근 출석</h2>
         {trend.length === 0 ? (
@@ -84,6 +95,7 @@ export default async function DashboardPage() {
           </ul>
         )}
       </div>
+      )}
     </section>
   );
 }

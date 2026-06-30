@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkPermission } from "@/lib/rbac/guards";
+import { requireModuleWrite } from "@/lib/billing/guards";
 import { PERMISSIONS } from "@/lib/rbac/roles";
 import { createAsset, updateAsset, deleteAsset, type AssetInput } from "./service";
 import {
@@ -26,6 +27,7 @@ import { isAssetType, isAssetStatus } from "./constants";
 async function requireWrite() {
   const res = await checkPermission(PERMISSIONS.ASSETS_WRITE);
   if (!res.ok) redirect(res.error === "unauthenticated" ? "/login" : "/forbidden");
+  await requireModuleWrite(res.user.church_id, "assets");
   return res.user;
 }
 

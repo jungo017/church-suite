@@ -1,7 +1,8 @@
 import { requireUser } from "@/lib/auth/session";
 import { hasPermission, PERMISSIONS, type Permission } from "@/lib/rbac/roles";
-import { visibleModules, allModules, type ModuleKey } from "@church/core";
+import { visibleModules, allModules } from "@church/core";
 import { ensureModulesRegistered } from "@/lib/modules.server";
+import { getInstalledModules } from "@/lib/billing/entitlement";
 import { AppShell, type NavModule } from "./app-shell";
 
 // 인증 영역 레이아웃 (스펙 §13: app/(app)). SSR.
@@ -18,8 +19,9 @@ export default async function AppLayout({
   ensureModulesRegistered();
 
   const can = (perm: string) => hasPermission(user.roles, perm as Permission);
-  // 엔타이틀먼트(M3) 전까지는 등록된 전 모듈을 설치로 간주.
-  const installed = new Set<ModuleKey>(allModules().map((m) => m.key));
+  // 교회별 설치 모듈 = 활성 구독→플랜→모듈 집합(M3 엔타이틀먼트). 셸이 노출하는
+  // 모듈 = 전체 ∩ installed ∩ RBAC(권한). 미설치 모듈은 탭/사이드바에서 숨김.
+  const installed = await getInstalledModules(user.church_id);
 
   const moduleNav: NavModule[] = visibleModules(allModules(), installed, can).map(
     (m) => ({

@@ -203,7 +203,7 @@ packages/
 | **M1** ✅(로컬) | 파일럿 **readContract 패턴**(비품/assets): 코어 읽기-계약 레지스트리(`read-contracts`) + `lib/assets/contract.ts`(`getAssetCount`) + 멱등 합성 부트스트랩(`lib/modules.server.ts`). **대시보드를 asset 테이블 직접 조회 → 모듈 계약 경유로 디커플링**(AGENTS §4.1-1). | 로컬 typecheck·lint·test(112)·build green |
 | **M1.5(선행)** | **코어 기반 추출** — `db`/`auth`/`rbac`/`tenant`/`storage` → `@church/core`. *모듈 패키지 물리 추출의 선행조건*(모듈→앱 역참조 금지). M0b에서 분리해 둔 작업. | 빌드·테스트 green |
 | **M2** | **레지스트리 기반 셸** — 하드코딩 `MODULES` 제거, 제품 스위처/사이드바를 매니페스트로 | E2E 네비/권한 |
-| **M3** | **엔타이틀먼트 배선** — `plan`→설치모듈, 컨텍스트 주입, 가드, 온보딩 확장 | 설치/해제 테스트 |
+| **M3** ✅ | **엔타이틀먼트 배선** — ① core 가격정책 `modulesForPlan`(plan→`Set<ModuleKey>`, 순수·애드온-ready. **현재 결정: 전 티어=전체 모듈**[현행 유지]) ② `lib/billing/entitlement`(활성 구독→플랜→설치집합 해석, React `cache` 요청 메모이즈, 미구독/비활성 폴백) ③ 셸 네비·대시보드 카드를 **설치 ∩ 권한**으로 필터(하드코딩 `installed=전체` 제거) ④ 가드: 모듈별 `(app)/<m>/layout.tsx` 라우트 가드(미설치=404) + 액션 `requireWrite` 쓰기 가드(미설치=forbidden, 레이아웃 우회 차단). 온보딩은 기존 free 구독으로 충족. | typecheck·lint·build green, **122 tests**(+11: 정책·DB해석·폴백·교회격리·해제강제) |
 | **M4** | **모듈 패키지 물리 추출** — assets(파일럿) 포함 전 모듈을 `packages/module-*` 로(M1.5 코어 기반 위에서). 모듈→코어만 의존. | 모듈별 격리 테스트 |
 | **M5** | (선택) `public` 접두어 → 모듈 Postgres 스키마 이전 | 마이그레이션 검증 |
 
@@ -241,7 +241,7 @@ packages/
 | 4 | 엔타이틀먼트 | ✅ **Set 기반(애드온-ready) 모델링 + 번들(티어)로 출시.** 애드온은 가격 매핑만 바꿔 추후 확장 |
 | 5 | 대시보드 | ✅ **코어 합성 화면**(독립 모듈 아님) |
 
-> 남은 후속 결정(추후): 번들 티어 구성(무료/스탠다드/프로 모듈 매핑), 애드온 전환 시점, `public`→스키마 이전(M5)의 정확한 시점.
+> 남은 후속 결정(추후): ~~번들 티어 구성(무료/스탠다드/프로 모듈 매핑)~~ **결정됨(M3): 출시 전이므로 전 티어=전체 모듈**(현행 동작 유지). 티어 분리는 `packages/core/src/entitlement.ts` 의 `PLAN_MODULES` 맵만 바꾸면 됨(나머지 코드 무변경). · 애드온 전환 시점, `public`→스키마 이전(M5)의 정확한 시점.
 
 ---
 
