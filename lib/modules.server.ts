@@ -8,10 +8,10 @@ import {
 } from "@church/core";
 import { membersManifest } from "@/lib/members/manifest";
 import { financeManifest } from "@/lib/finance/manifest";
-import { assetsManifest } from "@/lib/assets/manifest";
+import { assetsManifest } from "@church/module-assets/manifest";
 import { siteManifest } from "@/lib/site/manifest";
 import { formsManifest } from "@/lib/forms/manifest";
-import { getAssetCount } from "@/lib/assets/contract";
+import { getAssetCount } from "@church/module-assets/contract";
 
 // 호스트 모듈 합성(스펙 §1 P-1) — 설치/등록된 모듈의 매니페스트 + 읽기 계약을
 // 코어 레지스트리에 등록한다. 호스트는 이 합성 계층에서만 모듈을 import 하고,

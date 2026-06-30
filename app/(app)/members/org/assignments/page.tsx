@@ -3,7 +3,7 @@ import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listMemberships, listOrgRoles } from "@/lib/members/org";
 import { listMembers } from "@/lib/members/service";
-import { listDepartments } from "@/lib/assets/classification";
+import { listDepartments } from "@church/core/department";
 import { departmentTreeRows } from "@/lib/org/tree";
 import {
   assignMembershipAction,

@@ -6,8 +6,8 @@ import { checkPermission } from "@church/core/rbac/guards";
 import { requireModuleWrite } from "@church/core/billing/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { createAsset, updateAsset, deleteAsset, type AssetInput } from "./service";
+import { createDepartment } from "@church/core/department";
 import {
-  createDepartment,
   createLocation,
   createCategory,
 } from "./classification";

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listAudits } from "@/lib/assets/audit";
-import { createAuditAction } from "@/lib/assets/actions";
+import { listAudits } from "@church/module-assets/audit";
+import { createAuditAction } from "@church/module-assets/actions";
 
 export default async function AuditsPage() {
   const user = await requirePermission(PERMISSIONS.ASSETS_WRITE);

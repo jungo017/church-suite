@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { createMember } from "@/lib/members/service";
-import { createDepartment } from "@/lib/assets/classification";
+import { createDepartment } from "@church/core/department";
 import {
   seedDefaultPositions,
   seedDefaultOrgRoles,

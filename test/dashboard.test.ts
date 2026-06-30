@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { createMember } from "@/lib/members/service";
-import { createAsset } from "@/lib/assets/service";
+import { createAsset } from "@church/module-assets/service";
 import { dashboardCounts } from "@/lib/dashboard";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 

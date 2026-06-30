@@ -5,8 +5,8 @@ import {
   getAsset,
   updateAsset,
   deleteAsset,
-} from "@/lib/assets/service";
-import { createCategory, listCategories } from "@/lib/assets/classification";
+} from "@church/module-assets/service";
+import { createCategory, listCategories } from "@church/module-assets/classification";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

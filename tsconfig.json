@@ -21,7 +21,9 @@
     "paths": {
       "@/*": ["./*"],
       "@church/core": ["./packages/core/src/index.ts"],
-      "@church/core/*": ["./packages/core/src/*"]
+      "@church/core/*": ["./packages/core/src/*"],
+      "@church/module-assets": ["./packages/module-assets/src/index.ts"],
+      "@church/module-assets/*": ["./packages/module-assets/src/*"]
     }
   },
   "include": [

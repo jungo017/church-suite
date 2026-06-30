@@ -2,8 +2,8 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listAssets } from "@/lib/assets/service";
-import { qrDataUrl, assetUrl } from "@/lib/assets/qr";
+import { listAssets } from "@church/module-assets/service";
+import { qrDataUrl, assetUrl } from "@church/module-assets/qr";
 import { TENANT_HOST_HEADER } from "@church/core/tenant/host";
 import { PrintButton } from "./print-button";
 

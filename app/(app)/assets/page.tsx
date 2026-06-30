@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listAssetsPaged } from "@/lib/assets/service";
+import { listAssetsPaged } from "@church/module-assets/service";
 import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
 import {
@@ -10,7 +10,7 @@ import {
   ASSET_STATUSES,
   type AssetType,
   type AssetStatus,
-} from "@/lib/assets/constants";
+} from "@church/module-assets/constants";
 
 function FilterLink({
   status,

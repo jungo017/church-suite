@@ -3,7 +3,7 @@ import {
   ASSET_TYPE_LABELS,
   ASSET_STATUSES,
   ASSET_STATUS_LABELS,
-} from "@/lib/assets/constants";
+} from "@church/module-assets/constants";
 
 type Opt = { id: string; name: string };
 type AssetValues = {

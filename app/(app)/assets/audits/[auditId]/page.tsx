@@ -2,12 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getAudit, listAuditItems } from "@/lib/assets/audit";
+import { getAudit, listAuditItems } from "@church/module-assets/audit";
 import {
   checkItemAction,
   checkByTagAction,
   closeAuditAction,
-} from "@/lib/assets/actions";
+} from "@church/module-assets/actions";
 
 export default async function AuditDetailPage({
   params,

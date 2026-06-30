@@ -2,13 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getAsset } from "@/lib/assets/service";
+import { getAsset } from "@church/module-assets/service";
+import { listDepartments } from "@church/core/department";
 import {
-  listDepartments,
   listLocations,
   listCategories,
-} from "@/lib/assets/classification";
-import { updateAssetAction } from "@/lib/assets/actions";
+} from "@church/module-assets/classification";
+import { updateAssetAction } from "@church/module-assets/actions";
 import { AssetForm } from "../../asset-form";
 
 export default async function EditAssetPage({

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
+import { listDepartments } from "@church/core/department";
 import {
-  listDepartments,
   listLocations,
   listCategories,
-} from "@/lib/assets/classification";
-import { createAssetAction } from "@/lib/assets/actions";
+} from "@church/module-assets/classification";
+import { createAssetAction } from "@church/module-assets/actions";
 import { AssetForm } from "../asset-form";
 
 export default async function NewAssetPage() {

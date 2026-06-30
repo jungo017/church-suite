@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { qrDataUrl, assetUrl } from "@/lib/assets/qr";
+import { qrDataUrl, assetUrl } from "@church/module-assets/qr";
 
 describe("자산 QR", () => {
   it("QR 데이터 URL(PNG)을 생성한다", async () => {
