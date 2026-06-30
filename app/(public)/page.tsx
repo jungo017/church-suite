@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getTenant } from "@church/core/tenant/context";
 import {
   getPublicSite,
@@ -6,12 +5,18 @@ import {
   listPublicBoards,
   listRecentPublicPosts,
 } from "@church/module-site/public";
-import { SiteHeader } from "./site-header";
-
-const btnPrimary =
-  "inline-block w-fit rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90";
-const btnOutline =
-  "rounded-md border border-border px-3 py-1.5 transition-colors hover:bg-muted";
+import { Button } from "@/lib/ui/button";
+import { PublicHeader } from "@/lib/ui/public-site/public-header";
+import {
+  PublicShell,
+  PublicContainer,
+  PublicFooter,
+} from "@/lib/ui/public-site/public-container";
+import {
+  PublicPageTitle,
+  PublicSection,
+} from "@/lib/ui/public-site/public-section";
+import { PublicPostList } from "@/lib/ui/public-site/public-post-list";
 
 // 공개 홈 ("/").
 // - 루트 도메인: SaaS 마케팅/가입 랜딩
@@ -24,15 +29,15 @@ export default async function HomePage() {
   if (!tenant) {
     return (
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-4 px-6 py-16">
-        <h1 className="text-3xl font-bold tracking-tight">교회 관리 SaaS</h1>
+        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">교회 관리 SaaS</h1>
         <p className="text-base text-muted-foreground">
           멀티테넌트 교회 관리 플랫폼 — 비품 · 교적 · 재정 · 홈페이지.
         </p>
-        <div className="mt-2 flex gap-3">
-          <a href="/onboard" className={btnPrimary}>
-            교회 만들기 →
-          </a>
-          <span className="self-center text-sm text-muted-foreground">
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          <Button asChild size="lg">
+            <a href="/onboard">교회 만들기 →</a>
+          </Button>
+          <span className="text-sm text-muted-foreground">
             이미 교회가 있나요? 교회 주소(<code>코드.도메인</code>)에서 로그인하세요.
           </span>
         </div>
@@ -48,7 +53,9 @@ export default async function HomePage() {
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-3 px-6 text-center">
         <h1 className="text-2xl font-bold">{tenant.name}</h1>
         <p className="text-sm text-muted-foreground">홈페이지 준비 중입니다.</p>
-        <a href="/online/new-family" className="text-sm underline">새가족 등록</a>
+        <a href="/online/new-family" className="text-sm text-primary underline">
+          새가족 등록
+        </a>
       </main>
     );
   }
@@ -60,36 +67,35 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader
+    <PublicShell>
+      <PublicHeader
         churchName={site.title || tenant.name}
         pages={pages.map((p) => ({ slug: p.slug, title: p.title }))}
         boards={boards.map((b) => ({ slug: b.slug, name: b.name }))}
       />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-        <h1 className="text-3xl font-bold">{tenant.name}</h1>
+      <PublicContainer>
+        <PublicPageTitle>{tenant.name}</PublicPageTitle>
 
-        <div className="mt-6 flex gap-3 text-sm">
-          <a href="/online/new-family" className={btnOutline}>새가족 등록</a>
-          <a href="/online/offering" className={btnOutline}>온라인 헌금</a>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild variant="outline">
+            <a href="/online/new-family">새가족 등록</a>
+          </Button>
+          <Button asChild variant="outline">
+            <a href="/online/offering">온라인 헌금</a>
+          </Button>
         </div>
 
-        <section className="mt-10">
-          <h2 className="mb-3 text-lg font-semibold">최근 소식</h2>
-          {recent.length === 0 ? (
-            <p className="text-sm text-muted-foreground">게시된 글이 없습니다.</p>
-          ) : (
-            <ul className="flex flex-col gap-2 text-sm">
-              {recent.map((r) => (
-                <li key={r.postId} className="flex justify-between border-b border-border py-2">
-                  <Link href={`/b/${r.boardSlug}/${r.postId}`} className="underline">{r.title}</Link>
-                  <span className="text-muted-foreground">{r.boardName}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </main>
-    </div>
+        <PublicSection title="최근 소식">
+          <PublicPostList
+            items={recent.map((r) => ({
+              href: `/b/${r.boardSlug}/${r.postId}`,
+              title: r.title,
+              meta: r.boardName,
+            }))}
+          />
+        </PublicSection>
+      </PublicContainer>
+      <PublicFooter name={site.title || tenant.name} />
+    </PublicShell>
   );
 }

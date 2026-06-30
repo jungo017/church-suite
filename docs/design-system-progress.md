@@ -38,9 +38,12 @@
 - [x] 이동 함수 재배선: listDepartments→`@church/core/department`, getUserMember→`@church/core/member`
 - [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅ (test 는 CI)
 
-### Phase D4. 공개 사이트 분리 — ⬜ 대기
-- [ ] 신규 `lib/ui/public-site/*`(header·container/shell/footer·section·post-list)
-- [ ] 공개 홈·게시판·페이지·게시글·online 폼 3종 전환, 내부 앱과 톤 분리(교회별 `data-theme` 유지)
+### Phase D4. 공개 사이트 분리 — ✅ 완료 (재적용)
+- [x] 신규 `lib/ui/public-site/*`(public-header·public-container[Shell/Footer]·public-section·public-post-list)
+- [x] `app/(public)/site-header.tsx` → `PublicHeader` 재노출(하위호환)
+- [x] 공개 홈(`/`)·게시판(`b/[slug]`·`b/[slug]/[postId]`)·페이지(`p/[slug]`)·online 폼 3종(new-family·offering·forms/[formId]) → PublicShell/Container/Section/PostList + Field(모바일 우선 폼)
+- [x] 교회별 `data-theme` 적용 유지, 내부 앱과 톤 분리. import 재배선(module/core)
+- [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅ (test 는 CI)
 
 ### Phase D5. QA/문서 + 색상 lint — ⬜ 대기
 - [ ] **금지색 lint 자동화** — `eslint.config.mjs` `no-restricted-syntax`(.tsx)로 원시 색상 스케일·black/white error. (기존 boundary `no-restricted-imports` 규칙과 공존하도록 병합)

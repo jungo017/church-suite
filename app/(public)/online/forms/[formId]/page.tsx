@@ -4,9 +4,10 @@ import { getTenant } from "@church/core/tenant/context";
 import { getPublicForm, } from "@church/module-forms/responses";
 import { parseOptions } from "@church/module-forms/service";
 import { submitPublicFormAction } from "@church/module-forms/public-actions";
-
-const input =
-  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
+import { Button } from "@/lib/ui/button";
+import { PublicContainer } from "@/lib/ui/public-site/public-container";
+import { PublicPageTitle } from "@/lib/ui/public-site/public-section";
+import { Field, FieldLabel, Input, Textarea, Select } from "@/lib/ui/form";
 
 export default async function PublicFormPage({
   params,
@@ -25,18 +26,18 @@ export default async function PublicFormPage({
 
   if (submitted) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-4 px-6 py-12">
-        <h1 className="text-2xl font-bold">{pf.form.title}</h1>
-        <p className="text-sm text-green-600">응답이 제출되었습니다. 감사합니다!</p>
+      <PublicContainer className="flex min-h-screen max-w-md flex-col justify-center gap-4">
+        <PublicPageTitle>{pf.form.title}</PublicPageTitle>
+        <p className="text-sm text-success">응답이 제출되었습니다. 감사합니다!</p>
         <Link href="/" className="text-sm underline">← 홈으로</Link>
-      </main>
+      </PublicContainer>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-5 px-6 py-12">
+    <PublicContainer className="flex min-h-screen max-w-md flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-bold">{pf.form.title}</h1>
+        <PublicPageTitle>{pf.form.title}</PublicPageTitle>
         {pf.form.description && (
           <p className="mt-1 text-sm text-muted-foreground">{pf.form.description}</p>
         )}
@@ -56,30 +57,29 @@ export default async function PublicFormPage({
           const name = `field_${f.fieldId}`;
           const opts = parseOptions(f.options);
           return (
-            <div key={f.fieldId} className="flex flex-col gap-1">
-              <label className="text-sm font-medium">
+            <Field key={f.fieldId}>
+              <FieldLabel htmlFor={name} required={f.required}>
                 {f.label}
-                {f.required ? <span className="ml-1 text-destructive">*</span> : null}
-              </label>
+              </FieldLabel>
               {f.type === "short_text" && (
-                <input name={name} required={f.required} className={input} />
+                <Input id={name} name={name} required={f.required} />
               )}
               {f.type === "long_text" && (
-                <textarea name={name} required={f.required} rows={3} className={input} />
+                <Textarea id={name} name={name} required={f.required} rows={3} />
               )}
               {f.type === "number" && (
-                <input name={name} type="number" required={f.required} className={input} />
+                <Input id={name} name={name} type="number" required={f.required} />
               )}
               {f.type === "date" && (
-                <input name={name} type="date" required={f.required} className={input} />
+                <Input id={name} name={name} type="date" required={f.required} />
               )}
               {f.type === "scale" && (
-                <select name={name} required={f.required} className={input} defaultValue="">
+                <Select id={name} name={name} required={f.required} defaultValue="">
                   <option value="" disabled>선택</option>
                   {[1, 2, 3, 4, 5].map((n) => (
                     <option key={n} value={n}>{n}</option>
                   ))}
-                </select>
+                </Select>
               )}
               {f.type === "single_choice" &&
                 opts.map((o) => (
@@ -94,15 +94,13 @@ export default async function PublicFormPage({
                   </label>
                 ))}
               {f.type === "file" && (
-                <input name={name} type="file" required={f.required} className={input} />
+                <Input id={name} name={name} type="file" required={f.required} />
               )}
-            </div>
+            </Field>
           );
         })}
-        <button className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">
-          제출
-        </button>
+        <Button type="submit" size="lg">제출</Button>
       </form>
-    </main>
+    </PublicContainer>
   );
 }
