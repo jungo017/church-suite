@@ -207,7 +207,7 @@ packages/
 | **M3.5(코어 추출 2회차)** ✅ | **코어 횡단 라이브러리 추출** — `billing`(엔타이틀먼트)·`compliance`(PIPA)·`jobs`(pg-boss)·`notify`(알림) → `@church/core`(모두 문서 §4 코어 소관, 모듈 결합 0). M1.5 와 동일 패턴(서브패스 export·import 재작성·소스 소비). → 모듈(members/finance/assets/site)이 **코어만** 의존하게 됨(M4 직전 정지). | typecheck·lint·test(122)·build·tsx green |
 | **M4-파일럿(assets)** ✅ | **비품 모듈 물리 추출** — `lib/assets` → `packages/module-assets`(`@church/module-assets`, exports `.`=manifest+contract / `./*`=내부). 라우트(`app/(app)/assets`)는 단일배포라 앱에 잔류하고 패키지를 import. tsconfig `paths`·vitest alias 추가. **선행 디커플링:** `department`(코어 공유) CRUD 를 `lib/assets/classification` → `@church/core/department` 로 이전 → members 라우트가 assets 참조하지 않게 됨. assets 모듈은 이제 **코어만** 의존(`@/lib` 0). | typecheck·lint·test(122)·build green |
 | **M4-나머지** ✅ | members/finance/site/forms → `packages/module-*`(파일럿 패턴 반복). **forms→members 디커플링:** `getUserMember`·`listMembersByOrgRole` 은 코어 소유 테이블(`member`·`org_membership`) 읽기이므로 **`@church/core/member`(코어가 노출하는 읽기, §5.2)** 로 이전 — readContract 등록 타이밍 의존 없이 forms·members 양쪽이 코어에서 import. 라우트(`app/(app)/<m>`)·호스트(`modules.server`·`onboarding`)·워커(`jobs/worker`)·테스트가 패키지를 import. tsconfig `paths`·vitest alias 추가. **→ M4 완료: 5개 모듈 전부 `@church/core/*` 만 의존, 모듈→모듈 결합 0.** | typecheck·lint·test(122)·build·tsx(resolve) green |
-| **M5** | (선택) `public` 접두어 → 모듈 Postgres 스키마 이전 | 마이그레이션 검증 |
+| **M5** ⏸️ 보류(결정) | (선택) `public` → 모듈 Postgres 스키마(`finance.*` 등) 이전. **결정: 보류** — 고위험·대규모 DB 마이그레이션이고 실익은 주로 B안(독립 배포) 전환 시 발생. A안 단일배포에선 한계효용 낮고, 모듈 소유/격리는 패키지·매니페스트·`church_id`+RLS 로 이미 확보됨. **B안 트리거 발생 시 진행.** | (보류) |
 | **boundary 강제** ✅ | ESLint `no-restricted-imports`(flat config, `eslint.config.mjs`)로 `packages/**` 가 ① 앱(`@/*`) 역참조 ② 타 모듈/코어→모듈(`@church/module-*`) import 를 **에러로 차단**(§9). 호스트(`lib/`·`app/`)는 모듈 import 허용(셸 합성). `pnpm run lint`(=CI)에 포함 → 회귀 방지. | lint green + 위반 주입 시 발동 확인 |
 | **워커 server-only 수정** ✅ | 워커(`jobs/worker.ts`)가 import 하는 `notify/service`·`forms/remind` 의 `import "server-only"` 가 plain `tsx` 에서 throw(기존 잠재 버그). `package.json` 워커 스크립트를 `tsx --conditions=react-server` 로 변경 → server-only no-op(앱 client-bundle 가드는 유지). Docker/compose 는 `pnpm run worker` 라 자동 적용. | 워커 부팅 확인(`worker started; queues: …`) |
 
@@ -245,7 +245,9 @@ packages/
 | 4 | 엔타이틀먼트 | ✅ **Set 기반(애드온-ready) 모델링 + 번들(티어)로 출시.** 애드온은 가격 매핑만 바꿔 추후 확장 |
 | 5 | 대시보드 | ✅ **코어 합성 화면**(독립 모듈 아님) |
 
-> 남은 후속 결정(추후): ~~번들 티어 구성(무료/스탠다드/프로 모듈 매핑)~~ **결정됨(M3): 출시 전이므로 전 티어=전체 모듈**(현행 동작 유지). 티어 분리는 `packages/core/src/entitlement.ts` 의 `PLAN_MODULES` 맵만 바꾸면 됨(나머지 코드 무변경). · 애드온 전환 시점, `public`→스키마 이전(M5)의 정확한 시점.
+> 남은 후속 결정(추후): ~~번들 티어 구성(무료/스탠다드/프로 모듈 매핑)~~ **결정됨(M3): 출시 전이므로 전 티어=전체 모듈**(현행 동작 유지). 티어 분리는 `packages/core/src/entitlement.ts` 의 `PLAN_MODULES` 맵만 바꾸면 됨(나머지 코드 무변경). · 애드온 전환 시점. · ~~`public`→스키마 이전(M5)의 정확한 시점~~ **결정됨: 보류 — B안(독립 배포) 트리거 시 진행.**
+>
+> **마이그레이션 상태(현재): M0~M4 + 경계강제 + 워커수정 완료. M5 보류. → 모듈 플랫폼(A안) 완료.**
 
 ---
 
