@@ -7,7 +7,7 @@ import { listMemberCare } from "@/lib/members/care";
 import { listMemberAttendance } from "@/lib/members/attendance";
 import { listDepartments } from "@/lib/assets/classification";
 import { positionLabelMap } from "@/lib/members/org";
-import { logAccess } from "@/lib/compliance/access-log";
+import { logAccess } from "@church/core/compliance/access-log";
 import {
   deleteMemberAction,
   addCareAction,

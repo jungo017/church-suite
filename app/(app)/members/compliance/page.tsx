@@ -2,8 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { listAccessLogs } from "@/lib/compliance/access-log";
-import { listConsents } from "@/lib/compliance/consent";
+import { listAccessLogs } from "@church/core/compliance/access-log";
+import { listConsents } from "@church/core/compliance/consent";
 
 // 개인정보 컴플라이언스(접근로그·동의) — 관리자 전용 (스펙 §5).
 export default async function CompliancePage() {

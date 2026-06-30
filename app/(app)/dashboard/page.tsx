@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { getInstalledModules } from "@/lib/billing/entitlement";
+import { getInstalledModules } from "@church/core/billing/entitlement";
 import { dashboardCounts } from "@/lib/dashboard";
 import { attendanceTrend } from "@/lib/members/stats";
 import { accountSummary } from "@/lib/finance/report";

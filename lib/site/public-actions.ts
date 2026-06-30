@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getTenant } from "@church/core/tenant/context";
 import { submitNewFamily } from "./intake";
 import { submitOnlineOffering } from "./offering";
-import { recordConsent } from "@/lib/compliance/consent";
+import { recordConsent } from "@church/core/compliance/consent";
 
 /**
  * 공개(비인증) 접수 서버 액션. 호스트로 교회를 해석해 접수 테이블에만 기록한다(스펙 §2.4).

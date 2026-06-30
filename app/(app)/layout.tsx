@@ -2,7 +2,7 @@ import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS, type Permission } from "@church/core/rbac/roles";
 import { visibleModules, allModules } from "@church/core";
 import { ensureModulesRegistered } from "@/lib/modules.server";
-import { getInstalledModules } from "@/lib/billing/entitlement";
+import { getInstalledModules } from "@church/core/billing/entitlement";
 import { AppShell, type NavModule } from "./app-shell";
 
 // 인증 영역 레이아웃 (스펙 §13: app/(app)). SSR.

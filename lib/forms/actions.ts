@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkPermission } from "@church/core/rbac/guards";
-import { requireModuleWrite } from "@/lib/billing/guards";
+import { requireModuleWrite } from "@church/core/billing/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import {
   createForm,

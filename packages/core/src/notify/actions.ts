@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkPermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { sendJob, JOBS } from "@/lib/jobs/queue";
+import { sendJob, JOBS } from "@church/core/jobs/queue";
 import { queueToActiveMembers, isChannel } from "./service";
 
 /**

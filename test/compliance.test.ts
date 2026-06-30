@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { logAccess, listAccessLogs } from "@/lib/compliance/access-log";
-import { recordConsent, listConsents } from "@/lib/compliance/consent";
+import { logAccess, listAccessLogs } from "@church/core/compliance/access-log";
+import { recordConsent, listConsents } from "@church/core/compliance/consent";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

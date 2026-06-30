@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { getBoss, JOBS } from "@/lib/jobs/queue";
+import { getBoss, JOBS } from "@church/core/jobs/queue";
 import { remindPending } from "@/lib/forms/remind";
-import { processNotifications } from "@/lib/notify/service";
+import { processNotifications } from "@church/core/notify/service";
 
 /**
  * 백그라운드 잡 워커 (스펙 §11). 웹 인스턴스와 분리된 프로세스로 실행.

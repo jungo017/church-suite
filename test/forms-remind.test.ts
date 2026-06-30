@@ -4,7 +4,7 @@ import { createForm } from "@/lib/forms/service";
 import { submitResponse } from "@/lib/forms/responses";
 import { assignMembers, listAssignments } from "@/lib/forms/assignments";
 import { remindPending } from "@/lib/forms/remind";
-import { listNotifications } from "@/lib/notify/service";
+import { listNotifications } from "@church/core/notify/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];
