@@ -3,3 +3,4 @@
 export * from "./module-contract";
 export * from "./registry";
 export * from "./read-contracts";
+export * from "./entitlement";
