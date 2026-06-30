@@ -1,12 +1,21 @@
 import Link from "next/link";
+import { Search } from "lucide-react";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { accountSummary } from "@church/module-finance/report";
 import { formatWon } from "@church/module-finance/constants";
-
-const ctrl =
-  "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { FilterBar } from "@/lib/ui/filter-bar";
+import { Input } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@/lib/ui/table";
 
 function SummaryTable({
   title,
@@ -20,24 +29,26 @@ function SummaryTable({
     <div className="flex flex-col gap-1">
       <h2 className="font-semibold">{title}</h2>
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">내역 없음</p>
+        <EmptyState title="내역 없음" description="조회 기간에 해당하는 내역이 없습니다." />
       ) : (
-        <table className="w-full text-left text-sm">
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.code} className="border-b border-border">
-                <td className="py-1.5">{r.code} {r.name}</td>
-                <td className="py-1.5 text-right text-muted-foreground">{r.cnt}건</td>
-                <td className="py-1.5 text-right font-medium">{formatWon(r.total)}</td>
-              </tr>
-            ))}
-            <tr className="font-semibold">
-              <td className="py-2">합계</td>
-              <td></td>
-              <td className="py-2 text-right">{formatWon(sum)}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableBody>
+              {rows.map((r) => (
+                <TableRow key={r.code}>
+                  <TableCell>{r.code} {r.name}</TableCell>
+                  <TableCell className="text-right tabular-nums text-muted-foreground">{r.cnt}건</TableCell>
+                  <TableCell className="text-right tabular-nums font-medium">{formatWon(r.total)}</TableCell>
+                </TableRow>
+              ))}
+              <TableRow className="font-semibold">
+                <TableCell>합계</TableCell>
+                <TableCell></TableCell>
+                <TableCell className="text-right tabular-nums">{formatWon(sum)}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       )}
     </div>
   );
@@ -64,25 +75,30 @@ export default async function FinanceReportPage({
 
   return (
     <section className="flex max-w-2xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">재정 보고서 (예·결산)</h1>
+      <PageHeader>
+        <PageTitle>재정 보고서 (예·결산)</PageTitle>
+      </PageHeader>
 
-      <form className="flex flex-wrap items-end gap-2 text-sm">
-        <input name="from" type="date" defaultValue={fromDate} className={ctrl} />
+      <FilterBar>
+        <Input name="from" type="date" defaultValue={fromDate} className="w-auto" />
         <span className="self-center">~</span>
-        <input name="to" type="date" defaultValue={toDate} className={ctrl} />
-        <button className={ctrl}>조회</button>
-      </form>
+        <Input name="to" type="date" defaultValue={toDate} className="w-auto" />
+        <Button type="submit" variant="outline">
+          <Search />
+          조회
+        </Button>
+      </FilterBar>
 
-      <div className="flex gap-6 text-sm">
-        <span>총수입 <strong className="text-blue-600">{formatWon(incomeTotal)}</strong></span>
-        <span>총지출 <strong className="text-destructive">{formatWon(expenseTotal)}</strong></span>
-        <span>잔액 <strong>{formatWon(incomeTotal - expenseTotal)}</strong></span>
+      <div className="flex flex-wrap gap-6 text-sm">
+        <span>총수입 <strong className="tabular-nums text-info">{formatWon(incomeTotal)}</strong></span>
+        <span>총지출 <strong className="tabular-nums text-destructive">{formatWon(expenseTotal)}</strong></span>
+        <span>잔액 <strong className="tabular-nums">{formatWon(incomeTotal - expenseTotal)}</strong></span>
       </div>
 
       <SummaryTable title="수입" rows={incomeRows} />
       <SummaryTable title="지출" rows={expenseRows} />
 
-      <Link href="/finance" className="text-sm underline">← 재정</Link>
+      <Link href="/finance" className="text-sm text-muted-foreground hover:underline">← 재정</Link>
     </section>
   );
 }

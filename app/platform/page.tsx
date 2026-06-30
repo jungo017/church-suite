@@ -4,13 +4,26 @@ import {
   platformSummary,
 } from "@church/core/platform/dashboard";
 import { PLATFORM_ROLE_LABELS, type PlatformRole } from "@church/core/platform/roles";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { Card, CardContent } from "@/lib/ui/card";
+import { Badge } from "@/lib/ui/badge";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-4">
-      <div className="text-sm text-muted-foreground">{label}</div>
-      <div className="mt-1 text-2xl font-bold">{value}</div>
-    </div>
+    <Card>
+      <CardContent className="p-4">
+        <div className="text-sm text-muted-foreground">{label}</div>
+        <div className="mt-1 text-2xl font-bold tabular-nums">{value}</div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -24,12 +37,14 @@ export default async function PlatformDashboardPage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-6xl flex-col gap-6 px-6 py-8">
-      <div>
-        <p className="text-sm text-muted-foreground">
-          {role ? PLATFORM_ROLE_LABELS[role] : "플랫폼 사용자"} · {user.name}
-        </p>
-        <h1 className="text-2xl font-bold">전체 시스템 관리</h1>
-      </div>
+      <PageHeader>
+        <div>
+          <PageTitle>전체 시스템 관리</PageTitle>
+          <PageDescription>
+            {role ? PLATFORM_ROLE_LABELS[role] : "플랫폼 사용자"} · {user.name}
+          </PageDescription>
+        </div>
+      </PageHeader>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
         <Stat label="전체 교회" value={`${summary.churches}`} />
@@ -41,28 +56,38 @@ export default async function PlatformDashboardPage() {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">교회 목록</h2>
-        <table className="w-full text-sm">
-          <thead className="text-left text-muted-foreground">
-            <tr className="border-b border-border">
-              <th className="py-2">교회</th>
-              <th className="py-2">코드</th>
-              <th className="py-2">상태</th>
-              <th className="py-2 text-right">사용자</th>
-              <th className="py-2 text-right">교인</th>
-            </tr>
-          </thead>
-          <tbody>
-            {churches.map((church) => (
-              <tr key={church.churchId} className="border-b border-border">
-                <td className="py-2 font-medium">{church.name}</td>
-                <td className="py-2 font-mono text-xs">{church.code}</td>
-                <td className="py-2">{church.status}</td>
-                <td className="py-2 text-right">{church.users}</td>
-                <td className="py-2 text-right">{church.members}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>교회</TableHead>
+                <TableHead>코드</TableHead>
+                <TableHead>상태</TableHead>
+                <TableHead className="text-right">사용자</TableHead>
+                <TableHead className="text-right">교인</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {churches.map((church) => (
+                <TableRow key={church.churchId}>
+                  <TableCell className="font-medium">{church.name}</TableCell>
+                  <TableCell className="font-mono text-xs">{church.code}</TableCell>
+                  <TableCell>
+                    <Badge tone={church.status === "active" ? "success" : "muted"}>
+                      {church.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {church.users}
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {church.members}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </section>
     </main>
   );

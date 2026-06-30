@@ -7,6 +7,17 @@ import {
   fieldDistributions,
   submissionByDepartment,
 } from "@church/module-forms/aggregate";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 import { FIELD_TYPE_LABELS } from "@church/module-forms/constants";
 
 function showValue(type: string, value: string): string {
@@ -30,50 +41,46 @@ export default async function FormReportPage({
 
   return (
     <section className="flex max-w-3xl flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{f.title} — 집계</h1>
-        <div className="flex gap-2">
-          <a
-            href={`/forms/${formId}/export`}
-            className="rounded-md border border-border px-3 py-2 text-sm"
-          >
-            CSV
-          </a>
-          <a
-            href={`/forms/${formId}/export?format=xlsx`}
-            className="rounded-md border border-border px-3 py-2 text-sm"
-          >
-            Excel
-          </a>
-        </div>
-      </div>
+      <PageHeader>
+        <PageTitle>{f.title} — 집계</PageTitle>
+        <PageActions>
+          <Button asChild variant="outline">
+            <a href={`/forms/${formId}/export`}>CSV</a>
+          </Button>
+          <Button asChild variant="outline">
+            <a href={`/forms/${formId}/export?format=xlsx`}>Excel</a>
+          </Button>
+        </PageActions>
+      </PageHeader>
 
       {/* 속/구역별 제출률 (보고서) */}
       {byDept.length > 0 && (
         <div className="flex flex-col gap-2">
           <h2 className="text-lg font-semibold">조직별 제출률</h2>
-          <table className="w-full text-sm">
-            <thead className="text-left text-muted-foreground">
-              <tr className="border-b border-border">
-                <th className="py-2">조직</th>
-                <th className="py-2">제출</th>
-                <th className="py-2">대상</th>
-                <th className="py-2">제출률</th>
-              </tr>
-            </thead>
-            <tbody>
-              {byDept.map((d) => (
-                <tr key={d.departmentId} className="border-b border-border">
-                  <td className="py-2">{d.departmentName}</td>
-                  <td className="py-2">{d.submitted}</td>
-                  <td className="py-2">{d.total}</td>
-                  <td className="py-2">
-                    {d.total > 0 ? Math.round((d.submitted / d.total) * 100) : 0}%
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>조직</TableHead>
+                  <TableHead className="text-right">제출</TableHead>
+                  <TableHead className="text-right">대상</TableHead>
+                  <TableHead className="text-right">제출률</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {byDept.map((d) => (
+                  <TableRow key={d.departmentId}>
+                    <TableCell>{d.departmentName}</TableCell>
+                    <TableCell className="text-right tabular-nums">{d.submitted}</TableCell>
+                    <TableCell className="text-right tabular-nums">{d.total}</TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {d.total > 0 ? Math.round((d.submitted / d.total) * 100) : 0}%
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
 
@@ -81,7 +88,10 @@ export default async function FormReportPage({
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">문항별 응답</h2>
         {dists.length === 0 ? (
-          <p className="text-sm text-muted-foreground">문항이 없습니다.</p>
+          <EmptyState
+            title="문항이 없습니다"
+            description="폼에 문항을 추가하고 응답을 받으면 응답 분포가 집계됩니다."
+          />
         ) : (
           dists.map((d) => (
             <div key={d.fieldId} className="flex flex-col gap-1">
@@ -98,7 +108,7 @@ export default async function FormReportPage({
                   {d.values.map((v, i) => (
                     <li key={i} className="flex justify-between border-b border-border py-1">
                       <span>{showValue(d.type, v.value)}</span>
-                      <span className="text-muted-foreground">{v.count}</span>
+                      <span className="text-muted-foreground tabular-nums">{v.count}</span>
                     </li>
                   ))}
                 </ul>
@@ -109,8 +119,8 @@ export default async function FormReportPage({
       </div>
 
       <div className="flex gap-3 text-sm">
-        <Link href={`/forms/${formId}`} className="underline">← 폼으로</Link>
-        <Link href={`/forms/${formId}/assignments`} className="underline">배정/제출현황</Link>
+        <Link href={`/forms/${formId}`} className="text-muted-foreground hover:underline">← 폼으로</Link>
+        <Link href={`/forms/${formId}/assignments`} className="text-muted-foreground hover:underline">배정/제출현황</Link>
       </div>
     </section>
   );

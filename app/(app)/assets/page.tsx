@@ -1,9 +1,23 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
-import { PERMISSIONS } from "@church/core/rbac/roles";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { listAssetsPaged } from "@church/module-assets/service";
 import { pageParams } from "@church/core/db/pagination";
+import { cn } from "@/lib/utils";
 import { Pagination } from "../pagination";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { Badge, type BadgeTone } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 import {
   ASSET_TYPE_LABELS,
   ASSET_STATUS_LABELS,
@@ -12,7 +26,15 @@ import {
   type AssetStatus,
 } from "@church/module-assets/constants";
 
-function FilterLink({
+// 자산 상태 → Badge 톤.
+const ASSET_STATUS_TONE: Record<string, BadgeTone> = {
+  in_use: "success",
+  in_repair: "warning",
+  idle: "muted",
+  disposed: "destructive",
+};
+
+function FilterChip({
   status,
   current,
   children,
@@ -25,7 +47,13 @@ function FilterLink({
   return (
     <Link
       href={status ? `/assets?status=${status}` : "/assets"}
-      className={`rounded-md px-2 py-1 ${active ? "bg-primary text-primary-foreground" : "border border-border"}`}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "rounded-md px-2.5 py-1 text-sm transition-colors",
+        active
+          ? "bg-primary text-primary-foreground"
+          : "border border-border text-muted-foreground hover:bg-muted hover:text-foreground",
+      )}
     >
       {children}
     </Link>
@@ -39,6 +67,7 @@ export default async function AssetsPage({
 }) {
   const { status, page: pageParam, size } = await searchParams;
   const user = await requirePermission(PERMISSIONS.ASSETS_READ);
+  const canWrite = hasPermission(user.roles, PERMISSIONS.ASSETS_WRITE);
   const { page, pageSize } = pageParams({ page: pageParam, size });
   const result = await listAssetsPaged(
     user.church_id,
@@ -50,53 +79,92 @@ export default async function AssetsPage({
 
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">비품 (자산)</h1>
+      <PageHeader>
+        <PageTitle>비품 (자산)</PageTitle>
+        {canWrite && (
+          <PageActions>
+            <Button asChild>
+              <Link href="/assets/new">
+                <Plus />
+                자산 등록
+              </Link>
+            </Button>
+          </PageActions>
+        )}
+      </PageHeader>
 
-      <div className="flex gap-2 text-sm">
-        <FilterLink current={status}>전체</FilterLink>
+      <div className="flex flex-wrap gap-2">
+        <FilterChip current={status}>전체</FilterChip>
         {ASSET_STATUSES.map((s) => (
-          <FilterLink key={s} status={s} current={status}>
+          <FilterChip key={s} status={s} current={status}>
             {ASSET_STATUS_LABELS[s]}
-          </FilterLink>
+          </FilterChip>
         ))}
       </div>
 
       {assets.length === 0 ? (
-        <p className="py-8 text-sm text-muted-foreground">등록된 자산이 없습니다.</p>
+        <EmptyState
+          title="등록된 자산이 없습니다"
+          description={
+            status
+              ? "이 상태의 자산이 없습니다."
+              : "비품을 등록하면 QR 라벨 출력과 전수조사를 할 수 있습니다."
+          }
+          action={
+            canWrite && !status ? (
+              <Button asChild>
+                <Link href="/assets/new">
+                  <Plus />
+                  자산 등록
+                </Link>
+              </Button>
+            ) : undefined
+          }
+        />
       ) : (
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-border text-muted-foreground">
-            <tr>
-              <th className="py-2">이름</th>
-              <th className="py-2">종류</th>
-              <th className="py-2">상태</th>
-              <th className="py-2">수량</th>
-              <th className="py-2">태그</th>
-              <th className="py-2 text-right">취득가액</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assets.map((a) => (
-              <tr
-                key={a.assetId}
-                className="border-b border-border hover:bg-muted"
-              >
-                <td className="py-2">
-                  <Link href={`/assets/${a.assetId}`} className="font-medium underline">
-                    {a.name}
-                  </Link>
-                </td>
-                <td className="py-2">{ASSET_TYPE_LABELS[a.assetType as AssetType] ?? a.assetType}</td>
-                <td className="py-2">{ASSET_STATUS_LABELS[a.status as AssetStatus] ?? a.status}</td>
-                <td className="py-2">{a.quantity}</td>
-                <td className="py-2">{a.tag ?? "—"}</td>
-                <td className="py-2 text-right">
-                  {a.acquiredCost ? `${Number(a.acquiredCost).toLocaleString()}원` : "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>이름</TableHead>
+                <TableHead>종류</TableHead>
+                <TableHead>상태</TableHead>
+                <TableHead className="text-right">수량</TableHead>
+                <TableHead>태그</TableHead>
+                <TableHead className="text-right">취득가액</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {assets.map((a) => (
+                <TableRow key={a.assetId}>
+                  <TableCell>
+                    <Link
+                      href={`/assets/${a.assetId}`}
+                      className="font-medium text-foreground hover:underline"
+                    >
+                      {a.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {ASSET_TYPE_LABELS[a.assetType as AssetType] ?? a.assetType}
+                  </TableCell>
+                  <TableCell>
+                    <Badge tone={ASSET_STATUS_TONE[a.status] ?? "muted"}>
+                      {ASSET_STATUS_LABELS[a.status as AssetStatus] ?? a.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums">{a.quantity}</TableCell>
+                  <TableCell>{a.tag ?? "—"}</TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {a.acquiredCost
+                      ? `${Number(a.acquiredCost).toLocaleString()}원`
+                      : "—"}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
       <Pagination
