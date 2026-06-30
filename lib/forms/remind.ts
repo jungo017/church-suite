@@ -1,5 +1,5 @@
 import "server-only";
-import { sendToMembers, type Channel } from "@/lib/notify/service";
+import { sendToMembers, type Channel } from "@church/core/notify/service";
 import { getForm } from "./service";
 import { listPendingMemberIds } from "./assignments";
 

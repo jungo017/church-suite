@@ -16,7 +16,7 @@ import {
   type ModuleKey,
 } from "@church/core";
 import { onboardChurch } from "@/lib/onboarding/onboard";
-import { getInstalledModules } from "@/lib/billing/entitlement";
+import { getInstalledModules } from "@church/core/billing/entitlement";
 import { PERMISSIONS, hasPermission, type Permission } from "@church/core/rbac/roles";
 import { membersManifest } from "@/lib/members/manifest";
 import { financeManifest } from "@/lib/finance/manifest";

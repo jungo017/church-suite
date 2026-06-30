@@ -8,7 +8,7 @@ import {
   queueToActiveMembers,
   processNotifications,
   listNotifications,
-} from "@/lib/notify/service";
+} from "@church/core/notify/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

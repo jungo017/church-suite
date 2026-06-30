@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkPermission } from "@church/core/rbac/guards";
-import { requireModuleWrite } from "@/lib/billing/guards";
+import { requireModuleWrite } from "@church/core/billing/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import {
   autoAssignByRole,
@@ -12,7 +12,7 @@ import {
   removeAssignment,
 } from "./assignments";
 import { isAssignmentStatus } from "./constants";
-import { sendJob, JOBS } from "@/lib/jobs/queue";
+import { sendJob, JOBS } from "@church/core/jobs/queue";
 
 async function requireWrite() {
   const res = await checkPermission(PERMISSIONS.FORMS_WRITE);

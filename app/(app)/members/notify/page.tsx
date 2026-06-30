@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listNotifications, CHANNELS, CHANNEL_LABELS, type Channel } from "@/lib/notify/service";
-import { sendNotificationAction } from "@/lib/notify/actions";
+import { listNotifications, CHANNELS, CHANNEL_LABELS, type Channel } from "@church/core/notify/service";
+import { sendNotificationAction } from "@church/core/notify/actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

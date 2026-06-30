@@ -204,7 +204,8 @@ packages/
 | **M1.5(선행)** ✅ | **코어 기반 추출** — `db`/`auth`/`rbac`/`tenant`/`storage`(+상호결합된 `platform`) → `@church/core` 물리 이전. 코어 서브패스 export(`@church/core/db` 등) + tsconfig `paths`·vitest alias·`drizzle.config` 배선. 앱 import 전면 재작성(`@/lib/<base>`→`@church/core/<base>`, 145파일). 코어 내부는 자기 별칭 self-ref. 코어는 소스로 소비(경로 별칭 인라인 → deps 호이스팅 해석, 별도 선언 불필요). *모듈 패키지 물리 추출(M4)의 선행조건 — 모듈→앱 역참조 제거.* | typecheck·lint·test(122)·build·tsx(worker) green |
 | **M2** ✅ | **레지스트리 기반 셸** — 하드코딩 `MODULES` 제거, 제품 스위처/사이드바를 매니페스트로 | E2E 네비/권한 |
 | **M3** ✅ | **엔타이틀먼트 배선** — ① core 가격정책 `modulesForPlan`(plan→`Set<ModuleKey>`, 순수·애드온-ready. **현재 결정: 전 티어=전체 모듈**[현행 유지]) ② `lib/billing/entitlement`(활성 구독→플랜→설치집합 해석, React `cache` 요청 메모이즈, 미구독/비활성 폴백) ③ 셸 네비·대시보드 카드를 **설치 ∩ 권한**으로 필터(하드코딩 `installed=전체` 제거) ④ 가드: 모듈별 `(app)/<m>/layout.tsx` 라우트 가드(미설치=404) + 액션 `requireWrite` 쓰기 가드(미설치=forbidden, 레이아웃 우회 차단). 온보딩은 기존 free 구독으로 충족. | typecheck·lint·build green, **122 tests**(+11: 정책·DB해석·폴백·교회격리·해제강제) |
-| **M4** | **모듈 패키지 물리 추출** — assets(파일럿) 포함 전 모듈을 `packages/module-*` 로(M1.5 코어 기반 위에서). 모듈→코어만 의존. | 모듈별 격리 테스트 |
+| **M3.5(코어 추출 2회차)** ✅ | **코어 횡단 라이브러리 추출** — `billing`(엔타이틀먼트)·`compliance`(PIPA)·`jobs`(pg-boss)·`notify`(알림) → `@church/core`(모두 문서 §4 코어 소관, 모듈 결합 0). M1.5 와 동일 패턴(서브패스 export·import 재작성·소스 소비). → 모듈(members/finance/assets/site)이 **코어만** 의존하게 됨(M4 직전 정지). | typecheck·lint·test(122)·build·tsx green |
+| **M4** | **모듈 패키지 물리 추출** — assets(파일럿) 포함 전 모듈을 `packages/module-*` 로. 모듈→코어만 의존. **선행 디커플링 필요(M4 착수 전 결정):** ① `department`(부서/구역, 코어 공유 테이블)의 CRUD가 `lib/assets/classification` 에 있어 **members 라우트가 assets 를 참조** → department CRUD 를 코어로 이전 필요. ② `forms` → `members`(`org`·`portal`) **모듈 간 직접 결합** → 코어 `readContract`(파라미터 확장) 또는 코어 중재 인터페이스로 치환 필요. 라우트(`app/(app)/<m>`)는 단일배포라 앱에 잔류하고 모듈 패키지를 import. | 모듈별 격리 테스트 |
 | **M5** | (선택) `public` 접두어 → 모듈 Postgres 스키마 이전 | 마이그레이션 검증 |
 
 각 단계는 **현재 기능·테스트를 깨지 않고** 머지 가능(스펙 §16 "다음 모듈이 코어를 올바르게 참조하는가" 검증 포인트 재사용).
