@@ -2,7 +2,9 @@ import { PgBoss } from "pg-boss";
 
 /**
  * 백그라운드 잡 큐 (스펙 §11, pg-boss · Postgres 기반, 초기 Redis 불필요).
- * ⚠️ server-only 를 쓰지 않는다 — 독립 워커 프로세스(jobs/worker.ts)에서도 import 한다.
+ * 워커(jobs/worker.ts)는 `tsx --conditions=react-server` 로 실행해 `server-only`(코드의
+ * client-bundle 가드)를 no-op 으로 만든다 — 그래서 worker 가 server-only 모듈
+ * (notify/service·forms/remind 등)을 import 해도 동작한다. 이 파일은 가드 불필요.
  * 스키마 생성 권한이 필요하므로 DATABASE_URL(슈퍼유저)을 사용한다.
  */
 export const JOBS = {

@@ -209,7 +209,7 @@ packages/
 | **M4-나머지** ✅ | members/finance/site/forms → `packages/module-*`(파일럿 패턴 반복). **forms→members 디커플링:** `getUserMember`·`listMembersByOrgRole` 은 코어 소유 테이블(`member`·`org_membership`) 읽기이므로 **`@church/core/member`(코어가 노출하는 읽기, §5.2)** 로 이전 — readContract 등록 타이밍 의존 없이 forms·members 양쪽이 코어에서 import. 라우트(`app/(app)/<m>`)·호스트(`modules.server`·`onboarding`)·워커(`jobs/worker`)·테스트가 패키지를 import. tsconfig `paths`·vitest alias 추가. **→ M4 완료: 5개 모듈 전부 `@church/core/*` 만 의존, 모듈→모듈 결합 0.** | typecheck·lint·test(122)·build·tsx(resolve) green |
 | **M5** | (선택) `public` 접두어 → 모듈 Postgres 스키마 이전 | 마이그레이션 검증 |
 | **boundary 강제** ✅ | ESLint `no-restricted-imports`(flat config, `eslint.config.mjs`)로 `packages/**` 가 ① 앱(`@/*`) 역참조 ② 타 모듈/코어→모듈(`@church/module-*`) import 를 **에러로 차단**(§9). 호스트(`lib/`·`app/`)는 모듈 import 허용(셸 합성). `pnpm run lint`(=CI)에 포함 → 회귀 방지. | lint green + 위반 주입 시 발동 확인 |
-| **후속(선택)** | 워커 `tsx` + `server-only` 상호작용(코어/모듈의 `import "server-only"` 가 plain tsx 에서 throw — `--conditions react-server` 필요 여부)은 **M4 무관 기존 사항**으로 별도 점검 권장. | — |
+| **워커 server-only 수정** ✅ | 워커(`jobs/worker.ts`)가 import 하는 `notify/service`·`forms/remind` 의 `import "server-only"` 가 plain `tsx` 에서 throw(기존 잠재 버그). `package.json` 워커 스크립트를 `tsx --conditions=react-server` 로 변경 → server-only no-op(앱 client-bundle 가드는 유지). Docker/compose 는 `pnpm run worker` 라 자동 적용. | 워커 부팅 확인(`worker started; queues: …`) |
 
 각 단계는 **현재 기능·테스트를 깨지 않고** 머지 가능(스펙 §16 "다음 모듈이 코어를 올바르게 참조하는가" 검증 포인트 재사용).
 
