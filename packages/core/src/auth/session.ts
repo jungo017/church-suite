@@ -10,6 +10,8 @@ import {
 import { signAccessToken, verifyAccessToken, type AccessClaims } from "./jwt";
 import { verifyPassword } from "./password";
 import { findUserByLogin, findUserById, getUserRoleNames } from "./users";
+import { findUserIdByIdentity } from "./identity";
+import type { OAuthProfile } from "./oauth";
 import { findPlatformUserByLogin } from "@church/core/platform/users";
 import {
   issueRefreshToken,
@@ -74,11 +76,34 @@ export async function login(opts: {
   password: string;
 }): Promise<LoginResult> {
   const user = await findUserByLogin(opts.churchId, opts.loginId);
-  if (!user || user.status !== "active") {
+  // 소셜 전용 계정(passwordHash null)은 비번 로그인 불가.
+  if (!user || user.status !== "active" || !user.passwordHash) {
     return { ok: false, error: "invalid_credentials" };
   }
   const valid = await verifyPassword(opts.password, user.passwordHash);
   if (!valid) return { ok: false, error: "invalid_credentials" };
+  const { roles } = await issueSession(user);
+  return { ok: true, userId: user.userId, roles, scope: "tenant" };
+}
+
+/**
+ * 소셜 로그인: 신원이 연결돼 있으면 세션 발급(스펙 §14).
+ * 미연결이면 `identity_not_linked` — 호출부(콜백)가 클레임(A안) 또는 새가족 접수(C안)로 안내.
+ */
+export async function loginWithIdentity(opts: {
+  churchId: string;
+  profile: OAuthProfile;
+}): Promise<LoginResult> {
+  const userId = await findUserIdByIdentity(
+    opts.churchId,
+    opts.profile.provider,
+    opts.profile.providerUserId,
+  );
+  if (!userId) return { ok: false, error: "identity_not_linked" };
+  const user = await findUserById(opts.churchId, userId);
+  if (!user || user.status !== "active") {
+    return { ok: false, error: "invalid_account" };
+  }
   const { roles } = await issueSession(user);
   return { ok: true, userId: user.userId, roles, scope: "tenant" };
 }

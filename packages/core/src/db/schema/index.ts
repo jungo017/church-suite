@@ -5,6 +5,7 @@ export * from "./members";
 export * from "./users";
 export * from "./platform";
 export * from "./auth";
+export * from "./identity";
 export * from "./billing";
 export * from "./org";
 export * from "./membership";
