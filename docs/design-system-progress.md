@@ -16,10 +16,11 @@
 - [x] 로그인 화면 `Field`/`Button`+lucide 적용
 - [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅ / test ✅ (122 pass / 1 skip)
 
-### Phase D1. AppShell 개선 — ⬜ 대기
-- [ ] `app/(app)/app-shell.tsx` 분해 → `lib/ui/app/*`(types·module-nav·app-sidebar)
-- [ ] §7.1 레이아웃(max-w-7xl·반응형), 모바일 가로스크롤 하위메뉴, lucide, `aria-current`
-- [ ] **주의:** 현 셸은 M2 레지스트리 기반(`modules`/`personal` props). 청사진(브랜치)은 마이그레이션 이전 구조라 셸 분해 시 현 props 계약에 맞춰 재구성 필요.
+### Phase D1. AppShell 개선 — ✅ 완료 (재적용)
+- [x] `app/(app)/app-shell.tsx` 분해 → `lib/ui/app/*`(types·module-nav·app-sidebar)
+- [x] §7.1 레이아웃(max-w-7xl·반응형 `px-4 md:px-8`), 모바일 가로스크롤 하위메뉴(`MobileSubnav`), lucide(User), `aria-current`
+- [x] 현 M2 레지스트리 셸 props 계약(`modules`/`personal`/`userName`) 그대로 유지 — 청사진 `lib/ui/app/types` 가 현 `NavModule`/active 로직과 동일해 호환. layout.tsx 무변경.
+- [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅
 
 ### Phase D2. 목록/테이블 — ⬜ 대기
 - [ ] 신규 `lib/ui/filter-bar.tsx`
@@ -42,5 +43,8 @@
 ## 작업 로그
 - **D0 재적용** — 청사진 브랜치(`feat/design-system` `740466c`)에서 프리미티브·토큰·login 을
   현재 main 으로 이식, pnpm 의존성 추가. 게이트 green(122 pass). app 라우트 미변경(충돌 0).
-- D1~D5 — 청사진의 화면 적용을 현재 main 구조(레지스트리 셸·`@church/module-*` import·
-  모듈 레이아웃·엔타이틀먼트 가드)에 맞춰 단계별 재적용 예정. 충돌 마커 수동해소 대신 재구현.
+- **D1 재적용** — `lib/ui/app/*`(types·module-nav·app-sidebar) 도입 + `app-shell.tsx` 를
+  청사진 버전으로 교체(반응형·모바일 subnav·lucide). 청사진 types 가 현 M2 셸 props 와
+  동일해 깨끗한 교체, layout.tsx 무변경. 게이트 green.
+- D2~D5 — 화면 적용을 현재 main 구조(`@church/module-*` import·모듈 레이아웃·가드)에
+  맞춰 단계별 재적용 예정. 충돌 마커 수동해소 대신 재구현.
