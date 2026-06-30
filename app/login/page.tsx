@@ -1,5 +1,5 @@
 import { Card } from "@/lib/ui/card";
-import { getTenant } from "@/lib/tenant/context";
+import { getTenant } from "@church/core/tenant/context";
 import { LoginForm } from "./login-form";
 
 // 교회는 호스트(테넌트)로 해석되므로 교회 서브도메인에서 로그인한다.

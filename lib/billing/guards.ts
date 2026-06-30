@@ -1,6 +1,6 @@
 import "server-only";
 import { notFound, redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentUser } from "@church/core/auth/session";
 import type { ModuleKey } from "@church/core";
 import { isModuleInstalled } from "./entitlement";
 

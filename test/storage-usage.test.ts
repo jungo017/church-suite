@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { onboardChurch } from "@/lib/onboarding/onboard";
-import { reserveUsage, releaseUsage, getUsage } from "@/lib/storage/usage";
-import { churchPrefix } from "@/lib/storage/types";
+import { reserveUsage, releaseUsage, getUsage } from "@church/core/storage/usage";
+import { churchPrefix } from "@church/core/storage/types";
 import { deleteChurches, closeDb, uniqueCode } from "./helpers";
 
 const created: string[] = [];

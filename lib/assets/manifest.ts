@@ -3,7 +3,7 @@
 // 현재 셸(app/(app)/layout.tsx 의 assets 정의)과 **동일한 네비**를 계약 형태로 선언한다.
 // 셸 재배선(레지스트리 기반 합성)은 M2, 코어/스키마 물리 추출은 M0b/M4 — 여기서는 계약 적합성 검증용 선언.
 
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import type { ModuleManifest } from "@church/core";
 
 export const assetsManifest: ModuleManifest = {

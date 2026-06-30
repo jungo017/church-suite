@@ -1,7 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { withTenant, withSystem } from "@/lib/db/tenant";
+import { withTenant, withSystem } from "@church/core/db/tenant";
 import {
   church,
   appUser,
@@ -12,13 +12,13 @@ import {
   plan,
   position,
   orgRole,
-} from "@/lib/db/schema";
-import { hashPassword } from "@/lib/auth/password";
-import { assertUsableLoginId } from "@/lib/auth/login-id";
-import { DEFAULT_ROLES, ROLES } from "@/lib/rbac/roles";
+} from "@church/core/db/schema";
+import { hashPassword } from "@church/core/auth/password";
+import { assertUsableLoginId } from "@church/core/auth/login-id";
+import { DEFAULT_ROLES, ROLES } from "@church/core/rbac/roles";
 import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@/lib/members/org-constants";
-import { resolveChurchByCode } from "@/lib/tenant/resolve";
-import { RESERVED_SUBDOMAINS } from "@/lib/tenant/host";
+import { resolveChurchByCode } from "@church/core/tenant/resolve";
+import { RESERVED_SUBDOMAINS } from "@church/core/tenant/host";
 
 /**
  * 교회 온보딩 (스펙 §5, 작업 0.8).

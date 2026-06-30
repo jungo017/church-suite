@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { site, board, post, page } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { site, board, post, page } from "@church/core/db/schema";
 
 /** CMS 어드민 서비스 (스펙 §7.4, 내부). 테넌트 스코프. */
 

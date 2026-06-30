@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { pastoralCare } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { pastoralCare } from "@church/core/db/schema";
 
 /** 목양 기록(심방/기도/상담) 서비스 (스펙 §7.2). 테넌트 스코프. */
 

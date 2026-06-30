@@ -1,9 +1,9 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { eq } from "drizzle-orm";
-import { withTenant, withSystem } from "@/lib/db/tenant";
-import { subscription, churchStorageUsage, appUser } from "@/lib/db/schema";
+import { withTenant, withSystem } from "@church/core/db/tenant";
+import { subscription, churchStorageUsage, appUser } from "@church/core/db/schema";
 import { onboardChurch, OnboardError } from "@/lib/onboarding/onboard";
-import { getUserRoleNames } from "@/lib/auth/users";
+import { getUserRoleNames } from "@church/core/auth/users";
 import { deleteChurches, closeDb, uniqueCode } from "./helpers";
 
 const created: string[] = [];

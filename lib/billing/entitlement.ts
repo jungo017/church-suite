@@ -1,8 +1,8 @@
 import "server-only";
 import { cache } from "react";
 import { and, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { subscription, plan } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { subscription, plan } from "@church/core/db/schema";
 import { modulesForPlan, DEFAULT_PLAN, type ModuleKey } from "@church/core";
 
 /**

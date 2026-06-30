@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { mkdtemp, rm, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { LocalDiskAdapter } from "@/lib/storage/local";
+import { LocalDiskAdapter } from "@church/core/storage/local";
 
 /**
  * 로컬 디스크 어댑터: STORAGE_LOCAL_DIR 필수 + 경로조작(path traversal) 방어.

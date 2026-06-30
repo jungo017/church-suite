@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, count, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { formAssignment, member } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { formAssignment, member } from "@church/core/db/schema";
 import { listMembersByOrgRole } from "@/lib/members/org";
 import { getForm } from "./service";
 

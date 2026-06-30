@@ -2,9 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { checkPermission } from "@/lib/rbac/guards";
+import { checkPermission } from "@church/core/rbac/guards";
 import { requireModuleWrite } from "@/lib/billing/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { createAsset, updateAsset, deleteAsset, type AssetInput } from "./service";
 import {
   createDepartment,

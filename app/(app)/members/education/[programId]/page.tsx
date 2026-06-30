@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { getProgram, listEnrollments } from "@/lib/members/education";
 import { listMembers } from "@/lib/members/service";
 import {

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listMembers } from "@/lib/members/service";
 import { qrDataUrl } from "@/lib/assets/qr";
-import { TENANT_HOST_HEADER } from "@/lib/tenant/host";
+import { TENANT_HOST_HEADER } from "@church/core/tenant/host";
 import { PrintButton } from "@/app/(app)/assets/labels/print-button";
 
 // 교인 QR 라벨(키오스크 체크인 딥링크). 스캔 → /members/kiosk/{memberId}.

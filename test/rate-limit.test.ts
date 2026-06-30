@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { like } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
-import { rateLimit } from "@/lib/db/schema";
+import { withSystem } from "@church/core/db/tenant";
+import { rateLimit } from "@church/core/db/schema";
 import { consumeRateLimit, getClientIp } from "@/lib/security/rate-limit";
 import { closeDb, uniqueCode } from "./helpers";
 

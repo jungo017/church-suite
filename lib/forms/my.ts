@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, desc, eq, inArray } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { form, formField, formResponse, formAssignment } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { form, formField, formResponse, formAssignment } from "@church/core/db/schema";
 import { submitResponse, getResponseDetail, type AnswerInput } from "./responses";
 
 /**

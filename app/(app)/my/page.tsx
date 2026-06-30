@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requireUser } from "@church/core/auth/session";
 import { getUserMember } from "@/lib/members/portal";
 
 // 교인 셀프 포털 홈 (온라인교인센터). 로그인한 교인의 본인 정보.

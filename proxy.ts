@@ -5,7 +5,7 @@ import {
   normalizeHost,
   TENANT_HOST_HEADER,
   TENANT_SLUG_HEADER,
-} from "@/lib/tenant/host";
+} from "@church/core/tenant/host";
 
 /**
  * 테넌트 해석 프록시 (스펙 §5, §13). Next 16: `middleware`→`proxy`(스펙 §1).

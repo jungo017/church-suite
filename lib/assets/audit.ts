@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { assetAudit, assetAuditItem, asset } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { assetAudit, assetAuditItem, asset } from "@church/core/db/schema";
 
 /**
  * 전수조사 서비스 (스펙 §7.1). 모두 테넌트 스코프.

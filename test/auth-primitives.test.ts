@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { hashPassword, verifyPassword } from "@/lib/auth/password";
-import { signAccessToken, verifyAccessToken } from "@/lib/auth/jwt";
+import { hashPassword, verifyPassword } from "@church/core/auth/password";
+import { signAccessToken, verifyAccessToken } from "@church/core/auth/jwt";
 
 describe("password (scrypt)", () => {
   it("올바른 비밀번호는 통과, 틀린 비밀번호는 거부", async () => {

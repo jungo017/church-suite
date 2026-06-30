@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseTenantHost } from "@/lib/tenant/host";
+import { parseTenantHost } from "@church/core/tenant/host";
 
 const root = "localhost";
 

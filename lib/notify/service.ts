@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq, inArray, isNotNull } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { notification, member } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { notification, member } from "@church/core/db/schema";
 import { getNotifyProvider, type NotifyResult } from "./provider";
 
 /**

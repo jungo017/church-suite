@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { withTenant } from "@/lib/db/tenant";
-import { asset } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { asset } from "@church/core/db/schema";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 // Phase 1.1 — 자산 모듈도 코어와 동일하게 테넌트 격리(RLS)되는지 검증.

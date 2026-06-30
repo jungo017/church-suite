@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { notFound } from "next/navigation";
-import { createPlatformUser } from "@/lib/platform/users";
+import { createPlatformUser } from "@church/core/platform/users";
 import {
   isPlatformRole,
   PLATFORM_ROLES,
   type PlatformRole,
-} from "@/lib/platform/roles";
+} from "@church/core/platform/roles";
 
 export async function POST(req: Request) {
   if (process.env.NODE_ENV === "production") notFound();

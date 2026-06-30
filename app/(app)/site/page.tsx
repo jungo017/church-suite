@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { requireUser } from "@church/core/auth/session";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { getSite, listBoards, listPages } from "@/lib/site/admin";
 import {
   setSiteStatusAction,

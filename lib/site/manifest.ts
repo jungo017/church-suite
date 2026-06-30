@@ -1,5 +1,5 @@
 // 홈페이지(site/CMS) 모듈 매니페스트 (스펙 §1 P-1). 진입 권한은 현행과 동일하게 SITE_WRITE.
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import type { ModuleManifest } from "@church/core";
 
 export const siteManifest: ModuleManifest = {

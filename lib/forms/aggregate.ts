@@ -1,6 +1,6 @@
 import "server-only";
 import { sql } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
+import { withTenant } from "@church/core/db/tenant";
 import { listFields, parseOptions } from "./service";
 import { listResponses } from "./responses";
 import { parseFileAnswer } from "./files";

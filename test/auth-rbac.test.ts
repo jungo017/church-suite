@@ -3,11 +3,11 @@ import {
   createUser,
   findUserByLogin,
   getUserRoleNames,
-} from "@/lib/auth/users";
-import { seedDefaultRoles, assignRole } from "@/lib/rbac/seed";
-import { ROLES } from "@/lib/rbac/roles";
-import { createPlatformUser, findPlatformUserByLogin } from "@/lib/platform/users";
-import { PLATFORM_ROLES } from "@/lib/platform/roles";
+} from "@church/core/auth/users";
+import { seedDefaultRoles, assignRole } from "@church/core/rbac/seed";
+import { ROLES } from "@church/core/rbac/roles";
+import { createPlatformUser, findPlatformUserByLogin } from "@church/core/platform/users";
+import { PLATFORM_ROLES } from "@church/core/platform/roles";
 import { createChurch, deleteChurches, closeDb, uniqueCode } from "./helpers";
 
 const created: string[] = [];

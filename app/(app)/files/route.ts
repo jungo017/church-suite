@@ -1,5 +1,5 @@
-import { getCurrentUser } from "@/lib/auth/session";
-import { getStorage } from "@/lib/storage";
+import { getCurrentUser } from "@church/core/auth/session";
+import { getStorage } from "@church/core/storage";
 
 /**
  * 파일 다운로드 (설문 첨부 등). 인증 + 교회 프리픽스(church-{id}/) 소유권 검증.

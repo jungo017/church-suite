@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { withTenant } from "@/lib/db/tenant";
-import { formField, formAssignment } from "@/lib/db/schema";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { withTenant } from "@church/core/db/tenant";
+import { formField, formAssignment } from "@church/core/db/schema";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { createMember } from "@/lib/members/service";
 import { createForm, addField, listFields, setFormStatus } from "@/lib/forms/service";
 import {

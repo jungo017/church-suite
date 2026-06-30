@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { requireUser } from "@church/core/auth/session";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { redirect } from "next/navigation";
 import { listAccounts } from "@/lib/finance/accounts";
 import { createAccountAction } from "@/lib/finance/actions";

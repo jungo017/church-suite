@@ -1,7 +1,7 @@
 import "server-only";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
-import type { AccessClaims } from "@/lib/auth/jwt";
+import { getCurrentUser } from "@church/core/auth/session";
+import type { AccessClaims } from "@church/core/auth/jwt";
 import {
   hasRole,
   hasAnyRole,

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listAssetsPaged } from "@/lib/assets/service";
-import { pageParams } from "@/lib/db/pagination";
+import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
 import {
   ASSET_TYPE_LABELS,

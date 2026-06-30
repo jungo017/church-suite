@@ -1,8 +1,8 @@
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
-import { refreshToken } from "@/lib/db/schema";
+import { withSystem } from "@church/core/db/tenant";
+import { refreshToken } from "@church/core/db/schema";
 import { REFRESH_TTL_SEC } from "./config";
 
 /**

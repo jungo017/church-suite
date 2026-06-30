@@ -1,6 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentUser } from "@church/core/auth/session";
 import {
   hasPlatformRole,
   PLATFORM_ROLES,

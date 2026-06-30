@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import { TENANT_HOST_HEADER } from "@/lib/tenant/host";
-import { resolveTenant } from "@/lib/tenant/resolve";
+import { TENANT_HOST_HEADER } from "@church/core/tenant/host";
+import { resolveTenant } from "@church/core/tenant/resolve";
 
 /**
  * 진단용 엔드포인트 (개발 전용): 호스트 → 테넌트 해석 결과를 반환한다.

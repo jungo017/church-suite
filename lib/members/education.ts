@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { educationProgram, educationEnrollment, member } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { educationProgram, educationEnrollment, member } from "@church/core/db/schema";
 
 /** 교육 관리 서비스 (스펙 §7.2). 테넌트 스코프. */
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { withTenant, withSystem } from "@/lib/db/tenant";
-import { db } from "@/lib/db";
-import { member } from "@/lib/db/schema";
+import { withTenant, withSystem } from "@church/core/db/tenant";
+import { db } from "@church/core/db";
+import { member } from "@church/core/db/schema";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 // Phase 0 완료 게이트의 핵심: 행 단위 테넌트 격리(RLS).

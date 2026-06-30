@@ -1,9 +1,9 @@
 import "server-only";
 import { and, eq } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
-import { platformUser } from "@/lib/db/schema";
-import { normalizeLoginId } from "@/lib/auth/login-id";
-import { hashPassword } from "@/lib/auth/password";
+import { withSystem } from "@church/core/db/tenant";
+import { platformUser } from "@church/core/db/schema";
+import { normalizeLoginId } from "@church/core/auth/login-id";
+import { hashPassword } from "@church/core/auth/password";
 import {
   isPlatformRole,
   PLATFORM_ROLES,

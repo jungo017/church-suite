@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, eq, sql } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { voucher, account, member } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { voucher, account, member } from "@church/core/db/schema";
 
 /**
  * 기부금영수증 (스펙 §7.3). 교인별 연간 헌금(수입 전표, member 연동) 합산.

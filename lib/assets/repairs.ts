@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { assetRepair } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { assetRepair } from "@church/core/db/schema";
 
 /** 자산 수리이력 서비스 (스펙 §7.1). 테넌트 스코프. */
 

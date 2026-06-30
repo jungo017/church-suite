@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth/session";
+import { getCurrentUser } from "@church/core/auth/session";
 
 // GET /api/auth/me — 보호 라우트 예시. 액세스 토큰 검증.
 export async function GET() {

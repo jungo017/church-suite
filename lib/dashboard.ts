@@ -1,8 +1,8 @@
 import "server-only";
 import { and, count, eq } from "drizzle-orm";
 import { getReadContract } from "@church/core";
-import { withTenant } from "@/lib/db/tenant";
-import { member } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { member } from "@church/core/db/schema";
 import { ensureModulesRegistered } from "@/lib/modules.server";
 
 // 대시보드 = **코어 합성 화면**(P-1 결정 #5). 모듈 데이터는 직접 테이블 접근이 아니라

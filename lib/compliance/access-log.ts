@@ -1,7 +1,7 @@
 import "server-only";
 import { desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { accessLog } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { accessLog } from "@church/core/db/schema";
 
 /** 민감정보 접근 기록 (스펙 §5). append-only. */
 export async function logAccess(

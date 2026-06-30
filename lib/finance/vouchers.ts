@@ -1,8 +1,8 @@
 import "server-only";
 import { and, count, desc, eq, gte, lte, sql, type SQL } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { voucher, account, member } from "@/lib/db/schema";
-import { toPaged, type Paged } from "@/lib/db/pagination";
+import { withTenant } from "@church/core/db/tenant";
+import { voucher, account, member } from "@church/core/db/schema";
+import { toPaged, type Paged } from "@church/core/db/pagination";
 
 /** 전표 서비스 (스펙 §7.3, 단식). 테넌트 스코프. 금액 numeric. */
 

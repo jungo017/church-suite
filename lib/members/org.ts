@@ -1,14 +1,14 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { and, asc, eq, type SQL } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
+import { withTenant } from "@church/core/db/tenant";
 import {
   position,
   orgRole,
   orgMembership,
   member,
   department,
-} from "@/lib/db/schema";
+} from "@church/core/db/schema";
 import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "./org-constants";
 
 /**

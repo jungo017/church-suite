@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { account } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { account } from "@church/core/db/schema";
 
 /** 계정과목 서비스 (스펙 §7.3). 테넌트 스코프. */
 

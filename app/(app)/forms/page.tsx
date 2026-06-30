@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS, hasPermission } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS, hasPermission } from "@church/core/rbac/roles";
 import { listForms } from "@/lib/forms/service";
 import { createFormAction } from "@/lib/forms/actions";
 import {

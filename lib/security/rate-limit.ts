@@ -1,7 +1,7 @@
 import "server-only";
 import { sql } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
-import { rateLimit } from "@/lib/db/schema";
+import { withSystem } from "@church/core/db/tenant";
+import { rateLimit } from "@church/core/db/schema";
 
 export type RateLimitResult = {
   /** 이번 호출이 한도 내인가(true=허용). */

@@ -1,5 +1,5 @@
 // 설문/보고(forms) 모듈 매니페스트 (스펙 §1 P-1).
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import type { ModuleManifest } from "@church/core";
 
 export const formsManifest: ModuleManifest = {

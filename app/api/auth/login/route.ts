@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getTenant } from "@/lib/tenant/context";
-import { login, loginPlatform } from "@/lib/auth/session";
+import { getTenant } from "@church/core/tenant/context";
+import { login, loginPlatform } from "@church/core/auth/session";
 
 // POST /api/auth/login  body: { loginId, password }
 // 교회(church_id)는 요청 호스트(테넌트)로부터 해석한다(0.4).

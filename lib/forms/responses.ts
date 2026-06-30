@@ -1,6 +1,6 @@
 import "server-only";
 import { and, asc, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
+import { withTenant } from "@church/core/db/tenant";
 import {
   form,
   formField,
@@ -8,7 +8,7 @@ import {
   formAnswer,
   formAssignment,
   member,
-} from "@/lib/db/schema";
+} from "@church/core/db/schema";
 
 /**
  * 설문·보고 응답 제출/수집 (S.3, module-survey-report.md §4.1).
