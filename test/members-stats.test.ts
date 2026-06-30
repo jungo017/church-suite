@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
-import { saveAttendance } from "@/lib/members/attendance";
-import { memberStats, attendanceTrend } from "@/lib/members/stats";
+import { createMember } from "@church/module-members/service";
+import { saveAttendance } from "@church/module-members/attendance";
+import { memberStats, attendanceTrend } from "@church/module-members/stats";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

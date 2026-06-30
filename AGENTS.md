@@ -18,8 +18,8 @@
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
 - **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마) + 설문·보고 모듈(셀프 제출·파일첨부·xlsx 포함) + 교적 직분 연동 + 알림 실송출 잡 연결 + 보안 보강(경로조작·RBAC 읽기가드·스토리지 루트 필수화). 92 tests(+1 skipped: 실 S3 라운드트립), CI green, 모두 main 병합.** (다음 후보: §14 외부연동[실채널 드라이버·PG·소셜로그인] — 계정·환경 필요. §12 배포는 Docker 구성 완료 — 실서버 기동·TLS·다중 인스턴스 운영만 남음.)
-- **모듈 플랫폼 마이그레이션 진행(스펙 §1 P-1 · 상세 [`module-platform.md`](./module-platform.md) §10):** M0a/M0b/M1/M2/M3/M1.5/M3.5 → **M4-파일럿(비품/assets) 완료.** `lib/assets`→`packages/module-assets`(`@church/module-assets`), 라우트는 앱 잔류·패키지 import. `department`(코어 공유) CRUD 를 `@church/core/department` 로 이전(members→assets 결합 제거). 다음: **M4-나머지**(members/finance/site/forms → `packages/module-*`, 파일럿 패턴 반복). **forms 선행:** `forms`→`members`(org·portal) 직접 결합을 코어 `readContract`(파라미터 확장)/중재로 치환. 권장: boundary 강제(dependency-cruiser/ESLint)를 CI에. 이후 **M5**(`public`→모듈 Postgres 스키마, 선택). A안(모듈러 모놀리식·단일 배포) 유지.
-- **구현됨(M4-파일럿 · 비품 모듈 패키지 추출):** `packages/module-assets`(`@church/module-assets`) — exports `.`=manifest+contract(호스트 노출) / `./*`=내부 구현. `lib/modules.server.ts`·`app/(app)/assets/*` 라우트가 패키지를 import. tsconfig `paths`·vitest alias 추가(코어와 동일 패턴). assets 모듈은 `@church/core/*` 만 의존(앱 역참조 0). **신규 모듈 패키지는 이 패턴(매니페스트+contract 공개 / 내부는 서브패스 / 라우트는 앱 잔류)을 따른다.** **`department`(부서/구역)는 코어 공유 도메인 → `@church/core/department` 소유**(여러 모듈이 `department_id` 참조).
+- **모듈 플랫폼 마이그레이션 진행(스펙 §1 P-1 · 상세 [`module-platform.md`](./module-platform.md) §10):** M0a~M3·M1.5·M3.5 → **M4 완료(5개 모듈 전부 패키지 추출).** `lib/{members,finance,assets,site,forms}` → `packages/module-*`(`@church/module-*`). **각 모듈은 `@church/core/*` 만 의존, 모듈→모듈 결합 0.** 라우트(`app/(app)/<m>`)·공개(`app/(public)`)는 단일배포라 앱에 잔류하고 패키지를 import. 남은 후보: **M5**(`public`→모듈 Postgres 스키마, 선택) · 후속(선택): boundary 강제(dependency-cruiser/ESLint)를 CI에, 워커 `tsx`+`server-only` 점검. A안(모듈러 모놀리식·단일 배포) 유지.
+- **구현됨(M4 · 모듈 패키지 물리 추출):** 5개 모듈 → `packages/module-*`(exports `.`=manifest[+assets는 contract] 호스트 노출 / `./*`=내부 구현 서브패스). 호스트(`lib/modules.server`·`lib/onboarding`)·라우트·워커(`jobs/worker`)·테스트가 패키지를 import. tsconfig `paths`·vitest alias 추가. **cross-module 디커플링:** ① `department`(코어 공유) CRUD → `@church/core/department`. ② `forms`→`members`(`getUserMember`·`listMembersByOrgRole`)는 코어 소유 테이블 읽기라 **`@church/core/member`**(코어가 노출하는 읽기, §5.2)로 이전 — 양쪽이 코어에서 import. **신규 모듈은 이 패턴(매니페스트 공개/내부 서브패스/라우트 앱 잔류/코어만 의존)을 따른다.** 교인·직분·부서 등 **코어 소유 데이터의 cross-module 읽기는 `@church/core/<member|department|...>` 로 노출**(모듈 직접 import 금지).
 - **구현됨(M1.5 · 코어 기반 추출):** `lib/{db,auth,rbac,tenant,storage,platform}` → `packages/core/src/` 물리 이전(`platform`은 `auth`와 상호결합으로 동반). 코어 **서브패스 export**(`@church/core/db`·`@church/core/rbac/roles` 등) = `packages/core/package.json` exports + `tsconfig` `paths`(`@church/core/*`) + `vitest` alias(정규식) + `drizzle.config`(schema 경로). 앱 전역 import 재작성 `@/lib/<base>`→`@church/core/<base>`(145파일), 코어 내부는 자기 별칭 self-ref. **코어는 소스로 소비**(경로 별칭 인라인 → drizzle/postgres/jose 등 deps는 루트 호이스팅으로 해석, 코어 package.json에 deps 선언 불필요). 4개 리졸루션 컨텍스트(tsc·vitest·Turbopack·tsx) 전부 검증. 동작/테스트 불변(122). **새 base import는 `@church/core/<seg>` 사용**(앱의 `@/lib/{db,auth,rbac,tenant,storage,platform}`는 제거됨).
 - **구현됨(M3 · 엔타이틀먼트 배선):** 교회별 모듈 설치 = `installedModules: Set<ModuleKey>`. core 가격정책 `modulesForPlan`(plan→Set, 순수·애드온-ready, **현재 전 티어=전체 모듈**=현행 유지 — `packages/core/src/entitlement.ts`). `lib/billing/entitlement`(활성 구독→플랜→설치집합, React `cache`, 미구독/비활성 폴백)·`lib/billing/guards`(`requireModule`=페이지 404, `requireModuleWrite`=쓰기 forbidden). 셸 네비(`app/(app)/layout.tsx`)·대시보드 카드를 **설치 ∩ RBAC**로 필터(하드코딩 `installed=전체` 제거). 모듈별 `(app)/<m>/layout.tsx` 라우트 가드 + 각 모듈 액션 `requireWrite`에 쓰기 가드(서버액션은 레이아웃 우회 → 심층방어). 엔타이틀먼트와 RBAC는 **직교**(둘 다 통과). 122 tests(+11).
 - **구현됨(보안 보강 후속 · STORAGE_LOCAL_DIR 필수화):** 로컬 스토리지 루트를 `STORAGE_LOCAL_DIR` 로 **명시 필수**(`process.cwd()` 폴백 제거 → Turbopack "whole project traced" 경고 해소). 루트는 모듈 로드시점이 아닌 `LocalDiskAdapter` 생성자에서 읽어 s3 드라이버 선택 시 import 만으로 실패하지 않음. 미설정 시 명확히 throw. 배선: `.env.example`(`STORAGE_LOCAL_DIR=.storage`)·테스트 기본값(`test/setup.ts` tmpdir)·운영(이미지 기본 `/data/storage`+compose `appstorage` 볼륨을 app/worker 공유 마운트, `deploy/.env.prod.example`·README). 단위테스트 5건(미설정 throw 포함).
@@ -175,13 +175,16 @@ app/
   (public)/          # 공개 홈페이지 (SSG/ISR, SEO) — 민감 테이블 직접 접근 금지
   (app)/             # 인증 대시보드 (SSR) — dashboard/ members/ finance/ assets/
 proxy.ts             # (Next 16: middleware→proxy) 호스트 → church_id 해석·인증·컨텍스트 주입
-packages/core/src/   # @church/core — 기반 추출됨(M1.5): db/(+schema) · auth · rbac
-                     #   · tenant · storage · platform + 모듈 계약/레지스트리/엔타이틀먼트.
-                     #   앱·모듈은 @church/core/<seg> 로 소비(서브패스 export).
-lib/                 # 앱 도메인 모듈(members/finance/assets/site/forms) + ui/utils/jobs/
-                     #   notify/compliance/security/onboarding/dashboard/billing.
-                     #   (db/auth/rbac/tenant/storage/platform 는 M1.5 로 @church/core 이전됨)
-jobs/                # 워커(pg-boss / Graphile Worker)
+packages/
+  core/src/          # @church/core — 기반: db/(+schema) · auth · rbac · tenant · storage
+                     #   · platform · billing · compliance · jobs · notify · member · department
+                     #   + 모듈 계약/레지스트리/엔타이틀먼트. @church/core/<seg> 로 소비(서브패스).
+  module-{members,finance,assets,site,forms}/src/   # @church/module-* (M4)
+                     #   매니페스트(공개)+도메인 lib(내부 서브패스). 코어만 의존(모듈→모듈 금지).
+lib/                 # 호스트/공유만 잔류: modules.server(합성) · onboarding · dashboard(합성)
+                     #   · org(tree) · security · ui · utils. (도메인 모듈은 packages/module-* 로 이전됨)
+app/(app)/<m>/       # 모듈 라우트 — 단일배포(A안)라 앱에 잔류, @church/module-<m> 를 import
+jobs/                # 워커 엔트리(pg-boss) — @church/core·@church/module-* 소비
 drizzle/             # 생성된 마이그레이션 SQL
 drizzle.config.ts    # drizzle-kit 설정
 docker-compose.yml   # 로컬 Postgres

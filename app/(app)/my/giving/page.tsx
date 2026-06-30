@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { requireUser } from "@church/core/auth/session";
-import { getUserMember, listMyGiving } from "@/lib/members/portal";
-import { formatWon } from "@/lib/finance/constants";
+import { getUserMember } from "@church/core/member";
+import { listMyGiving } from "@church/module-members/portal";
+import { formatWon } from "@church/module-finance/constants";
 
 // 교인 셀프 포털 — 본인 헌금내역만.
 export default async function MyGivingPage() {

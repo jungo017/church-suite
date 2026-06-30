@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getPublicContext, getPublicPageBySlug } from "@/lib/site/public";
+import { getPublicContext, getPublicPageBySlug } from "@church/module-site/public";
 import { SiteHeader } from "../../site-header";
 
 export default async function PublicPagePage({

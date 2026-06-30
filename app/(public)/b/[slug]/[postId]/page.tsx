@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPublicContext, getPublicPost } from "@/lib/site/public";
+import { getPublicContext, getPublicPost } from "@church/module-site/public";
 import { SiteHeader } from "../../../site-header";
 
 export default async function PublicPostPage({

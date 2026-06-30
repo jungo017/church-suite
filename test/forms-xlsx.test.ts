@@ -1,8 +1,8 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createForm, addField } from "@/lib/forms/service";
-import { submitResponse } from "@/lib/forms/responses";
-import { buildResponseRows } from "@/lib/forms/aggregate";
-import { exportResponsesXlsx } from "@/lib/forms/xlsx";
+import { createForm, addField } from "@church/module-forms/service";
+import { submitResponse } from "@church/module-forms/responses";
+import { buildResponseRows } from "@church/module-forms/aggregate";
+import { exportResponsesXlsx } from "@church/module-forms/xlsx";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

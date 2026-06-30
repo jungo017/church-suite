@@ -7,7 +7,7 @@ import {
   deleteMember,
   createFamily,
   listFamilies,
-} from "@/lib/members/service";
+} from "@church/module-members/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

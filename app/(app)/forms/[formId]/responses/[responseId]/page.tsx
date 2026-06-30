@@ -2,9 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getResponseDetail } from "@/lib/forms/responses";
-import { parseOptions } from "@/lib/forms/service";
-import { parseFileAnswer } from "@/lib/forms/files";
+import { getResponseDetail } from "@church/module-forms/responses";
+import { parseOptions } from "@church/module-forms/service";
+import { parseFileAnswer } from "@church/module-forms/files";
 
 function fileHref(key: string, name: string): string {
   return `/files?key=${encodeURIComponent(key)}&name=${encodeURIComponent(name)}`;

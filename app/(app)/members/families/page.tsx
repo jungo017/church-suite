@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listFamilies } from "@/lib/members/service";
-import { createFamilyAction } from "@/lib/members/actions";
+import { listFamilies } from "@church/module-members/service";
+import { createFamilyAction } from "@church/module-members/actions";
 
 export default async function FamiliesPage() {
   const user = await requirePermission(PERMISSIONS.MEMBERS_WRITE);

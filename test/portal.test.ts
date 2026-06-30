@@ -1,9 +1,10 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
+import { createMember } from "@church/module-members/service";
 import { seedDefaultRoles } from "@church/core/rbac/seed";
-import { createMemberUser, getUserMember, listMyGiving } from "@/lib/members/portal";
-import { createAccount } from "@/lib/finance/accounts";
-import { createVoucher } from "@/lib/finance/vouchers";
+import { getUserMember } from "@church/core/member";
+import { createMemberUser, listMyGiving } from "@church/module-members/portal";
+import { createAccount } from "@church/module-finance/accounts";
+import { createVoucher } from "@church/module-finance/vouchers";
 import { createChurch, deleteChurches, closeDb, uniqueCode } from "./helpers";
 
 const created: string[] = [];

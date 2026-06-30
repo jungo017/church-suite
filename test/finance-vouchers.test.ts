@@ -1,11 +1,11 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createAccount } from "@/lib/finance/accounts";
+import { createAccount } from "@church/module-finance/accounts";
 import {
   createVoucher,
   listVouchers,
   deleteVoucher,
-} from "@/lib/finance/vouchers";
-import { createMember } from "@/lib/members/service";
+} from "@church/module-finance/vouchers";
+import { createMember } from "@church/module-members/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

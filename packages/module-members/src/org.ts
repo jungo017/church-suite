@@ -271,36 +271,6 @@ export async function removeMembership(
 }
 
 /**
- * 그 해 특정 직책(org_role.code) 보유자 목록 — is_leader 여부 무관.
- * 역할 기반 보고서(S.4) 자동 배정에서 form.target_role 매칭에 사용한다.
- */
-export async function listMembersByOrgRole(
-  churchId: string,
-  periodYear: number,
-  orgRoleCode: string,
-): Promise<{ memberId: string; memberName: string }[]> {
-  return withTenant(churchId, (tx) =>
-    tx
-      .selectDistinct({
-        memberId: orgMembership.memberId,
-        memberName: member.name,
-      })
-      .from(orgMembership)
-      .innerJoin(orgRole, eq(orgMembership.orgRoleId, orgRole.orgRoleId))
-      .innerJoin(member, eq(orgMembership.memberId, member.memberId))
-      .where(
-        and(
-          eq(orgMembership.churchId, churchId),
-          eq(orgMembership.periodYear, periodYear),
-          eq(orgMembership.status, "active"),
-          eq(orgRole.code, orgRoleCode),
-        ),
-      )
-      .orderBy(asc(member.name)),
-  );
-}
-
-/**
  * 그 해 리더(속장/부장 등 is_leader 직책 보유자) 목록.
  * 역할 기반 보고서(S.4)의 자동 배정 대상 선정의 근거가 되는 핵심 쿼리.
  * `orgRoleCode` 를 주면 특정 직책(예: class_leader)만 좁힌다.

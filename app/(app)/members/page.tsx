@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listMembersPaged } from "@/lib/members/service";
-import { positionLabelMap } from "@/lib/members/org";
+import { listMembersPaged } from "@church/module-members/service";
+import { positionLabelMap } from "@church/module-members/org";
 import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
 import {
@@ -11,7 +11,7 @@ import {
   GENDER_LABELS,
   type MemberStatus,
   type Gender,
-} from "@/lib/members/constants";
+} from "@church/module-members/constants";
 
 export default async function MembersPage({
   searchParams,

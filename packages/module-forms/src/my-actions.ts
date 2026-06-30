@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
-import { getUserMember } from "@/lib/members/portal";
+import { getUserMember } from "@church/core/member";
 import { getMyFillForm, submitMyResponse } from "./my";
 import { collectAnswers } from "./files";
 

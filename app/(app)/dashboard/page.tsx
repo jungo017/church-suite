@@ -4,10 +4,10 @@ import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { getInstalledModules } from "@church/core/billing/entitlement";
 import { dashboardCounts } from "@/lib/dashboard";
-import { attendanceTrend } from "@/lib/members/stats";
-import { accountSummary } from "@/lib/finance/report";
-import { formatWon } from "@/lib/finance/constants";
-import { SERVICE_TYPE_LABELS, type ServiceType } from "@/lib/members/constants";
+import { attendanceTrend } from "@church/module-members/stats";
+import { accountSummary } from "@church/module-finance/report";
+import { formatWon } from "@church/module-finance/constants";
+import { SERVICE_TYPE_LABELS, type ServiceType } from "@church/module-members/constants";
 
 function Card({
   title,

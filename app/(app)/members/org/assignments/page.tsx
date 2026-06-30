@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listMemberships, listOrgRoles } from "@/lib/members/org";
-import { listMembers } from "@/lib/members/service";
+import { listMemberships, listOrgRoles } from "@church/module-members/org";
+import { listMembers } from "@church/module-members/service";
 import { listDepartments } from "@church/core/department";
 import { departmentTreeRows } from "@/lib/org/tree";
 import {
   assignMembershipAction,
   removeMembershipAction,
-} from "@/lib/members/org-actions";
+} from "@church/module-members/org-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

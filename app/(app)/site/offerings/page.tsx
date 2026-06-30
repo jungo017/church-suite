@@ -2,10 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { listOnlineOfferings } from "@/lib/site/offering";
-import { listAccounts } from "@/lib/finance/accounts";
-import { reflectOfferingAction } from "@/lib/site/actions";
-import { formatWon } from "@/lib/finance/constants";
+import { listOnlineOfferings } from "@church/module-site/offering";
+import { listAccounts } from "@church/module-finance/accounts";
+import { reflectOfferingAction } from "@church/module-site/actions";
+import { formatWon } from "@church/module-finance/constants";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "대기",

@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
 import { withTenant } from "@church/core/db/tenant";
-import { appUser, member, voucher, account } from "@church/core/db/schema";
+import { member, voucher, account } from "@church/core/db/schema";
 import { createUser } from "@church/core/auth/users";
 import { assignRole } from "@church/core/rbac/seed";
 import { ROLES } from "@church/core/rbac/roles";
@@ -10,26 +10,6 @@ import { ROLES } from "@church/core/rbac/roles";
  * 교인 셀프 포털(온라인교인센터) 서비스 (스펙 §7.4).
  * 본인 데이터만 노출 — 앱 레벨에서 보장(로그인 사용자의 연결 member_id 기준).
  */
-
-/** 로그인 사용자(app_user)에 연결된 교인. 연결 없으면 null. */
-export async function getUserMember(churchId: string, userId: string) {
-  const rows = await withTenant(churchId, (tx) =>
-    tx
-      .select({
-        memberId: member.memberId,
-        name: member.name,
-        position: member.position,
-        phone: member.phone,
-        email: member.email,
-        registeredDate: member.registeredDate,
-      })
-      .from(appUser)
-      .innerJoin(member, eq(appUser.memberId, member.memberId))
-      .where(and(eq(appUser.churchId, churchId), eq(appUser.userId, userId)))
-      .limit(1),
-  );
-  return rows[0] ?? null;
-}
 
 /** 본인 헌금내역(수입 전표 중 본인 member_id). */
 export async function listMyGiving(churchId: string, memberId: string) {

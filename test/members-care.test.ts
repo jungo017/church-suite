@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
-import { addCare, listMemberCare, deleteCare } from "@/lib/members/care";
+import { createMember } from "@church/module-members/service";
+import { addCare, listMemberCare, deleteCare } from "@church/module-members/care";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

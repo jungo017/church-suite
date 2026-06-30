@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { memberStats, attendanceTrend, type Bucket } from "@/lib/members/stats";
+import { memberStats, attendanceTrend, type Bucket } from "@church/module-members/stats";
 import {
   MEMBER_STATUS_LABELS,
   GENDER_LABELS,
@@ -9,7 +9,7 @@ import {
   type MemberStatus,
   type Gender,
   type ServiceType,
-} from "@/lib/members/constants";
+} from "@church/module-members/constants";
 
 function BucketList({
   title,

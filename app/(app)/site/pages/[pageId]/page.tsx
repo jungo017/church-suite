@@ -2,8 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { getPageById } from "@/lib/site/admin";
-import { updatePageAction } from "@/lib/site/actions";
+import { getPageById } from "@church/module-site/admin";
+import { updatePageAction } from "@church/module-site/actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

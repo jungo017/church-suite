@@ -92,6 +92,14 @@ importers:
 
   packages/module-assets: {}
 
+  packages/module-finance: {}
+
+  packages/module-forms: {}
+
+  packages/module-members: {}
+
+  packages/module-site: {}
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

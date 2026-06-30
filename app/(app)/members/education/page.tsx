@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listPrograms } from "@/lib/members/education";
-import { createProgramAction } from "@/lib/members/education-actions";
+import { listPrograms } from "@church/module-members/education";
+import { createProgramAction } from "@church/module-members/education-actions";
 import {
   PROGRAM_STATUS_LABELS,
   type ProgramStatus,
-} from "@/lib/members/constants";
+} from "@church/module-members/constants";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

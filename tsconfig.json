@@ -23,7 +23,15 @@
       "@church/core": ["./packages/core/src/index.ts"],
       "@church/core/*": ["./packages/core/src/*"],
       "@church/module-assets": ["./packages/module-assets/src/index.ts"],
-      "@church/module-assets/*": ["./packages/module-assets/src/*"]
+      "@church/module-assets/*": ["./packages/module-assets/src/*"],
+      "@church/module-members": ["./packages/module-members/src/index.ts"],
+      "@church/module-members/*": ["./packages/module-members/src/*"],
+      "@church/module-finance": ["./packages/module-finance/src/index.ts"],
+      "@church/module-finance/*": ["./packages/module-finance/src/*"],
+      "@church/module-site": ["./packages/module-site/src/index.ts"],
+      "@church/module-site/*": ["./packages/module-site/src/*"],
+      "@church/module-forms": ["./packages/module-forms/src/index.ts"],
+      "@church/module-forms/*": ["./packages/module-forms/src/*"]
     }
   },
   "include": [

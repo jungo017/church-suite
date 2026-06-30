@@ -2,8 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getForm } from "@/lib/forms/service";
-import { listResponses } from "@/lib/forms/responses";
+import { getForm } from "@church/module-forms/service";
+import { listResponses } from "@church/module-forms/responses";
 
 export default async function FormResponsesPage({
   params,

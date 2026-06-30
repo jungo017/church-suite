@@ -2,19 +2,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS, hasPermission } from "@church/core/rbac/roles";
-import { getForm, listFields, parseOptions } from "@/lib/forms/service";
+import { getForm, listFields, parseOptions } from "@church/module-forms/service";
 import {
   addFieldAction,
   removeFieldAction,
   setFormStatusAction,
   updateFormAction,
-} from "@/lib/forms/actions";
+} from "@church/module-forms/actions";
 import {
   FIELD_TYPES,
   FIELD_TYPE_LABELS,
   FORM_STATUS_LABELS,
   type FormStatus,
-} from "@/lib/forms/constants";
+} from "@church/module-forms/constants";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

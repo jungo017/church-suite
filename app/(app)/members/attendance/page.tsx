@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listMembers } from "@/lib/members/service";
-import { listServiceAttendance } from "@/lib/members/attendance";
-import { saveAttendanceAction } from "@/lib/members/actions";
+import { listMembers } from "@church/module-members/service";
+import { listServiceAttendance } from "@church/module-members/attendance";
+import { saveAttendanceAction } from "@church/module-members/actions";
 import {
   SERVICE_TYPES,
   SERVICE_TYPE_LABELS,
   isServiceType,
   type ServiceType,
-} from "@/lib/members/constants";
+} from "@church/module-members/constants";
 
 export default async function AttendancePage({
   searchParams,

@@ -2,19 +2,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getProgram, listEnrollments } from "@/lib/members/education";
-import { listMembers } from "@/lib/members/service";
+import { getProgram, listEnrollments } from "@church/module-members/education";
+import { listMembers } from "@church/module-members/service";
 import {
   enrollAction,
   setEnrollmentStatusAction,
   removeEnrollmentAction,
-} from "@/lib/members/education-actions";
+} from "@church/module-members/education-actions";
 import {
   ENROLLMENT_STATUSES,
   ENROLLMENT_STATUS_LABELS,
   PROGRAM_STATUS_LABELS,
   type ProgramStatus,
-} from "@/lib/members/constants";
+} from "@church/module-members/constants";
 
 const ctrl =
   "rounded-md border border-border px-2 py-1 text-sm dark:bg-transparent";

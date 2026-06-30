@@ -18,8 +18,8 @@ import {
 import { onboardChurch } from "@/lib/onboarding/onboard";
 import { getInstalledModules } from "@church/core/billing/entitlement";
 import { PERMISSIONS, hasPermission, type Permission } from "@church/core/rbac/roles";
-import { membersManifest } from "@/lib/members/manifest";
-import { financeManifest } from "@/lib/finance/manifest";
+import { membersManifest } from "@church/module-members/manifest";
+import { financeManifest } from "@church/module-finance/manifest";
 import { createChurch, deleteChurches, closeDb, uniqueCode } from "./helpers";
 
 const created: string[] = [];

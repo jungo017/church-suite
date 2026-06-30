@@ -4,7 +4,7 @@ import {
   getPublicContext,
   getPublicBoardBySlug,
   listPublicPosts,
-} from "@/lib/site/public";
+} from "@church/module-site/public";
 import { SiteHeader } from "../../site-header";
 
 export default async function PublicBoardPage({

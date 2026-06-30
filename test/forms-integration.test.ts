@@ -2,15 +2,15 @@ import { describe, it, expect, afterAll } from "vitest";
 import { withTenant } from "@church/core/db/tenant";
 import { formField, formAssignment } from "@church/core/db/schema";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { createMember } from "@/lib/members/service";
-import { createForm, addField, listFields, setFormStatus } from "@/lib/forms/service";
+import { createMember } from "@church/module-members/service";
+import { createForm, addField, listFields, setFormStatus } from "@church/module-forms/service";
 import {
   submitResponse,
   listResponses,
   getPublicForm,
-} from "@/lib/forms/responses";
-import { assignMembers, listAssignments } from "@/lib/forms/assignments";
-import { fieldDistributions } from "@/lib/forms/aggregate";
+} from "@church/module-forms/responses";
+import { assignMembers, listAssignments } from "@church/module-forms/assignments";
+import { fieldDistributions } from "@church/module-forms/aggregate";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 // S.7 — 설문·보고 모듈 전반의 격리·권한·공개 경계 통합 검증.

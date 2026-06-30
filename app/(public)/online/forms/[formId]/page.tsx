@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTenant } from "@church/core/tenant/context";
-import { getPublicForm, } from "@/lib/forms/responses";
-import { parseOptions } from "@/lib/forms/service";
-import { submitPublicFormAction } from "@/lib/forms/public-actions";
+import { getPublicForm, } from "@church/module-forms/responses";
+import { parseOptions } from "@church/module-forms/service";
+import { submitPublicFormAction } from "@church/module-forms/public-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

@@ -1,4 +1,4 @@
-import { GENDERS, GENDER_LABELS, MEMBER_STATUSES, MEMBER_STATUS_LABELS } from "@/lib/members/constants";
+import { GENDERS, GENDER_LABELS, MEMBER_STATUSES, MEMBER_STATUS_LABELS } from "@church/module-members/constants";
 
 type Opt = { id: string; name: string };
 type MemberValues = {

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
-import { getUserMember } from "@/lib/members/portal";
-import { getMyFillForm, myResponseDetail } from "@/lib/forms/my";
-import { parseOptions } from "@/lib/forms/service";
-import { parseFileAnswer } from "@/lib/forms/files";
-import { submitMyResponseAction } from "@/lib/forms/my-actions";
+import { getUserMember } from "@church/core/member";
+import { getMyFillForm, myResponseDetail } from "@church/module-forms/my";
+import { parseOptions } from "@church/module-forms/service";
+import { parseFileAnswer } from "@church/module-forms/files";
+import { submitMyResponseAction } from "@church/module-forms/my-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

@@ -2,13 +2,13 @@ import Link from "next/link";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { redirect } from "next/navigation";
-import { listAccounts } from "@/lib/finance/accounts";
-import { createAccountAction } from "@/lib/finance/actions";
+import { listAccounts } from "@church/module-finance/accounts";
+import { createAccountAction } from "@church/module-finance/actions";
 import {
   ACCOUNT_TYPES,
   ACCOUNT_TYPE_LABELS,
   type AccountType,
-} from "@/lib/finance/constants";
+} from "@church/module-finance/constants";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

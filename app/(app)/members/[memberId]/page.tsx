@@ -2,18 +2,18 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { getMember, listFamilies } from "@/lib/members/service";
-import { listMemberCare } from "@/lib/members/care";
-import { listMemberAttendance } from "@/lib/members/attendance";
+import { getMember, listFamilies } from "@church/module-members/service";
+import { listMemberCare } from "@church/module-members/care";
+import { listMemberAttendance } from "@church/module-members/attendance";
 import { listDepartments } from "@church/core/department";
-import { positionLabelMap } from "@/lib/members/org";
+import { positionLabelMap } from "@church/module-members/org";
 import { logAccess } from "@church/core/compliance/access-log";
 import {
   deleteMemberAction,
   addCareAction,
   deleteCareAction,
   createMemberUserAction,
-} from "@/lib/members/actions";
+} from "@church/module-members/actions";
 import {
   GENDER_LABELS,
   MEMBER_STATUS_LABELS,
@@ -24,7 +24,7 @@ import {
   type MemberStatus,
   type CareType,
   type ServiceType,
-} from "@/lib/members/constants";
+} from "@church/module-members/constants";
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (

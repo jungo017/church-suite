@@ -16,7 +16,7 @@ import {
 import { hashPassword } from "@church/core/auth/password";
 import { assertUsableLoginId } from "@church/core/auth/login-id";
 import { DEFAULT_ROLES, ROLES } from "@church/core/rbac/roles";
-import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@/lib/members/org-constants";
+import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@church/module-members/org-constants";
 import { resolveChurchByCode } from "@church/core/tenant/resolve";
 import { RESERVED_SUBDOMAINS } from "@church/core/tenant/host";
 

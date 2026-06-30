@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listPositions, listOrgRoles } from "@/lib/members/org";
+import { listPositions, listOrgRoles } from "@church/module-members/org";
 import {
   createPositionAction,
   updatePositionAction,
   createOrgRoleAction,
   updateOrgRoleAction,
-} from "@/lib/members/org-actions";
+} from "@church/module-members/org-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
