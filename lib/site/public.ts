@@ -1,8 +1,8 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { site, board, post, page } from "@/lib/db/schema";
-import { getTenant } from "@/lib/tenant/context";
+import { withTenant } from "@church/core/db/tenant";
+import { site, board, post, page } from "@church/core/db/schema";
+import { getTenant } from "@church/core/tenant/context";
 
 /**
  * 공개 컨텍스트(호스트→교회→발행 사이트 + 네비 데이터). 없으면 null.

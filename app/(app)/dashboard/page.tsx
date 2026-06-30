@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { requireUser } from "@church/core/auth/session";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { getInstalledModules } from "@/lib/billing/entitlement";
 import { dashboardCounts } from "@/lib/dashboard";
 import { attendanceTrend } from "@/lib/members/stats";

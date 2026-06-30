@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { inArray } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
-import { church } from "@/lib/db/schema";
+import { withSystem } from "@church/core/db/tenant";
+import { church } from "@church/core/db/schema";
 
-export { closeDb } from "@/lib/db";
+export { closeDb } from "@church/core/db";
 
 /** 충돌 없는 짧은 식별자(서브도메인/코드 규칙에 맞게 하이픈 사용). */
 export function uniqueCode(prefix = "t"): string {

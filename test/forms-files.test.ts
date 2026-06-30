@@ -1,8 +1,8 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { createForm, addField } from "@/lib/forms/service";
 import { collectAnswers, parseFileAnswer } from "@/lib/forms/files";
-import { getStorage } from "@/lib/storage";
-import { getUsage } from "@/lib/storage/usage";
+import { getStorage } from "@church/core/storage";
+import { getUsage } from "@church/core/storage/usage";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

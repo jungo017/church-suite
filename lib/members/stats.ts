@@ -1,7 +1,7 @@
 import "server-only";
 import { count, desc, eq, sql } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { member, attendance, position } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { member, attendance, position } from "@church/core/db/schema";
 
 /**
  * 교적 통계 (스펙 §7.2). 집계는 RLS 스코프(withTenant) 안에서 수행.

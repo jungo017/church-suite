@@ -1,7 +1,7 @@
 import "server-only";
 import { and, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { role, userRole } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { role, userRole } from "@church/core/db/schema";
 import { DEFAULT_ROLES, type RoleName } from "./roles";
 
 /**

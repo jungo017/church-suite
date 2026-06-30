@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getTenant } from "@/lib/tenant/context";
+import { getTenant } from "@church/core/tenant/context";
 import { submitNewFamily } from "./intake";
 import { submitOnlineOffering } from "./offering";
 import { recordConsent } from "@/lib/compliance/consent";

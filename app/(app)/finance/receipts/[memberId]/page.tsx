@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
-import { getTenant } from "@/lib/tenant/context";
+import { requireUser } from "@church/core/auth/session";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
+import { getTenant } from "@church/core/tenant/context";
 import { memberAnnualGiving } from "@/lib/finance/receipts";
 import { formatWon } from "@/lib/finance/constants";
 import { PrintButton } from "../print-button";

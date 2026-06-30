@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
+import { requireUser } from "@church/core/auth/session";
 import { getUserMember } from "@/lib/members/portal";
 import { getMyFillForm, myResponseDetail } from "@/lib/forms/my";
 import { parseOptions } from "@/lib/forms/service";

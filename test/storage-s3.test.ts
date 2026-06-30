@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { S3Adapter } from "@/lib/storage/s3";
+import { S3Adapter } from "@church/core/storage/s3";
 
 /**
  * S3(SeaweedFS) 어댑터. url/설정은 항상 검증.

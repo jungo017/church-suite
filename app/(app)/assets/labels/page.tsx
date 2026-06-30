@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listAssets } from "@/lib/assets/service";
 import { qrDataUrl, assetUrl } from "@/lib/assets/qr";
-import { TENANT_HOST_HEADER } from "@/lib/tenant/host";
+import { TENANT_HOST_HEADER } from "@church/core/tenant/host";
 import { PrintButton } from "./print-button";
 
 // QR 라벨 인쇄 페이지 (스펙 §7.1). 스캔 시 자산 상세로 이동.

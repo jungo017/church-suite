@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { newfamilyReq, member } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { newfamilyReq, member } from "@church/core/db/schema";
 
 /** 새가족 등록 접수 (스펙 §7.4). 공개 제출 + 어드민 검토→교인 전환. */
 

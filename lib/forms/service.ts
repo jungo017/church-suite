@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { form, formField } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { form, formField } from "@church/core/db/schema";
 
 /**
  * 설문·보고 폼 빌더 서비스 (S.2, module-survey-report.md §4.1). 테넌트 스코프.

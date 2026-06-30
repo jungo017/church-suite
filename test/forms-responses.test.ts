@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { and, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { formAssignment } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { formAssignment } from "@church/core/db/schema";
 import { createMember } from "@/lib/members/service";
 import { createForm, addField, setFormStatus } from "@/lib/forms/service";
 import {

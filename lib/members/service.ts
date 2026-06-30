@@ -1,8 +1,8 @@
 import "server-only";
 import { and, asc, count, eq, ilike } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { member, family } from "@/lib/db/schema";
-import { toPaged, type Paged } from "@/lib/db/pagination";
+import { withTenant } from "@church/core/db/tenant";
+import { member, family } from "@church/core/db/schema";
+import { toPaged, type Paged } from "@church/core/db/pagination";
 
 /** 교인 CRUD 서비스 (스펙 §7.2). 테넌트 스코프. 교인 데이터는 단일 원본(§2). */
 

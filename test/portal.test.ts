@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { createMember } from "@/lib/members/service";
-import { seedDefaultRoles } from "@/lib/rbac/seed";
+import { seedDefaultRoles } from "@church/core/rbac/seed";
 import { createMemberUser, getUserMember, listMyGiving } from "@/lib/members/portal";
 import { createAccount } from "@/lib/finance/accounts";
 import { createVoucher } from "@/lib/finance/vouchers";

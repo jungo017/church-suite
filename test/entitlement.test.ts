@@ -6,8 +6,8 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { withSystem, withTenant } from "@/lib/db/tenant";
-import { plan, subscription } from "@/lib/db/schema";
+import { withSystem, withTenant } from "@church/core/db/tenant";
+import { plan, subscription } from "@church/core/db/schema";
 import {
   modulesForPlan,
   MODULE_KEYS,
@@ -17,7 +17,7 @@ import {
 } from "@church/core";
 import { onboardChurch } from "@/lib/onboarding/onboard";
 import { getInstalledModules } from "@/lib/billing/entitlement";
-import { PERMISSIONS, hasPermission, type Permission } from "@/lib/rbac/roles";
+import { PERMISSIONS, hasPermission, type Permission } from "@church/core/rbac/roles";
 import { membersManifest } from "@/lib/members/manifest";
 import { financeManifest } from "@/lib/finance/manifest";
 import { createChurch, deleteChurches, closeDb, uniqueCode } from "./helpers";

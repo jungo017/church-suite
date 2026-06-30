@@ -1,9 +1,9 @@
-import { requirePlatformRole } from "@/lib/platform/guards";
+import { requirePlatformRole } from "@church/core/platform/guards";
 import {
   listPlatformChurches,
   platformSummary,
-} from "@/lib/platform/dashboard";
-import { PLATFORM_ROLE_LABELS, type PlatformRole } from "@/lib/platform/roles";
+} from "@church/core/platform/dashboard";
+import { PLATFORM_ROLE_LABELS, type PlatformRole } from "@church/core/platform/roles";
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (

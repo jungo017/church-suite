@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/session";
+import { requireUser } from "@church/core/auth/session";
 import { getUserMember } from "@/lib/members/portal";
 import { listMyAssignments } from "@/lib/forms/my";
 import {

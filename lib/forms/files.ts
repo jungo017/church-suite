@@ -1,7 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { getStorage, churchPrefix } from "@/lib/storage";
-import { reserveUsage } from "@/lib/storage/usage";
+import { getStorage, churchPrefix } from "@church/core/storage";
+import { reserveUsage } from "@church/core/storage/usage";
 import type { AnswerInput } from "./responses";
 
 /**

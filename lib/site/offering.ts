@@ -1,7 +1,7 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { onlineOffering, voucher } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { onlineOffering, voucher } from "@church/core/db/schema";
 
 /**
  * 온라인 헌금 접수 (스펙 §7.4). 공개 제출 → (PG) → 어드민 재정 반영(전표 생성).

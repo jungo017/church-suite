@@ -1,7 +1,7 @@
 import "server-only";
 import { eq } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
-import { church } from "@/lib/db/schema";
+import { withSystem } from "@church/core/db/tenant";
+import { church } from "@church/core/db/schema";
 import { parseTenantHost, type TenantHint } from "./host";
 
 /**

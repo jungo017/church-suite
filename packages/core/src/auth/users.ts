@@ -1,7 +1,7 @@
 import "server-only";
 import { and, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { appUser, role, userRole } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { appUser, role, userRole } from "@church/core/db/schema";
 import { assertUsableLoginId, normalizeLoginId } from "./login-id";
 import { hashPassword } from "./password";
 

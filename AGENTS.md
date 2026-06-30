@@ -18,7 +18,8 @@
 ## 2. 현재 상태 (작업을 시작하기 전 반드시 확인)
 
 - **단계: ✅ 전체 완료 — 스펙 로드맵(Phase 0~5) + 보완(Phase 6) + UX 보강(페이지네이션·디자인 시스템/테마) + 설문·보고 모듈(셀프 제출·파일첨부·xlsx 포함) + 교적 직분 연동 + 알림 실송출 잡 연결 + 보안 보강(경로조작·RBAC 읽기가드·스토리지 루트 필수화). 92 tests(+1 skipped: 실 S3 라운드트립), CI green, 모두 main 병합.** (다음 후보: §14 외부연동[실채널 드라이버·PG·소셜로그인] — 계정·환경 필요. §12 배포는 Docker 구성 완료 — 실서버 기동·TLS·다중 인스턴스 운영만 남음.)
-- **모듈 플랫폼 마이그레이션 진행(스펙 §1 P-1 · 상세 [`module-platform.md`](./module-platform.md) §10):** M0a/M0b/M1/M2 병합 완료 → **M3(엔타이틀먼트 배선) 완료.** 다음 후보: **M1.5**(코어 기반 추출 `db/auth/rbac/tenant/storage`→`@church/core`, M4 선행) → **M4**(모듈 패키지 물리 추출 `packages/module-*`) → **M5**(`public`→모듈 Postgres 스키마 이전, 선택). A안(모듈러 모놀리식·단일 배포) 유지.
+- **모듈 플랫폼 마이그레이션 진행(스펙 §1 P-1 · 상세 [`module-platform.md`](./module-platform.md) §10):** M0a/M0b/M1/M2/M3 → **M1.5(코어 기반 추출) 완료.** 다음 후보: **M4**(모듈 패키지 물리 추출 `packages/module-*`, 코어 기반 위에서) → **M5**(`public`→모듈 Postgres 스키마 이전, 선택). A안(모듈러 모놀리식·단일 배포) 유지.
+- **구현됨(M1.5 · 코어 기반 추출):** `lib/{db,auth,rbac,tenant,storage,platform}` → `packages/core/src/` 물리 이전(`platform`은 `auth`와 상호결합으로 동반). 코어 **서브패스 export**(`@church/core/db`·`@church/core/rbac/roles` 등) = `packages/core/package.json` exports + `tsconfig` `paths`(`@church/core/*`) + `vitest` alias(정규식) + `drizzle.config`(schema 경로). 앱 전역 import 재작성 `@/lib/<base>`→`@church/core/<base>`(145파일), 코어 내부는 자기 별칭 self-ref. **코어는 소스로 소비**(경로 별칭 인라인 → drizzle/postgres/jose 등 deps는 루트 호이스팅으로 해석, 코어 package.json에 deps 선언 불필요). 4개 리졸루션 컨텍스트(tsc·vitest·Turbopack·tsx) 전부 검증. 동작/테스트 불변(122). **새 base import는 `@church/core/<seg>` 사용**(앱의 `@/lib/{db,auth,rbac,tenant,storage,platform}`는 제거됨).
 - **구현됨(M3 · 엔타이틀먼트 배선):** 교회별 모듈 설치 = `installedModules: Set<ModuleKey>`. core 가격정책 `modulesForPlan`(plan→Set, 순수·애드온-ready, **현재 전 티어=전체 모듈**=현행 유지 — `packages/core/src/entitlement.ts`). `lib/billing/entitlement`(활성 구독→플랜→설치집합, React `cache`, 미구독/비활성 폴백)·`lib/billing/guards`(`requireModule`=페이지 404, `requireModuleWrite`=쓰기 forbidden). 셸 네비(`app/(app)/layout.tsx`)·대시보드 카드를 **설치 ∩ RBAC**로 필터(하드코딩 `installed=전체` 제거). 모듈별 `(app)/<m>/layout.tsx` 라우트 가드 + 각 모듈 액션 `requireWrite`에 쓰기 가드(서버액션은 레이아웃 우회 → 심층방어). 엔타이틀먼트와 RBAC는 **직교**(둘 다 통과). 122 tests(+11).
 - **구현됨(보안 보강 후속 · STORAGE_LOCAL_DIR 필수화):** 로컬 스토리지 루트를 `STORAGE_LOCAL_DIR` 로 **명시 필수**(`process.cwd()` 폴백 제거 → Turbopack "whole project traced" 경고 해소). 루트는 모듈 로드시점이 아닌 `LocalDiskAdapter` 생성자에서 읽어 s3 드라이버 선택 시 import 만으로 실패하지 않음. 미설정 시 명확히 throw. 배선: `.env.example`(`STORAGE_LOCAL_DIR=.storage`)·테스트 기본값(`test/setup.ts` tmpdir)·운영(이미지 기본 `/data/storage`+compose `appstorage` 볼륨을 app/worker 공유 마운트, `deploy/.env.prod.example`·README). 단위테스트 5건(미설정 throw 포함).
 - **구현됨(보안 보강 · 경로조작/RBAC 읽기가드):** ① 로컬 스토리지 어댑터 경로조작(path traversal) 차단 — `lib/storage/local.ts`에 `resolveKey`(키를 ROOT 하위 절대경로로 해석, `..`·절대경로로 ROOT 밖이면 거부) 추가해 put/get/delete 적용. 다운로드 라우트 `app/(app)/files/route.ts`도 `..` 세그먼트 키 거부(심층방어). ② 교적/자산 **읽기** 페이지(`members` 목록·상세·통계, `assets` 목록·상세·라벨)에 read 권한 가드 추가(`requirePermission`/`hasPermission`) — member 역할(셀프포털)의 직접 URL 접근 차단. RLS는 교회 간 격리만 보장하므로 역할별 읽기 차단은 앱 레벨 가드로 강제. ③ 로컬 어댑터 경로조작 단위테스트 4건 추가(`test/storage-local.test.ts`, DB 불필요 — 통과). ※ DB 연동 통합 스위트는 이 환경(Docker 미가동)에서 재실행하지 못함.
@@ -173,11 +174,12 @@ app/
   (public)/          # 공개 홈페이지 (SSG/ISR, SEO) — 민감 테이블 직접 접근 금지
   (app)/             # 인증 대시보드 (SSR) — dashboard/ members/ finance/ assets/
 proxy.ts             # (Next 16: middleware→proxy) 호스트 → church_id 해석·인증·컨텍스트 주입
-lib/
-  db/                # Drizzle 데이터 계층(+schema/) + RLS 세션 변수 + 뷰/raw SQL
-  auth/              # JWT/세션/리프레시
-  storage/           # S3 어댑터(SeaweedFS)
-  tenant/            # 테넌트 컨텍스트 유틸
+packages/core/src/   # @church/core — 기반 추출됨(M1.5): db/(+schema) · auth · rbac
+                     #   · tenant · storage · platform + 모듈 계약/레지스트리/엔타이틀먼트.
+                     #   앱·모듈은 @church/core/<seg> 로 소비(서브패스 export).
+lib/                 # 앱 도메인 모듈(members/finance/assets/site/forms) + ui/utils/jobs/
+                     #   notify/compliance/security/onboarding/dashboard/billing.
+                     #   (db/auth/rbac/tenant/storage/platform 는 M1.5 로 @church/core 이전됨)
 jobs/                # 워커(pg-boss / Graphile Worker)
 drizzle/             # 생성된 마이그레이션 SQL
 drizzle.config.ts    # drizzle-kit 설정

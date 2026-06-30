@@ -201,8 +201,8 @@ packages/
 | **M0a** ✅ | 모듈 계약·레지스트리·파일럿(assets) 매니페스트 + 단위테스트 (순수 추가, 동작 불변). 위치 `lib/core/`(추출 시드) | typecheck·lint·109 tests green |
 | **M0b** ✅(로컬) | pnpm workspace 전환(`packageManager` 고정, `allowBuilds`) + 물리적 `packages/core`(`@church/core`) 추출 + tsconfig/vitest 별칭 + CI·Dockerfile·compose·문서 pnpm화. core 는 의존성 0(권한검사 DI). lib 기반(db/auth/rbac) 이전은 M4. | 로컬 typecheck·lint·test(109)·build green. **CI/Docker는 푸시 시 실검증** |
 | **M1** ✅(로컬) | 파일럿 **readContract 패턴**(비품/assets): 코어 읽기-계약 레지스트리(`read-contracts`) + `lib/assets/contract.ts`(`getAssetCount`) + 멱등 합성 부트스트랩(`lib/modules.server.ts`). **대시보드를 asset 테이블 직접 조회 → 모듈 계약 경유로 디커플링**(AGENTS §4.1-1). | 로컬 typecheck·lint·test(112)·build green |
-| **M1.5(선행)** | **코어 기반 추출** — `db`/`auth`/`rbac`/`tenant`/`storage` → `@church/core`. *모듈 패키지 물리 추출의 선행조건*(모듈→앱 역참조 금지). M0b에서 분리해 둔 작업. | 빌드·테스트 green |
-| **M2** | **레지스트리 기반 셸** — 하드코딩 `MODULES` 제거, 제품 스위처/사이드바를 매니페스트로 | E2E 네비/권한 |
+| **M1.5(선행)** ✅ | **코어 기반 추출** — `db`/`auth`/`rbac`/`tenant`/`storage`(+상호결합된 `platform`) → `@church/core` 물리 이전. 코어 서브패스 export(`@church/core/db` 등) + tsconfig `paths`·vitest alias·`drizzle.config` 배선. 앱 import 전면 재작성(`@/lib/<base>`→`@church/core/<base>`, 145파일). 코어 내부는 자기 별칭 self-ref. 코어는 소스로 소비(경로 별칭 인라인 → deps 호이스팅 해석, 별도 선언 불필요). *모듈 패키지 물리 추출(M4)의 선행조건 — 모듈→앱 역참조 제거.* | typecheck·lint·test(122)·build·tsx(worker) green |
+| **M2** ✅ | **레지스트리 기반 셸** — 하드코딩 `MODULES` 제거, 제품 스위처/사이드바를 매니페스트로 | E2E 네비/권한 |
 | **M3** ✅ | **엔타이틀먼트 배선** — ① core 가격정책 `modulesForPlan`(plan→`Set<ModuleKey>`, 순수·애드온-ready. **현재 결정: 전 티어=전체 모듈**[현행 유지]) ② `lib/billing/entitlement`(활성 구독→플랜→설치집합 해석, React `cache` 요청 메모이즈, 미구독/비활성 폴백) ③ 셸 네비·대시보드 카드를 **설치 ∩ 권한**으로 필터(하드코딩 `installed=전체` 제거) ④ 가드: 모듈별 `(app)/<m>/layout.tsx` 라우트 가드(미설치=404) + 액션 `requireWrite` 쓰기 가드(미설치=forbidden, 레이아웃 우회 차단). 온보딩은 기존 free 구독으로 충족. | typecheck·lint·build green, **122 tests**(+11: 정책·DB해석·폴백·교회격리·해제강제) |
 | **M4** | **모듈 패키지 물리 추출** — assets(파일럿) 포함 전 모듈을 `packages/module-*` 로(M1.5 코어 기반 위에서). 모듈→코어만 의존. | 모듈별 격리 테스트 |
 | **M5** | (선택) `public` 접두어 → 모듈 Postgres 스키마 이전 | 마이그레이션 검증 |

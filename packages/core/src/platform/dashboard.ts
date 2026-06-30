@@ -1,6 +1,6 @@
 import "server-only";
 import { sql } from "drizzle-orm";
-import { withSystem } from "@/lib/db/tenant";
+import { withSystem } from "@church/core/db/tenant";
 
 export type PlatformChurchRow = {
   churchId: string;

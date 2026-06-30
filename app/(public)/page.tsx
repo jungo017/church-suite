@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTenant } from "@/lib/tenant/context";
+import { getTenant } from "@church/core/tenant/context";
 import {
   getPublicSite,
   listPublicPages,

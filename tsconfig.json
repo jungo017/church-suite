@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@church/core": ["./packages/core/src/index.ts"]
+      "@church/core": ["./packages/core/src/index.ts"],
+      "@church/core/*": ["./packages/core/src/*"]
     }
   },
   "include": [

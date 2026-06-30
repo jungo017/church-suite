@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listMembersPaged } from "@/lib/members/service";
 import { positionLabelMap } from "@/lib/members/org";
-import { pageParams } from "@/lib/db/pagination";
+import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
 import {
   MEMBER_STATUSES,

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getTenant } from "@/lib/tenant/context";
+import { getTenant } from "@church/core/tenant/context";
 import { getPublicForm, } from "@/lib/forms/responses";
 import { parseOptions } from "@/lib/forms/service";
 import { submitPublicFormAction } from "@/lib/forms/public-actions";

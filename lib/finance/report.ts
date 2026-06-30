@@ -1,6 +1,6 @@
 import "server-only";
 import { sql } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
+import { withTenant } from "@church/core/db/tenant";
 
 /**
  * 재정 보고서 — 기간 집계 (스펙 §7.3, §4: 복잡 집계는 raw SQL).

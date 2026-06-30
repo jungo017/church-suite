@@ -1,5 +1,5 @@
 // 교적(members) 모듈 매니페스트 (스펙 §1 P-1). 셸은 레지스트리에서 이 선언으로 네비를 합성(M2).
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import type { ModuleManifest } from "@church/core";
 
 export const membersManifest: ModuleManifest = {

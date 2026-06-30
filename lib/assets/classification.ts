@@ -1,7 +1,7 @@
 import "server-only";
 import { asc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { department, location, assetCategory } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { department, location, assetCategory } from "@church/core/db/schema";
 
 /**
  * 자산 분류(부서/장소/품목) 조회·생성. 모두 테넌트 스코프.

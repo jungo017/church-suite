@@ -1,13 +1,13 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
+import { withTenant } from "@church/core/db/tenant";
 import {
   form,
   formField,
   formAssignment,
   formResponse,
   formAnswer,
-} from "@/lib/db/schema";
+} from "@church/core/db/schema";
 import { createMember } from "@/lib/members/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 

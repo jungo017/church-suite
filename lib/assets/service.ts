@@ -1,8 +1,8 @@
 import "server-only";
 import { and, count, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { asset } from "@/lib/db/schema";
-import { toPaged, type Paged } from "@/lib/db/pagination";
+import { withTenant } from "@church/core/db/tenant";
+import { asset } from "@church/core/db/schema";
+import { toPaged, type Paged } from "@church/core/db/pagination";
 
 /**
  * 자산 CRUD 서비스 (스펙 §7.1, §16). 모두 테넌트 스코프(withTenant → RLS).

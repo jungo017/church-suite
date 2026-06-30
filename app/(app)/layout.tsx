@@ -1,5 +1,5 @@
-import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS, type Permission } from "@/lib/rbac/roles";
+import { requireUser } from "@church/core/auth/session";
+import { hasPermission, PERMISSIONS, type Permission } from "@church/core/rbac/roles";
 import { visibleModules, allModules } from "@church/core";
 import { ensureModulesRegistered } from "@/lib/modules.server";
 import { getInstalledModules } from "@/lib/billing/entitlement";

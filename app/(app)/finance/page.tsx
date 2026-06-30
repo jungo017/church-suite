@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth/session";
-import { hasPermission, PERMISSIONS } from "@/lib/rbac/roles";
+import { requireUser } from "@church/core/auth/session";
+import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { listVouchersPaged, voucherTotals } from "@/lib/finance/vouchers";
-import { pageParams } from "@/lib/db/pagination";
+import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
 import {
   ACCOUNT_TYPE_LABELS,

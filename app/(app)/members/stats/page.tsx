@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { requirePermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { requirePermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { memberStats, attendanceTrend, type Bucket } from "@/lib/members/stats";
 import {
   MEMBER_STATUS_LABELS,

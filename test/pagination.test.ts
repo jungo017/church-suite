@@ -6,7 +6,7 @@ import {
   listVouchersPaged,
   voucherTotals,
 } from "@/lib/finance/vouchers";
-import { pageParams, toPaged } from "@/lib/db/pagination";
+import { pageParams, toPaged } from "@church/core/db/pagination";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

@@ -1,5 +1,5 @@
-import { checkPermission } from "@/lib/rbac/guards";
-import { PERMISSIONS } from "@/lib/rbac/roles";
+import { checkPermission } from "@church/core/rbac/guards";
+import { PERMISSIONS } from "@church/core/rbac/roles";
 import { getForm } from "@/lib/forms/service";
 import { exportResponsesCsv } from "@/lib/forms/aggregate";
 import { exportResponsesXlsx } from "@/lib/forms/xlsx";

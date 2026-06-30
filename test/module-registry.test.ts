@@ -1,6 +1,6 @@
 // 모듈 레지스트리/가시성 단위 테스트 (스펙 §1 P-1) — DB 불필요(순수 함수).
 import { describe, it, expect, beforeEach } from "vitest";
-import { PERMISSIONS, hasPermission, type Permission } from "@/lib/rbac/roles";
+import { PERMISSIONS, hasPermission, type Permission } from "@church/core/rbac/roles";
 import type { ModuleManifest, ModuleKey } from "@church/core";
 import {
   visibleModules,

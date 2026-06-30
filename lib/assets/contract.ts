@@ -1,7 +1,7 @@
 import "server-only";
 import { count, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { asset } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { asset } from "@church/core/db/schema";
 
 // 비품(자산) 모듈의 **읽기 계약** (스펙 §1 P-1, AGENTS §4.1-1).
 // 다른 모듈/대시보드(호스트)가 asset 테이블을 직접 조회하지 않고 이 함수로 소비한다.

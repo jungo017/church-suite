@@ -1,7 +1,7 @@
 import "server-only";
 import { desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { consent } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { consent } from "@church/core/db/schema";
 
 /** 개인정보 수집·이용 동의 기록 (스펙 §5, §14). */
 export async function recordConsent(

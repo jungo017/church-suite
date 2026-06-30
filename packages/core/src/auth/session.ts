@@ -10,7 +10,7 @@ import {
 import { signAccessToken, verifyAccessToken, type AccessClaims } from "./jwt";
 import { verifyPassword } from "./password";
 import { findUserByLogin, findUserById, getUserRoleNames } from "./users";
-import { findPlatformUserByLogin } from "@/lib/platform/users";
+import { findPlatformUserByLogin } from "@church/core/platform/users";
 import {
   issueRefreshToken,
   findRefreshToken,

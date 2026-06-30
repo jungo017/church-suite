@@ -1,10 +1,10 @@
 import "server-only";
 import { and, desc, eq } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { appUser, member, voucher, account } from "@/lib/db/schema";
-import { createUser } from "@/lib/auth/users";
-import { assignRole } from "@/lib/rbac/seed";
-import { ROLES } from "@/lib/rbac/roles";
+import { withTenant } from "@church/core/db/tenant";
+import { appUser, member, voucher, account } from "@church/core/db/schema";
+import { createUser } from "@church/core/auth/users";
+import { assignRole } from "@church/core/rbac/seed";
+import { ROLES } from "@church/core/rbac/roles";
 
 /**
  * 교인 셀프 포털(온라인교인센터) 서비스 (스펙 §7.4).

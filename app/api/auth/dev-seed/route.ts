@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { notFound } from "next/navigation";
 import { randomUUID } from "node:crypto";
-import { withSystem } from "@/lib/db/tenant";
-import { church } from "@/lib/db/schema";
-import { resolveChurchByCode } from "@/lib/tenant/resolve";
-import { createUser } from "@/lib/auth/users";
-import { seedDefaultRoles, assignRole } from "@/lib/rbac/seed";
-import { ROLES, type RoleName } from "@/lib/rbac/roles";
+import { withSystem } from "@church/core/db/tenant";
+import { church } from "@church/core/db/schema";
+import { resolveChurchByCode } from "@church/core/tenant/resolve";
+import { createUser } from "@church/core/auth/users";
+import { seedDefaultRoles, assignRole } from "@church/core/rbac/seed";
+import { ROLES, type RoleName } from "@church/core/rbac/roles";
 
 /**
  * 개발 전용 시드: 교회 + 기본 역할 + 사용자(역할 부여). 프로덕션에서는 404.

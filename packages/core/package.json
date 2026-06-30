@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "church-suite 플랫폼 코어 — 모듈 계약/레지스트리(P-1). 앱 의존성 0.",
+  "description": "church-suite 플랫폼 코어 — 모듈 계약/레지스트리 + 기반(db/auth/rbac/tenant/storage/platform, M1.5).",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./db": "./src/db/index.ts",
+    "./db/schema": "./src/db/schema/index.ts",
+    "./storage": "./src/storage/index.ts",
+    "./*": "./src/*.ts"
   },
   "types": "./src/index.ts"
 }

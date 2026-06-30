@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { checkRole, guardStatus } from "@/lib/rbac/guards";
-import { ROLES } from "@/lib/rbac/roles";
+import { checkRole, guardStatus } from "@church/core/rbac/guards";
+import { ROLES } from "@church/core/rbac/roles";
 
 // 관리자 전용 라우트(RBAC 가드 시연/검증). admin 역할만 200.
 export async function GET() {

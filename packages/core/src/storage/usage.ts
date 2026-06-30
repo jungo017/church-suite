@@ -1,7 +1,7 @@
 import "server-only";
 import { eq, sql } from "drizzle-orm";
-import { withTenant } from "@/lib/db/tenant";
-import { churchStorageUsage, subscription, plan } from "@/lib/db/schema";
+import { withTenant } from "@church/core/db/tenant";
+import { churchStorageUsage, subscription, plan } from "@church/core/db/schema";
 
 /**
  * 저장소 사용량/쿼터 (스펙 §10). church_storage_usage 카운터 유지(버킷 스캔 금지).
