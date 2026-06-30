@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { requireUser } from "@church/core/auth/session";
 import { getUserMember } from "@church/core/member";
 import { getMyFillForm, myResponseDetail } from "@church/module-forms/my";
 import { parseOptions } from "@church/module-forms/service";
 import { parseFileAnswer } from "@church/module-forms/files";
 import { submitMyResponseAction } from "@church/module-forms/my-actions";
-
-const input =
-  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
+import {
+  PageHeader,
+  PageTitle,
+  PageDescription,
+} from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import { DescriptionList, DescriptionItem } from "@/lib/ui/description-list";
+import { Field, FieldLabel, Input, Textarea, Select } from "@/lib/ui/form";
 
 function fileHref(key: string, name: string): string {
   return `/files?key=${encodeURIComponent(key)}&name=${encodeURIComponent(name)}`;
@@ -54,74 +62,85 @@ export default async function MyFillPage({
     const detail = await myResponseDetail(user.church_id, me.memberId, assignmentId);
     return (
       <section className="flex max-w-2xl flex-col gap-5">
-        <div>
-          <h1 className="text-2xl font-bold">{pf.assignment.title}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {done ? "제출 완료" : "마감되어 작성할 수 없습니다."}
-          </p>
-        </div>
+        <PageHeader>
+          <div>
+            <PageTitle>{pf.assignment.title}</PageTitle>
+            <PageDescription>
+              {done ? (
+                <Badge tone="success">제출 완료</Badge>
+              ) : (
+                "마감되어 작성할 수 없습니다."
+              )}
+            </PageDescription>
+          </div>
+        </PageHeader>
         {detail && detail.answers.length > 0 && (
-          <dl className="flex flex-col gap-3 text-sm">
+          <DescriptionList className="sm:grid-cols-1">
             {detail.answers.map((aw) => (
-              <div key={aw.answerId} className="border-b border-border pb-2">
-                <dt className="font-medium">{aw.label}</dt>
-                <dd className="mt-1 text-muted-foreground"><AnswerValue type={aw.type} value={aw.value} /></dd>
-              </div>
+              <DescriptionItem key={aw.answerId} label={aw.label}>
+                <AnswerValue type={aw.type} value={aw.value} />
+              </DescriptionItem>
             ))}
-          </dl>
+          </DescriptionList>
         )}
-        <Link href="/my/forms" className="text-sm underline">← 목록으로</Link>
+        <Button asChild variant="ghost" size="sm" className="self-start">
+          <Link href="/my/forms">
+            <ArrowLeft />
+            목록으로
+          </Link>
+        </Button>
       </section>
     );
   }
 
   return (
     <section className="flex max-w-2xl flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-bold">{pf.assignment.title}</h1>
-        {pf.assignment.description && (
-          <p className="mt-1 text-sm text-muted-foreground">{pf.assignment.description}</p>
-        )}
-      </div>
+      <PageHeader>
+        <div>
+          <PageTitle>{pf.assignment.title}</PageTitle>
+          {pf.assignment.description && (
+            <PageDescription>{pf.assignment.description}</PageDescription>
+          )}
+        </div>
+      </PageHeader>
       {error && (
-        <p className="text-sm text-destructive">
-          {error === "quota" ? "저장 용량을 초과했습니다." : "필수 문항을 입력해 주세요."}
-        </p>
+        <EmptyState
+          title={error === "quota" ? "저장 용량을 초과했습니다." : "필수 문항을 입력해 주세요."}
+        />
       )}
 
       <form
         action={submitMyResponseAction.bind(null, assignmentId)}
         encType="multipart/form-data"
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-5"
       >
         {pf.fields.map((f) => {
           const name = `field_${f.fieldId}`;
           const opts = parseOptions(f.options);
           return (
-            <div key={f.fieldId} className="flex flex-col gap-1">
-              <label className="text-sm font-medium">
+            <Field key={f.fieldId}>
+              <FieldLabel htmlFor={name} required={f.required}>
                 {f.label}
-                {f.required ? <span className="ml-1 text-destructive">*</span> : null}
-              </label>
+              </FieldLabel>
               {f.type === "short_text" && (
-                <input name={name} required={f.required} className={input} />
+                <Input id={name} name={name} required={f.required} />
               )}
               {f.type === "long_text" && (
-                <textarea name={name} required={f.required} rows={3} className={input} />
+                <Textarea id={name} name={name} required={f.required} rows={4} />
               )}
               {f.type === "number" && (
-                <input name={name} type="number" required={f.required} className={input} />
+                <Input id={name} name={name} type="number" required={f.required} />
               )}
               {f.type === "date" && (
-                <input name={name} type="date" required={f.required} className={input} />
+                <Input id={name} name={name} type="date" required={f.required} />
               )}
               {f.type === "scale" && (
-                <select name={name} required={f.required} className={input} defaultValue="">
+                <Select id={name} name={name} required={f.required} defaultValue="">
                   <option value="" disabled>선택</option>
                   {[1, 2, 3, 4, 5].map((n) => (
                     <option key={n} value={n}>{n}</option>
                   ))}
-                </select>
+                </Select>
               )}
               {f.type === "single_choice" &&
                 opts.map((o) => (
@@ -136,17 +155,22 @@ export default async function MyFillPage({
                   </label>
                 ))}
               {f.type === "file" && (
-                <input name={name} type="file" required={f.required} className={input} />
+                <Input id={name} name={name} type="file" required={f.required} />
               )}
-            </div>
+            </Field>
           );
         })}
-        <button className="w-fit rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">
+        <Button type="submit" size="lg" className="w-fit">
           제출
-        </button>
+        </Button>
       </form>
 
-      <Link href="/my/forms" className="text-sm underline">← 목록으로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/my/forms">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

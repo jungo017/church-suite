@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listDepartments } from "@church/core/department";
@@ -7,6 +8,8 @@ import {
   listCategories,
 } from "@church/module-assets/classification";
 import { createAssetAction } from "@church/module-assets/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
 import { AssetForm } from "../asset-form";
 
 export default async function NewAssetPage() {
@@ -18,7 +21,9 @@ export default async function NewAssetPage() {
   ]);
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">자산 등록</h1>
+      <PageHeader>
+        <PageTitle>자산 등록</PageTitle>
+      </PageHeader>
       <AssetForm
         action={createAssetAction}
         departments={departments.map((d) => ({ id: d.departmentId, name: d.name }))}
@@ -26,9 +31,12 @@ export default async function NewAssetPage() {
         categories={categories.map((c) => ({ id: c.categoryId, name: c.name }))}
         submitLabel="등록"
       />
-      <Link href="/assets" className="text-sm underline">
-        ← 목록으로
-      </Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/assets">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

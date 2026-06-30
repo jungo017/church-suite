@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listDepartments } from "@church/core/department";
 import { listFamilies } from "@church/module-members/service";
 import { listPositions } from "@church/module-members/org";
 import { createMemberAction } from "@church/module-members/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
 import { MemberForm } from "../member-form";
 
 export default async function NewMemberPage() {
@@ -16,7 +19,9 @@ export default async function NewMemberPage() {
   ]);
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">교인 등록</h1>
+      <PageHeader>
+        <PageTitle>교인 등록</PageTitle>
+      </PageHeader>
       <MemberForm
         action={createMemberAction}
         departments={departments.map((d) => ({ id: d.departmentId, name: d.name }))}
@@ -24,7 +29,12 @@ export default async function NewMemberPage() {
         positions={positions.map((p) => ({ id: p.positionId, name: p.label }))}
         submitLabel="등록"
       />
-      <Link href="/members" className="text-sm underline">← 목록으로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/members">
+          <ArrowLeft />
+          목록으로
+        </Link>
+      </Button>
     </section>
   );
 }

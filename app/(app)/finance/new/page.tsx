@@ -1,19 +1,19 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listAccounts } from "@church/module-finance/accounts";
 import { listMembers } from "@church/module-members/service";
 import { createVoucherAction } from "@church/module-finance/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Field, FieldLabel, Input, Select, Textarea } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
 import {
   ACCOUNT_TYPE_LABELS,
   PAYMENT_METHODS,
   PAYMENT_METHOD_LABELS,
   type AccountType,
 } from "@church/module-finance/constants";
-
-const input =
-  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
-const label = "flex flex-col gap-1 text-sm";
 
 export default async function NewVoucherPage() {
   const user = await requirePermission(PERMISSIONS.FINANCE_WRITE);
@@ -25,82 +25,89 @@ export default async function NewVoucherPage() {
 
   return (
     <section className="flex max-w-xl flex-col gap-6">
-      <h1 className="text-2xl font-bold">전표 등록</h1>
+      <PageHeader>
+        <PageTitle>전표 등록</PageTitle>
+      </PageHeader>
 
       {accounts.length === 0 ? (
-        <p className="text-sm text-amber-600">
+        <p className="text-sm text-warning">
           먼저 <Link href="/finance/accounts" className="underline">계정과목</Link>을 등록하세요.
         </p>
       ) : (
         <form action={createVoucherAction} className="flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
-            <label className={label}>
-              일자 *
-              <input name="voucherDate" type="date" required defaultValue={today} className={input} />
-            </label>
-            <label className={label}>
-              구분
-              <select name="type" defaultValue="income" className={input}>
+            <Field>
+              <FieldLabel htmlFor="voucherDate" required>일자</FieldLabel>
+              <Input id="voucherDate" name="voucherDate" type="date" required defaultValue={today} />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="type">구분</FieldLabel>
+              <Select id="type" name="type" defaultValue="income">
                 <option value="income">수입</option>
                 <option value="expense">지출</option>
-              </select>
-            </label>
+              </Select>
+            </Field>
           </div>
 
-          <label className={label}>
-            계정과목 *
-            <select name="accountId" required defaultValue="" className={input}>
+          <Field>
+            <FieldLabel htmlFor="accountId" required>계정과목</FieldLabel>
+            <Select id="accountId" name="accountId" required defaultValue="">
               <option value="" disabled>선택…</option>
               {accounts.map((a) => (
                 <option key={a.accountId} value={a.accountId}>
                   [{ACCOUNT_TYPE_LABELS[a.type as AccountType] ?? a.type}] {a.code} {a.name}
                 </option>
               ))}
-            </select>
-          </label>
+            </Select>
+          </Field>
 
           <div className="grid grid-cols-2 gap-4">
-            <label className={label}>
-              금액(원) *
-              <input name="amount" type="number" min="1" step="1" required className={input} />
-            </label>
-            <label className={label}>
-              결제수단
-              <select name="method" defaultValue="" className={input}>
+            <Field>
+              <FieldLabel htmlFor="amount" required>금액(원)</FieldLabel>
+              <Input id="amount" name="amount" type="number" inputMode="numeric" min="1" step="1" required />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="method">결제수단</FieldLabel>
+              <Select id="method" name="method" defaultValue="">
                 <option value="">(선택)</option>
                 {PAYMENT_METHODS.map((m) => (
                   <option key={m} value={m}>{PAYMENT_METHOD_LABELS[m]}</option>
                 ))}
-              </select>
-            </label>
+              </Select>
+            </Field>
           </div>
 
-          <label className={label}>
-            헌금자 (수입 시, 기부금영수증 연동)
-            <select name="memberId" defaultValue="" className={input}>
+          <Field>
+            <FieldLabel htmlFor="memberId">헌금자 (수입 시, 기부금영수증 연동)</FieldLabel>
+            <Select id="memberId" name="memberId" defaultValue="">
               <option value="">(없음)</option>
               {members.map((m) => (
                 <option key={m.memberId} value={m.memberId}>{m.name}</option>
               ))}
-            </select>
-          </label>
+            </Select>
+          </Field>
 
-          <label className={label}>
-            적요
-            <input name="summary" className={input} />
-          </label>
-          <label className={label}>
-            비고
-            <textarea name="note" rows={2} className={input} />
-          </label>
+          <Field>
+            <FieldLabel htmlFor="summary">적요</FieldLabel>
+            <Input id="summary" name="summary" />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="note">비고</FieldLabel>
+            <Textarea id="note" name="note" rows={2} />
+          </Field>
 
-          <button type="submit" className="w-fit rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background">
+          <Button type="submit" className="w-fit">
             등록
-          </button>
+          </Button>
         </form>
       )}
 
-      <Link href="/finance" className="text-sm underline">← 재정</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href="/finance">
+          <ArrowLeft />
+          재정
+        </Link>
+      </Button>
     </section>
   );
 }

@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { getResponseDetail } from "@church/module-forms/responses";
 import { parseOptions } from "@church/module-forms/service";
 import { parseFileAnswer } from "@church/module-forms/files";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
+import { DescriptionList, DescriptionItem } from "@/lib/ui/description-list";
 
 function fileHref(key: string, name: string): string {
   return `/files?key=${encodeURIComponent(key)}&name=${encodeURIComponent(name)}`;
@@ -37,29 +42,36 @@ export default async function ResponseDetailPage({
 
   return (
     <section className="flex max-w-2xl flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-bold">응답 상세</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {detail.response.memberId ? "교인 제출" : "익명"} ·{" "}
-          {detail.response.submittedAt
-            ? new Date(detail.response.submittedAt).toLocaleString("ko-KR")
-            : ""}
-        </p>
-      </div>
+      <PageHeader>
+        <div>
+          <PageTitle>응답 상세</PageTitle>
+          <PageDescription>
+            {detail.response.memberId ? "교인 제출" : "익명"} ·{" "}
+            {detail.response.submittedAt
+              ? new Date(detail.response.submittedAt).toLocaleString("ko-KR")
+              : ""}
+          </PageDescription>
+        </div>
+      </PageHeader>
 
-      <dl className="flex flex-col gap-3 text-sm">
-        {detail.answers.map((a) => (
-          <div key={a.answerId} className="border-b border-border pb-2">
-            <dt className="font-medium">{a.label}</dt>
-            <dd className="mt-1 text-muted-foreground"><AnswerValue type={a.type} value={a.value} /></dd>
-          </div>
-        ))}
-        {detail.answers.length === 0 && (
-          <p className="text-muted-foreground">답변이 없습니다.</p>
-        )}
-      </dl>
+      {detail.answers.length === 0 ? (
+        <EmptyState title="답변이 없습니다" />
+      ) : (
+        <DescriptionList className="sm:grid-cols-1">
+          {detail.answers.map((a) => (
+            <DescriptionItem key={a.answerId} label={a.label}>
+              <AnswerValue type={a.type} value={a.value} />
+            </DescriptionItem>
+          ))}
+        </DescriptionList>
+      )}
 
-      <Link href={`/forms/${formId}/responses`} className="text-sm underline">← 응답 목록</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href={`/forms/${formId}/responses`}>
+          <ArrowLeft />
+          응답 목록
+        </Link>
+      </Button>
     </section>
   );
 }
