@@ -3,8 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { getTenant } from "@church/core/tenant/context";
-import { memberAnnualGiving } from "@/lib/finance/receipts";
-import { formatWon } from "@/lib/finance/constants";
+import { memberAnnualGiving } from "@church/module-finance/receipts";
+import { formatWon } from "@church/module-finance/constants";
 import { PrintButton } from "../print-button";
 
 export default async function ReceiptPage({

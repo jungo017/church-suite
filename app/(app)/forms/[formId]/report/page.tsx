@@ -2,12 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getForm, parseOptions } from "@/lib/forms/service";
+import { getForm, parseOptions } from "@church/module-forms/service";
 import {
   fieldDistributions,
   submissionByDepartment,
-} from "@/lib/forms/aggregate";
-import { FIELD_TYPE_LABELS } from "@/lib/forms/constants";
+} from "@church/module-forms/aggregate";
+import { FIELD_TYPE_LABELS } from "@church/module-forms/constants";
 
 function showValue(type: string, value: string): string {
   if (type === "multi_choice") return parseOptions(value).join(" / ") || value;

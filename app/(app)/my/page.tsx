@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireUser } from "@church/core/auth/session";
-import { getUserMember } from "@/lib/members/portal";
+import { getUserMember } from "@church/core/member";
 
 // 교인 셀프 포털 홈 (온라인교인센터). 로그인한 교인의 본인 정보.
 export default async function MyHomePage() {

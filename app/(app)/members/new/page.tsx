@@ -2,9 +2,9 @@ import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listDepartments } from "@church/core/department";
-import { listFamilies } from "@/lib/members/service";
-import { listPositions } from "@/lib/members/org";
-import { createMemberAction } from "@/lib/members/actions";
+import { listFamilies } from "@church/module-members/service";
+import { listPositions } from "@church/module-members/org";
+import { createMemberAction } from "@church/module-members/actions";
 import { MemberForm } from "../member-form";
 
 export default async function NewMemberPage() {

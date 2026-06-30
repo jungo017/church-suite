@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { getBoss, JOBS } from "@church/core/jobs/queue";
-import { remindPending } from "@/lib/forms/remind";
+import { remindPending } from "@church/module-forms/remind";
 import { processNotifications } from "@church/core/notify/service";
 
 /**

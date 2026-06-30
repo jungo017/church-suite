@@ -2,7 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listMembers } from "@/lib/members/service";
+import { listMembers } from "@church/module-members/service";
 import { qrDataUrl } from "@church/module-assets/qr";
 import { TENANT_HOST_HEADER } from "@church/core/tenant/host";
 import { PrintButton } from "@/app/(app)/assets/labels/print-button";

@@ -6,13 +6,13 @@ import {
   createPost,
   createPage,
   updatePage,
-} from "@/lib/site/admin";
+} from "@church/module-site/admin";
 import {
   getPublicSite,
   listPublicPosts,
   getPublicPost,
   getPublicPageBySlug,
-} from "@/lib/site/public";
+} from "@church/module-site/public";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTenant } from "@church/core/tenant/context";
-import { submitOnlineOfferingAction } from "@/lib/site/public-actions";
+import { submitOnlineOfferingAction } from "@church/module-site/public-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

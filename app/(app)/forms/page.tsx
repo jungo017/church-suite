@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS, hasPermission } from "@church/core/rbac/roles";
-import { listForms } from "@/lib/forms/service";
-import { createFormAction } from "@/lib/forms/actions";
+import { listForms } from "@church/module-forms/service";
+import { createFormAction } from "@church/module-forms/actions";
 import {
   FORM_CATEGORY_LABELS,
   FORM_STATUS_LABELS,
   type FormCategory,
   type FormStatus,
-} from "@/lib/forms/constants";
+} from "@church/module-forms/constants";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

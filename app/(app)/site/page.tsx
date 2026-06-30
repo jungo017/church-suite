@@ -2,13 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { getSite, listBoards, listPages } from "@/lib/site/admin";
+import { getSite, listBoards, listPages } from "@church/module-site/admin";
 import {
   setSiteStatusAction,
   setSiteThemeAction,
   createBoardAction,
   createPageAction,
-} from "@/lib/site/actions";
+} from "@church/module-site/actions";
 import { controlClass } from "@/lib/ui/form";
 
 const THEME_LABELS: Record<string, string> = {

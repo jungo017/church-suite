@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listAccounts } from "@/lib/finance/accounts";
-import { listMembers } from "@/lib/members/service";
-import { createVoucherAction } from "@/lib/finance/actions";
+import { listAccounts } from "@church/module-finance/accounts";
+import { listMembers } from "@church/module-members/service";
+import { createVoucherAction } from "@church/module-finance/actions";
 import {
   ACCOUNT_TYPE_LABELS,
   PAYMENT_METHODS,
   PAYMENT_METHOD_LABELS,
   type AccountType,
-} from "@/lib/finance/constants";
+} from "@church/module-finance/constants";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

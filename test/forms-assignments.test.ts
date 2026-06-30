@@ -1,20 +1,20 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
+import { createMember } from "@church/module-members/service";
 import { createDepartment } from "@church/core/department";
 import {
   seedDefaultOrgRoles,
   listOrgRoles,
   assignMembership,
-  listMembersByOrgRole,
-} from "@/lib/members/org";
-import { createForm } from "@/lib/forms/service";
-import { submitResponse } from "@/lib/forms/responses";
+} from "@church/module-members/org";
+import { listMembersByOrgRole } from "@church/core/member";
+import { createForm } from "@church/module-forms/service";
+import { submitResponse } from "@church/module-forms/responses";
 import {
   autoAssignByRole,
   assignmentSummary,
   listAssignments,
   setAssignmentStatus,
-} from "@/lib/forms/assignments";
+} from "@church/module-forms/assignments";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

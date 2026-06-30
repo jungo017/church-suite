@@ -1,13 +1,13 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
-import { createForm, addField, setFormStatus } from "@/lib/forms/service";
-import { assignMembers, listAssignments } from "@/lib/forms/assignments";
+import { createMember } from "@church/module-members/service";
+import { createForm, addField, setFormStatus } from "@church/module-forms/service";
+import { assignMembers, listAssignments } from "@church/module-forms/assignments";
 import {
   listMyAssignments,
   getMyFillForm,
   submitMyResponse,
   myResponseDetail,
-} from "@/lib/forms/my";
+} from "@church/module-forms/my";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

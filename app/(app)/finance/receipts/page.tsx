@@ -2,8 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { annualGivingByMember } from "@/lib/finance/receipts";
-import { formatWon } from "@/lib/finance/constants";
+import { annualGivingByMember } from "@church/module-finance/receipts";
+import { formatWon } from "@church/module-finance/constants";
 
 const ctrl =
   "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";

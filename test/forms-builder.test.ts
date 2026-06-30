@@ -10,7 +10,7 @@ import {
   updateField,
   removeField,
   parseOptions,
-} from "@/lib/forms/service";
+} from "@church/module-forms/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

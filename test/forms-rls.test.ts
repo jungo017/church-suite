@@ -8,7 +8,7 @@ import {
   formResponse,
   formAnswer,
 } from "@church/core/db/schema";
-import { createMember } from "@/lib/members/service";
+import { createMember } from "@church/module-members/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 // S.1 — 설문 엔진 테이블이 코어와 동일하게 테넌트 격리(RLS)되는지 + 익명/체인 검증.

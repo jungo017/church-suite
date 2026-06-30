@@ -10,7 +10,7 @@ import {
   createPage,
   updatePage,
   getPageById,
-} from "@/lib/site/admin";
+} from "@church/module-site/admin";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

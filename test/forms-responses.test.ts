@@ -2,14 +2,14 @@ import { describe, it, expect, afterAll } from "vitest";
 import { and, eq } from "drizzle-orm";
 import { withTenant } from "@church/core/db/tenant";
 import { formAssignment } from "@church/core/db/schema";
-import { createMember } from "@/lib/members/service";
-import { createForm, addField, setFormStatus } from "@/lib/forms/service";
+import { createMember } from "@church/module-members/service";
+import { createForm, addField, setFormStatus } from "@church/module-forms/service";
 import {
   submitResponse,
   listResponses,
   getResponseDetail,
   getPublicForm,
-} from "@/lib/forms/responses";
+} from "@church/module-forms/responses";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

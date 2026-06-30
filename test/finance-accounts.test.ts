@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createAccount, listAccounts, getAccount, updateAccount } from "@/lib/finance/accounts";
+import { createAccount, listAccounts, getAccount, updateAccount } from "@church/module-finance/accounts";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

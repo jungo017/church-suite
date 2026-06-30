@@ -2,23 +2,23 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS, hasPermission } from "@church/core/rbac/roles";
-import { getForm } from "@/lib/forms/service";
+import { getForm } from "@church/module-forms/service";
 import {
   assignmentSummary,
   listAssignments,
-} from "@/lib/forms/assignments";
-import { listMembers } from "@/lib/members/service";
+} from "@church/module-forms/assignments";
+import { listMembers } from "@church/module-members/service";
 import {
   autoAssignAction,
   assignMembersAction,
   setAssignmentStatusAction,
   removeAssignmentAction,
   remindPendingAction,
-} from "@/lib/forms/assignment-actions";
+} from "@church/module-forms/assignment-actions";
 import {
   ASSIGNMENT_STATUS_LABELS,
   type AssignmentStatus,
-} from "@/lib/forms/constants";
+} from "@church/module-forms/constants";
 
 const btn =
   "rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background";

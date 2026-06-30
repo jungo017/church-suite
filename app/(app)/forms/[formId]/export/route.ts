@@ -1,8 +1,8 @@
 import { checkPermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getForm } from "@/lib/forms/service";
-import { exportResponsesCsv } from "@/lib/forms/aggregate";
-import { exportResponsesXlsx } from "@/lib/forms/xlsx";
+import { getForm } from "@church/module-forms/service";
+import { exportResponsesCsv } from "@church/module-forms/aggregate";
+import { exportResponsesXlsx } from "@church/module-forms/xlsx";
 
 /** 응답 내보내기 (S.5). forms:read. ?format=xlsx 또는 기본 csv. */
 export async function GET(

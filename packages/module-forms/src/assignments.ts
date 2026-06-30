@@ -2,7 +2,7 @@ import "server-only";
 import { and, asc, count, eq } from "drizzle-orm";
 import { withTenant } from "@church/core/db/tenant";
 import { formAssignment, member } from "@church/core/db/schema";
-import { listMembersByOrgRole } from "@/lib/members/org";
+import { listMembersByOrgRole } from "@church/core/member";
 import { getForm } from "./service";
 
 /**

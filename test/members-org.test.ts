@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
+import { createMember } from "@church/module-members/service";
 import { createDepartment } from "@church/core/department";
 import {
   seedDefaultPositions,
@@ -12,8 +12,8 @@ import {
   listMemberships,
   removeMembership,
   listLeaders,
-} from "@/lib/members/org";
-import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@/lib/members/org-constants";
+} from "@church/module-members/org";
+import { DEFAULT_POSITIONS, DEFAULT_ORG_ROLES } from "@church/module-members/org-constants";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

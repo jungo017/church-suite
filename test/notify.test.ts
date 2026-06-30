@@ -2,7 +2,7 @@ import { describe, it, expect, afterAll } from "vitest";
 import { eq } from "drizzle-orm";
 import { withTenant } from "@church/core/db/tenant";
 import { notification } from "@church/core/db/schema";
-import { createMember } from "@/lib/members/service";
+import { createMember } from "@church/module-members/service";
 import {
   sendToActiveMembers,
   queueToActiveMembers,

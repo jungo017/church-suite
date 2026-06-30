@@ -6,11 +6,11 @@ import {
   getReadContract,
   type ModuleManifest,
 } from "@church/core";
-import { membersManifest } from "@/lib/members/manifest";
-import { financeManifest } from "@/lib/finance/manifest";
+import { membersManifest } from "@church/module-members/manifest";
+import { financeManifest } from "@church/module-finance/manifest";
 import { assetsManifest } from "@church/module-assets/manifest";
-import { siteManifest } from "@/lib/site/manifest";
-import { formsManifest } from "@/lib/forms/manifest";
+import { siteManifest } from "@church/module-site/manifest";
+import { formsManifest } from "@church/module-forms/manifest";
 import { getAssetCount } from "@church/module-assets/contract";
 
 // 호스트 모듈 합성(스펙 §1 P-1) — 설치/등록된 모듈의 매니페스트 + 읽기 계약을

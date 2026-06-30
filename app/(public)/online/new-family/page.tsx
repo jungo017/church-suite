@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTenant } from "@church/core/tenant/context";
-import { submitNewFamilyAction } from "@/lib/site/public-actions";
+import { submitNewFamilyAction } from "@church/module-site/public-actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

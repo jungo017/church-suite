@@ -1,9 +1,9 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
-import { createForm } from "@/lib/forms/service";
-import { submitResponse } from "@/lib/forms/responses";
-import { assignMembers, listAssignments } from "@/lib/forms/assignments";
-import { remindPending } from "@/lib/forms/remind";
+import { createMember } from "@church/module-members/service";
+import { createForm } from "@church/module-forms/service";
+import { submitResponse } from "@church/module-forms/responses";
+import { assignMembers, listAssignments } from "@church/module-forms/assignments";
+import { remindPending } from "@church/module-forms/remind";
 import { listNotifications } from "@church/core/notify/service";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 

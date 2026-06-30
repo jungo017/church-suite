@@ -13,6 +13,14 @@ export default defineConfig({
       // 모듈 패키지(@church/module-*) 서브패스 매핑(M4)
       { find: /^@church\/module-assets$/, replacement: `${root}packages/module-assets/src/index.ts` },
       { find: /^@church\/module-assets\/(.*)$/, replacement: `${root}packages/module-assets/src/$1` },
+      { find: /^@church\/module-members$/, replacement: `${root}packages/module-members/src/index.ts` },
+      { find: /^@church\/module-members\/(.*)$/, replacement: `${root}packages/module-members/src/$1` },
+      { find: /^@church\/module-finance$/, replacement: `${root}packages/module-finance/src/index.ts` },
+      { find: /^@church\/module-finance\/(.*)$/, replacement: `${root}packages/module-finance/src/$1` },
+      { find: /^@church\/module-site$/, replacement: `${root}packages/module-site/src/index.ts` },
+      { find: /^@church\/module-site\/(.*)$/, replacement: `${root}packages/module-site/src/$1` },
+      { find: /^@church\/module-forms$/, replacement: `${root}packages/module-forms/src/index.ts` },
+      { find: /^@church\/module-forms\/(.*)$/, replacement: `${root}packages/module-forms/src/$1` },
       // "@/..." → 프로젝트 루트
       { find: /^@\/(.*)$/, replacement: `${root}$1` },
       // "server-only" 가드는 테스트(Node)에서 빈 모듈로 대체

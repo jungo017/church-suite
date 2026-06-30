@@ -1,11 +1,11 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember, listMembersPaged } from "@/lib/members/service";
-import { createAccount } from "@/lib/finance/accounts";
+import { createMember, listMembersPaged } from "@church/module-members/service";
+import { createAccount } from "@church/module-finance/accounts";
 import {
   createVoucher,
   listVouchersPaged,
   voucherTotals,
-} from "@/lib/finance/vouchers";
+} from "@church/module-finance/vouchers";
 import { pageParams, toPaged } from "@church/core/db/pagination";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 

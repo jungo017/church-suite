@@ -2,12 +2,12 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { getBoard, listPosts } from "@/lib/site/admin";
+import { getBoard, listPosts } from "@church/module-site/admin";
 import {
   createPostAction,
   setPostPublishedAction,
   deletePostAction,
-} from "@/lib/site/actions";
+} from "@church/module-site/actions";
 
 const input =
   "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";

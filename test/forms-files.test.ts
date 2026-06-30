@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createForm, addField } from "@/lib/forms/service";
-import { collectAnswers, parseFileAnswer } from "@/lib/forms/files";
+import { createForm, addField } from "@church/module-forms/service";
+import { collectAnswers, parseFileAnswer } from "@church/module-forms/files";
 import { getStorage } from "@church/core/storage";
 import { getUsage } from "@church/core/storage/usage";
 import { createChurch, deleteChurches, closeDb } from "./helpers";

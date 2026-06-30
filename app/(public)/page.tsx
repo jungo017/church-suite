@@ -5,7 +5,7 @@ import {
   listPublicPages,
   listPublicBoards,
   listRecentPublicPosts,
-} from "@/lib/site/public";
+} from "@church/module-site/public";
 import { SiteHeader } from "./site-header";
 
 const btnPrimary =

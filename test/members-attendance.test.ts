@@ -1,10 +1,10 @@
 import { describe, it, expect, afterAll } from "vitest";
-import { createMember } from "@/lib/members/service";
+import { createMember } from "@church/module-members/service";
 import {
   saveAttendance,
   listServiceAttendance,
   listMemberAttendance,
-} from "@/lib/members/attendance";
+} from "@church/module-members/attendance";
 import { createChurch, deleteChurches, closeDb } from "./helpers";
 
 const created: string[] = [];

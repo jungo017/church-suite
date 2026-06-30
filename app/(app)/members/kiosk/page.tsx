@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listMembers } from "@/lib/members/service";
-import { listServiceAttendance } from "@/lib/members/attendance";
-import { kioskSetAction } from "@/lib/members/actions";
+import { listMembers } from "@church/module-members/service";
+import { listServiceAttendance } from "@church/module-members/attendance";
+import { kioskSetAction } from "@church/module-members/actions";
 
 // 탭 키오스크 — 교인을 탭하면 오늘 주일예배 출석 토글.
 export default async function KioskPage() {

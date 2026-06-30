@@ -2,9 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { getMember } from "@/lib/members/service";
-import { listServiceAttendance } from "@/lib/members/attendance";
-import { kioskSetAction } from "@/lib/members/actions";
+import { getMember } from "@church/module-members/service";
+import { listServiceAttendance } from "@church/module-members/attendance";
+import { kioskSetAction } from "@church/module-members/actions";
 
 // QR 스캔 체크인 대상: 교인 QR → 이 페이지 → 확인 버튼으로 출석 처리.
 export default async function KioskCheckinPage({

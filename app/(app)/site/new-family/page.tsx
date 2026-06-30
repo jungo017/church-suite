@@ -2,11 +2,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { listNewFamilyReqs } from "@/lib/site/intake";
+import { listNewFamilyReqs } from "@church/module-site/intake";
 import {
   approveNewFamilyAction,
   rejectNewFamilyAction,
-} from "@/lib/site/actions";
+} from "@church/module-site/actions";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "대기",

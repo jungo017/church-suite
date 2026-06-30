@@ -1,0 +1,12 @@
+{
+  "name": "@church/module-finance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "재정 모듈 — module-platform.md M4. @church/core 만 의존(모듈→모듈 금지).",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "types": "./src/index.ts"
+}

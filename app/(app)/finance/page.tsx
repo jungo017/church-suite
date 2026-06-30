@@ -1,15 +1,15 @@
 import { redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { listVouchersPaged, voucherTotals } from "@/lib/finance/vouchers";
+import { listVouchersPaged, voucherTotals } from "@church/module-finance/vouchers";
 import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
 import {
   ACCOUNT_TYPE_LABELS,
   formatWon,
   type AccountType,
-} from "@/lib/finance/constants";
-import { deleteVoucherAction } from "@/lib/finance/actions";
+} from "@church/module-finance/constants";
+import { deleteVoucherAction } from "@church/module-finance/actions";
 
 export default async function FinancePage({
   searchParams,

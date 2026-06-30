@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { requireUser } from "@church/core/auth/session";
-import { getUserMember } from "@/lib/members/portal";
-import { listMyAssignments } from "@/lib/forms/my";
+import { getUserMember } from "@church/core/member";
+import { listMyAssignments } from "@church/module-forms/my";
 import {
   ASSIGNMENT_STATUS_LABELS,
   FORM_CATEGORY_LABELS,
   type AssignmentStatus,
   type FormCategory,
-} from "@/lib/forms/constants";
+} from "@church/module-forms/constants";
 
 export default async function MyFormsPage({
   searchParams,
