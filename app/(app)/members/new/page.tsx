@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
-import { listDepartments } from "@/lib/assets/classification";
+import { listDepartments } from "@church/core/department";
 import { listFamilies } from "@/lib/members/service";
 import { listPositions } from "@/lib/members/org";
 import { createMemberAction } from "@/lib/members/actions";

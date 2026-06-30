@@ -1,35 +1,12 @@
 import "server-only";
 import { asc, eq } from "drizzle-orm";
 import { withTenant } from "@church/core/db/tenant";
-import { department, location, assetCategory } from "@church/core/db/schema";
+import { location, assetCategory } from "@church/core/db/schema";
 
 /**
- * 자산 분류(부서/장소/품목) 조회·생성. 모두 테넌트 스코프.
+ * 자산 분류(장소/품목) 조회·생성. 모두 테넌트 스코프.
+ * 부서/구역(`department`)은 코어 공유 도메인이라 `@church/core/department` 가 소유한다.
  */
-
-export async function listDepartments(churchId: string) {
-  return withTenant(churchId, (tx) =>
-    tx
-      .select()
-      .from(department)
-      .where(eq(department.churchId, churchId))
-      .orderBy(asc(department.name)),
-  );
-}
-
-export async function createDepartment(
-  churchId: string,
-  name: string,
-  parentId: string | null = null,
-): Promise<{ departmentId: string }> {
-  return withTenant(churchId, async (tx) => {
-    const rows = await tx
-      .insert(department)
-      .values({ churchId, name, parentId })
-      .returning({ departmentId: department.departmentId });
-    return { departmentId: rows[0]!.departmentId };
-  });
-}
 
 export async function listLocations(churchId: string) {
   return withTenant(churchId, (tx) =>

@@ -5,7 +5,7 @@ import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { getMember, listFamilies } from "@/lib/members/service";
 import { listMemberCare } from "@/lib/members/care";
 import { listMemberAttendance } from "@/lib/members/attendance";
-import { listDepartments } from "@/lib/assets/classification";
+import { listDepartments } from "@church/core/department";
 import { positionLabelMap } from "@/lib/members/org";
 import { logAccess } from "@church/core/compliance/access-log";
 import {

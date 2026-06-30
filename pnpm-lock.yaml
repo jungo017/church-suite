@@ -90,6 +90,8 @@ importers:
 
   packages/core: {}
 
+  packages/module-assets: {}
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

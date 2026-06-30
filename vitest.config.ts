@@ -10,6 +10,9 @@ export default defineConfig({
       // "@church/core" → 코어 패키지 소스(workspace 패키지). 서브패스(@church/core/db 등)도 매핑.
       { find: /^@church\/core$/, replacement: `${root}packages/core/src/index.ts` },
       { find: /^@church\/core\/(.*)$/, replacement: `${root}packages/core/src/$1` },
+      // 모듈 패키지(@church/module-*) 서브패스 매핑(M4)
+      { find: /^@church\/module-assets$/, replacement: `${root}packages/module-assets/src/index.ts` },
+      { find: /^@church\/module-assets\/(.*)$/, replacement: `${root}packages/module-assets/src/$1` },
       // "@/..." → 프로젝트 루트
       { find: /^@\/(.*)$/, replacement: `${root}$1` },
       // "server-only" 가드는 테스트(Node)에서 빈 모듈로 대체

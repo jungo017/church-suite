@@ -2,19 +2,19 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
-import { getAsset } from "@/lib/assets/service";
-import { listRepairs } from "@/lib/assets/repairs";
+import { getAsset } from "@church/module-assets/service";
+import { listRepairs } from "@church/module-assets/repairs";
 import {
   deleteAssetAction,
   addRepairAction,
   deleteRepairAction,
-} from "@/lib/assets/actions";
+} from "@church/module-assets/actions";
 import {
   ASSET_TYPE_LABELS,
   ASSET_STATUS_LABELS,
   type AssetType,
   type AssetStatus,
-} from "@/lib/assets/constants";
+} from "@church/module-assets/constants";
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (

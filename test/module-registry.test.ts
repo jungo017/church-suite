@@ -12,7 +12,7 @@ import {
   getReadContract,
   resetReadContracts,
 } from "@church/core";
-import { assetsManifest } from "@/lib/assets/manifest";
+import { assetsManifest } from "@church/module-assets/manifest";
 
 // 테스트용 최소 finance 매니페스트(파일럿 외 모듈 — 필터 검증용).
 const financeManifest: ModuleManifest = {
