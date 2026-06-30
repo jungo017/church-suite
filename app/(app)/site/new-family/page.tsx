@@ -39,10 +39,10 @@ export default async function NewFamilyAdminPage() {
               {r.status === "pending" && (
                 <div className="flex shrink-0 gap-2">
                   <form action={approveNewFamilyAction.bind(null, r.reqId)}>
-                    <button className="rounded-md border border-green-300 px-2 py-1 text-xs text-green-700">승인</button>
+                    <button className="rounded-md border border-success/40 px-2 py-1 text-xs text-success">승인</button>
                   </form>
                   <form action={rejectNewFamilyAction.bind(null, r.reqId)}>
-                    <button className="rounded-md border border-red-300 px-2 py-1 text-xs text-destructive">거절</button>
+                    <button className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive">거절</button>
                   </form>
                 </div>
               )}

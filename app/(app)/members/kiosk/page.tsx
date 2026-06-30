@@ -31,7 +31,7 @@ export default async function KioskPage() {
               <button
                 className={`w-full rounded-lg border p-4 text-center text-lg font-medium ${
                   isPresent
-                    ? "border-green-400 bg-green-50 text-green-700 dark:bg-green-950"
+                    ? "border-success/40 bg-success/10 text-success dark:bg-success/10"
                     : "border-border"
                 }`}
               >

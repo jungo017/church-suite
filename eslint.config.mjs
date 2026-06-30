@@ -45,6 +45,39 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // 디자인 시스템 색상 규칙 (DESIGNE.md §5.3, D5) — .tsx 에서 원시 Tailwind 색상
+  // 스케일(text-red-600 등)·black/white 금지. 토큰 색(success/warning/info/destructive/
+  // primary/muted-foreground 등, globals.css 정의)만 사용. 회귀를 lint 로 차단.
+  {
+    files: ["**/*.tsx"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "Literal[value=/(text|bg|border|ring|divide|from|via|to|fill|stroke)-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]/]",
+          message:
+            "원시 색상 스케일 금지(DESIGNE.md §5.3). 토큰 색(text-primary/success/warning/info/destructive/muted-foreground 등)을 사용하세요.",
+        },
+        {
+          selector:
+            "TemplateElement[value.raw=/(text|bg|border|ring|divide|from|via|to|fill|stroke)-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]/]",
+          message:
+            "원시 색상 스케일 금지(DESIGNE.md §5.3). 토큰 색을 사용하세요.",
+        },
+        {
+          selector: "Literal[value=/(text|bg|border)-(black|white)/]",
+          message:
+            "text/bg/border-black|white 금지(DESIGNE.md §5.3). 토큰 색을 사용하세요.",
+        },
+        {
+          selector: "TemplateElement[value.raw=/(text|bg|border)-(black|white)/]",
+          message:
+            "text/bg/border-black|white 금지(DESIGNE.md §5.3). 토큰 색을 사용하세요.",
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

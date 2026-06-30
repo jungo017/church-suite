@@ -44,7 +44,7 @@ export default async function BoardPostsPage({
           <li key={p.postId} className="flex items-center justify-between gap-2 border-b border-border py-1.5">
             <span className="font-medium">{p.title}</span>
             <div className="flex items-center gap-2">
-              <span className={p.published ? "text-green-600" : "text-muted-foreground"}>
+              <span className={p.published ? "text-success" : "text-muted-foreground"}>
                 {p.published ? "공개" : "비공개"}
               </span>
               <form action={setPostPublishedAction.bind(null, boardId, p.postId, !p.published)}>

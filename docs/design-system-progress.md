@@ -45,9 +45,18 @@
 - [x] 교회별 `data-theme` 적용 유지, 내부 앱과 톤 분리. import 재배선(module/core)
 - [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅ (test 는 CI)
 
-### Phase D5. QA/문서 + 색상 lint — ⬜ 대기
-- [ ] **금지색 lint 자동화** — `eslint.config.mjs` `no-restricted-syntax`(.tsx)로 원시 색상 스케일·black/white error. (기존 boundary `no-restricted-imports` 규칙과 공존하도록 병합)
-- [ ] AGENTS.md 디자인 규칙 갱신, 역할별(staff/viewer/member) 화면 점검
+### Phase D5. QA/문서 + 색상 lint — ✅ 완료 (재적용)
+- [x] **금지색 lint 자동화** — `eslint.config.mjs` `no-restricted-syntax`(`**/*.tsx`)로 원시 색상 스케일·black/white error. 기존 boundary `no-restricted-imports`(packages/**) 와 별 config 객체로 공존.
+- [x] 의미색 위반 10건 토큰화: `text-green→text-success`·`text-amber→text-warning`·`text-blue→text-info`·`border-*→token/40`·`bg-green-50→bg-success/10`(assets/audits·compliance·kiosk·my/forms·site boards/new-family/offerings)
+- [x] **app/lib .tsx 금지색 0건**(lint 강제) — 회귀 차단
+- [x] AGENTS.md 디자인 규칙 갱신. 품질게이트: typecheck ✅ / lint ✅ / build ✅
+- [ ] (선택) 역할별(staff/viewer/member) 화면 점검은 후속
+
+## 현황 요약
+
+**디자인 시스템 재적용 D0~D5 핵심 완료.** 프리미티브·토큰(D0) · 반응형 셸(D1) · 핵심 목록/테이블(D2) · 폼/상세(D3) · 공개 사이트(D4) · 색상 lint 자동화+토큰화(D5)가 현재 main(모듈 플랫폼 완료) 위에 적용됨. app/lib `.tsx` 금지색 0건(lint 강제).
+
+**선택 후속(미완):** 일부 long-tail 보조 화면(members attendance/education/families/stats/notify/org/labels, assets audits/classification/labels, site offerings/new-family/boards 등)의 **전면 PageHeader/Table 재배치**는 미적용 — 단, 색상은 토큰 준수·기능 정상. 역할별 화면 점검도 후속.
 
 ## 작업 로그
 - **D0 재적용** — 청사진 브랜치(`feat/design-system` `740466c`)에서 프리미티브·토큰·login 을

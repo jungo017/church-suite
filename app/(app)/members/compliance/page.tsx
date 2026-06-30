@@ -46,7 +46,7 @@ export default async function CompliancePage() {
             {consents.map((c) => (
               <li key={c.consentId} className="flex justify-between border-b border-border py-1">
                 <span>{c.subjectName ?? c.memberId?.slice(0, 8) ?? "—"} · {c.consentType} · {c.source ?? ""}</span>
-                <span className={c.agreed ? "text-green-600" : "text-muted-foreground"}>
+                <span className={c.agreed ? "text-success" : "text-muted-foreground"}>
                   {c.agreed ? "동의" : "거부"}
                 </span>
               </li>
