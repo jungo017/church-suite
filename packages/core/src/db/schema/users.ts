@@ -23,8 +23,10 @@ export const appUser = pgTable(
       .notNull()
       .references(() => church.churchId, { onDelete: "cascade" }),
     memberId: uuid().references(() => member.memberId, { onDelete: "set null" }),
-    loginId: text().notNull(),
-    passwordHash: text().notNull(),
+    // loginId/passwordHash 는 nullable — 소셜 전용 계정(비번 없음)은 user_identity 로만 인증.
+    // (church_id, login_id) unique 는 nulls distinct 라 소셜 계정 다수의 null login_id 허용.
+    loginId: text(),
+    passwordHash: text(),
     name: text().notNull(),
     status: text().notNull().default("active"),
     ...timestamps,

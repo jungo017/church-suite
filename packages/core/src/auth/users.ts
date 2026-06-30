@@ -35,7 +35,7 @@ export type AuthUser = {
   churchId: string;
   name: string;
   status: string;
-  passwordHash: string;
+  passwordHash: string | null; // 소셜 전용 계정은 null
 };
 
 export async function findUserByLogin(
