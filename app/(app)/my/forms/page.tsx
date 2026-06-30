@@ -32,7 +32,7 @@ export default async function MyFormsPage({
   return (
     <section className="flex max-w-2xl flex-col gap-5">
       <h1 className="text-2xl font-bold">설문 · 보고</h1>
-      {submitted && <p className="text-sm text-green-600">제출이 완료되었습니다. 감사합니다!</p>}
+      {submitted && <p className="text-sm text-success">제출이 완료되었습니다. 감사합니다!</p>}
 
       {assignments.length === 0 ? (
         <p className="text-sm text-muted-foreground">배정된 설문·보고가 없습니다.</p>

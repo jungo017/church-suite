@@ -47,7 +47,7 @@ export default async function OfferingsAdminPage() {
                       <option key={a.accountId} value={a.accountId}>{a.code} {a.name}</option>
                     ))}
                   </select>
-                  <button className="rounded-md border border-blue-300 px-2 py-1 text-xs text-blue-700">재정 반영</button>
+                  <button className="rounded-md border border-info/40 px-2 py-1 text-xs text-info">재정 반영</button>
                 </form>
               )}
             </li>
