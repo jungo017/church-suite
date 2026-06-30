@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { listDepartments } from "@church/core/department";
 import { getMember, listFamilies } from "@church/module-members/service";
 import { listPositions } from "@church/module-members/org";
 import { updateMemberAction } from "@church/module-members/actions";
+import { PageHeader, PageTitle } from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
 import { MemberForm } from "../../member-form";
 
 export default async function EditMemberPage({
@@ -24,7 +27,9 @@ export default async function EditMemberPage({
   ]);
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">교인 편집</h1>
+      <PageHeader>
+        <PageTitle>교인 편집</PageTitle>
+      </PageHeader>
       <MemberForm
         action={updateMemberAction.bind(null, memberId)}
         member={m}
@@ -33,7 +38,12 @@ export default async function EditMemberPage({
         positions={positions.map((p) => ({ id: p.positionId, name: p.label }))}
         submitLabel="저장"
       />
-      <Link href={`/members/${memberId}`} className="text-sm underline">← 상세로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href={`/members/${memberId}`}>
+          <ArrowLeft />
+          상세로
+        </Link>
+      </Button>
     </section>
   );
 }

@@ -30,10 +30,13 @@
 - [ ] **long-tail(후속)**: members 보조(attendance·education·families·stats·notify·org·labels·kiosk) · assets(audits·classification·labels) · site(offerings·new-family·boards) · my/forms → PageHeader/Table/Badge/EmptyState
 - [ ] 의미색 토큰화(`text-green→success`·`text-amber→warning`·수입 `text-blue→info`) — D5 색상 lint 와 함께 마무리
 
-### Phase D3. 폼/상세 — ⬜ 대기
-- [ ] 신규 `lib/ui/description-list.tsx`
-- [ ] 교인·자산 상세 → PageHeader·DescriptionList·Badge·위험액션 분리
-- [ ] 공유 폼 `member-form`·`asset-form`·`finance/new` 등 `Field` 화(label↔input·필수·inputMode)
+### Phase D3. 폼/상세 — ✅ 완료 (재적용)
+- [x] 신규 `lib/ui/description-list.tsx`
+- [x] 상세: 교인(`members/[memberId]`)·자산(`assets/[assetId]`) → PageHeader·DescriptionList·Badge·하위 Table·위험액션 분리
+- [x] 공유 폼 `member-form`·`asset-form` Field 화 + 등록/수정: members(new·edit)·assets(new·edit)·`finance/new`
+- [x] 폼/응답 상세: `forms/[formId]`·`responses`·`responses/[responseId]`·`my`·`my/forms/[assignmentId]`(셀프 제출폼)
+- [x] 이동 함수 재배선: listDepartments→`@church/core/department`, getUserMember→`@church/core/member`
+- [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅ (test 는 CI)
 
 ### Phase D4. 공개 사이트 분리 — ⬜ 대기
 - [ ] 신규 `lib/ui/public-site/*`(header·container/shell/footer·section·post-list)

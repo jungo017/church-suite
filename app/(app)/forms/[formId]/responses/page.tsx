@@ -1,9 +1,25 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS } from "@church/core/rbac/roles";
 import { getForm } from "@church/module-forms/service";
 import { listResponses } from "@church/module-forms/responses";
+import {
+  PageHeader,
+  PageTitle,
+  PageDescription,
+} from "@/lib/ui/page";
+import { Button } from "@/lib/ui/button";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 
 export default async function FormResponsesPage({
   params,
@@ -18,35 +34,54 @@ export default async function FormResponsesPage({
 
   return (
     <section className="flex max-w-3xl flex-col gap-5">
-      <div>
-        <h1 className="text-2xl font-bold">{f.title} — 응답</h1>
-        <p className="mt-1 text-sm text-muted-foreground">총 {responses.length}건</p>
-      </div>
+      <PageHeader>
+        <div>
+          <PageTitle>{f.title} — 응답</PageTitle>
+          <PageDescription>총 {responses.length}건</PageDescription>
+        </div>
+      </PageHeader>
 
       {responses.length === 0 ? (
-        <p className="text-sm text-muted-foreground">아직 응답이 없습니다.</p>
+        <EmptyState
+          title="아직 응답이 없습니다"
+          description="폼이 발행되고 제출이 들어오면 여기에 표시됩니다."
+        />
       ) : (
-        <ul className="flex flex-col gap-1 text-sm">
-          {responses.map((r) => (
-            <li
-              key={r.responseId}
-              className="flex items-center justify-between border-b border-border py-2"
-            >
-              <Link
-                href={`/forms/${formId}/responses/${r.responseId}`}
-                className="underline"
-              >
-                {r.memberName ?? "익명"}
-              </Link>
-              <span className="text-muted-foreground">
-                {r.submittedAt ? new Date(r.submittedAt).toLocaleString("ko-KR") : ""}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>제출자</TableHead>
+                <TableHead className="text-right">제출일시</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {responses.map((r) => (
+                <TableRow key={r.responseId}>
+                  <TableCell>
+                    <Link
+                      href={`/forms/${formId}/responses/${r.responseId}`}
+                      className="underline"
+                    >
+                      {r.memberName ?? "익명"}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums text-muted-foreground">
+                    {r.submittedAt ? new Date(r.submittedAt).toLocaleString("ko-KR") : ""}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
-      <Link href={`/forms/${formId}`} className="text-sm underline">← 폼으로</Link>
+      <Button asChild variant="ghost" size="sm" className="self-start">
+        <Link href={`/forms/${formId}`}>
+          <ArrowLeft />
+          폼으로
+        </Link>
+      </Button>
     </section>
   );
 }
