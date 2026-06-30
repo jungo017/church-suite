@@ -9,11 +9,20 @@ import {
   assignMembershipAction,
   removeMembershipAction,
 } from "@church/module-members/org-actions";
-
-const input =
-  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
-const btn =
-  "rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { FilterBar } from "@/lib/ui/filter-bar";
+import { Input, Select, Label } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 
 export default async function OrgAssignmentsPage({
   searchParams,
@@ -40,53 +49,62 @@ export default async function OrgAssignmentsPage({
 
   return (
     <section className="flex max-w-5xl flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">연도별 조직 편성</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          매년 속회/부서 개편을 연도별로 관리합니다. 같은 교인이 여러 조직에 동시 소속될 수 있습니다.
-        </p>
-      </div>
+      <PageHeader>
+        <div>
+          <PageTitle>연도별 조직 편성</PageTitle>
+          <PageDescription>
+            매년 속회/부서 개편을 연도별로 관리합니다. 같은 교인이 여러 조직에 동시 소속될 수 있습니다.
+          </PageDescription>
+        </div>
+      </PageHeader>
 
       {/* 연도 선택 */}
-      <form method="get" className="flex items-center gap-2 text-sm">
-        <label htmlFor="year">대상 연도</label>
-        <input id="year" name="year" type="number" defaultValue={year} className={`${input} w-28`} />
-        <button className="rounded-md border border-border px-3 py-2">조회</button>
-      </form>
+      <FilterBar method="get">
+        <Label htmlFor="year" className="flex-row items-center gap-2">
+          대상 연도
+          <Input id="year" name="year" type="number" defaultValue={year} className="w-28" />
+        </Label>
+        <Button type="submit" variant="outline">
+          조회
+        </Button>
+      </FilterBar>
 
       {/* 편성 추가 */}
-      <form action={assignMembershipAction} className="flex flex-wrap items-end gap-2 rounded-md border border-border p-3">
+      <form
+        action={assignMembershipAction}
+        className="flex flex-wrap items-end gap-2 rounded-md border border-border p-3"
+      >
         <input type="hidden" name="periodYear" value={year} />
-        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+        <Label className="text-xs text-muted-foreground">
           교인
-          <select name="memberId" required className={input} defaultValue="">
+          <Select name="memberId" required defaultValue="">
             <option value="" disabled>선택</option>
             {members.map((m) => (
               <option key={m.memberId} value={m.memberId}>{m.name}</option>
             ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          </Select>
+        </Label>
+        <Label className="text-xs text-muted-foreground">
           조직(부서/구역/속)
-          <select name="departmentId" required className={input} defaultValue="">
+          <Select name="departmentId" required defaultValue="">
             <option value="" disabled>선택</option>
             {departmentRows.map((d) => (
               <option key={d.departmentId} value={d.departmentId}>{d.label}</option>
             ))}
-          </select>
-        </label>
-        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          </Select>
+        </Label>
+        <Label className="text-xs text-muted-foreground">
           직책
-          <select name="orgRoleId" className={input} defaultValue="">
+          <Select name="orgRoleId" defaultValue="">
             <option value="">(없음)</option>
             {roles.map((r) => (
               <option key={r.orgRoleId} value={r.orgRoleId}>
                 {r.label}{r.isLeader ? " (리더)" : ""}
               </option>
             ))}
-          </select>
-        </label>
-        <button className={btn}>편성 추가</button>
+          </Select>
+        </Label>
+        <Button type="submit">편성 추가</Button>
       </form>
 
       {departments.length === 0 && (
@@ -118,29 +136,21 @@ export default async function OrgAssignmentsPage({
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium">{dept.name}</span>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                      {rows.length}명
-                    </span>
+                    <Badge tone="muted">{rows.length}명</Badge>
                   </div>
                   {rows.length > 0 && (
                     <div className="mt-1 flex flex-wrap gap-1 text-xs">
                       {leaders.map((m) => (
-                        <span
-                          key={m.membershipId}
-                          className="rounded-full border border-primary/30 px-2 py-0.5 text-primary"
-                        >
+                        <Badge key={m.membershipId} tone="info">
                           {m.memberName}
                           {m.orgRoleLabel ? ` · ${m.orgRoleLabel}` : ""}
-                        </span>
+                        </Badge>
                       ))}
                       {members.map((m) => (
-                        <span
-                          key={m.membershipId}
-                          className="rounded-full border border-border px-2 py-0.5 text-muted-foreground"
-                        >
+                        <Badge key={m.membershipId} tone="muted">
                           {m.memberName}
                           {m.orgRoleLabel ? ` · ${m.orgRoleLabel}` : ""}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   )}
@@ -153,35 +163,44 @@ export default async function OrgAssignmentsPage({
 
       {/* 편성 목록 */}
       {memberships.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{year}년 편성 내역이 없습니다.</p>
+        <EmptyState
+          title={`${year}년 편성 내역이 없습니다`}
+          description="위 편성 추가 폼으로 교인을 조직에 배정하세요."
+        />
       ) : (
-        <table className="w-full text-sm">
-          <thead className="text-left text-muted-foreground">
-            <tr className="border-b border-border">
-              <th className="py-2">조직</th>
-              <th className="py-2">교인</th>
-              <th className="py-2">직책</th>
-              <th className="py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {memberships.map((m) => (
-              <tr key={m.membershipId} className="border-b border-border">
-                <td className="py-2">{m.departmentName}</td>
-                <td className="py-2">{m.memberName}</td>
-                <td className="py-2">
-                  {m.orgRoleLabel ?? "—"}
-                  {m.isLeader ? <span className="ml-1 text-xs text-primary">리더</span> : null}
-                </td>
-                <td className="py-2 text-right">
-                  <form action={removeMembershipAction.bind(null, m.membershipId)}>
-                    <button className="text-xs text-destructive underline">삭제</button>
-                  </form>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>조직</TableHead>
+                <TableHead>교인</TableHead>
+                <TableHead>직책</TableHead>
+                <TableHead className="text-right" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {memberships.map((m) => (
+                <TableRow key={m.membershipId}>
+                  <TableCell>{m.departmentName}</TableCell>
+                  <TableCell>{m.memberName}</TableCell>
+                  <TableCell>
+                    {m.orgRoleLabel ?? "—"}
+                    {m.isLeader ? (
+                      <Badge tone="info" className="ml-1">리더</Badge>
+                    ) : null}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <form action={removeMembershipAction.bind(null, m.membershipId)}>
+                      <Button type="submit" variant="destructive" size="sm">
+                        삭제
+                      </Button>
+                    </form>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
       <Link href="/members/org" className="text-sm underline">← 직분 · 직책 관리</Link>

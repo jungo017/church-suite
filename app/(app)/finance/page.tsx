@@ -1,9 +1,25 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Search, Plus, Trash2 } from "lucide-react";
 import { requireUser } from "@church/core/auth/session";
 import { hasPermission, PERMISSIONS } from "@church/core/rbac/roles";
 import { listVouchersPaged, voucherTotals } from "@church/module-finance/vouchers";
 import { pageParams } from "@church/core/db/pagination";
 import { Pagination } from "../pagination";
+import { PageHeader, PageTitle, PageActions } from "@/lib/ui/page";
+import { FilterBar } from "@/lib/ui/filter-bar";
+import { Input, Select } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/lib/ui/table";
 import {
   ACCOUNT_TYPE_LABELS,
   formatWon,
@@ -37,68 +53,127 @@ export default async function FinancePage({
   const vouchers = result.items;
   const income = totals.income;
   const expense = totals.expense;
-
-  const ctrl =
-    "rounded-md border border-border px-3 py-1.5 text-sm dark:bg-transparent";
+  const filtered = Boolean(type || from || to);
 
   return (
     <section className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">재정</h1>
+      <PageHeader>
+        <PageTitle>재정</PageTitle>
+        {canWrite && (
+          <PageActions>
+            <Button asChild>
+              <Link href="/finance/new">
+                <Plus />
+                전표 등록
+              </Link>
+            </Button>
+          </PageActions>
+        )}
+      </PageHeader>
 
-      <form className="flex flex-wrap items-end gap-2 text-sm">
-        <select name="type" defaultValue={type ?? ""} className={ctrl}>
+      <FilterBar>
+        <Select name="type" defaultValue={type ?? ""} className="w-auto">
           <option value="">전체</option>
           <option value="income">수입</option>
           <option value="expense">지출</option>
-        </select>
-        <input name="from" type="date" defaultValue={from ?? ""} className={ctrl} />
-        <input name="to" type="date" defaultValue={to ?? ""} className={ctrl} />
-        <button className={ctrl}>조회</button>
-      </form>
+        </Select>
+        <Input name="from" type="date" defaultValue={from ?? ""} className="w-auto" />
+        <Input name="to" type="date" defaultValue={to ?? ""} className="w-auto" />
+        <Button type="submit" variant="outline">
+          <Search />
+          조회
+        </Button>
+        {filtered && (
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/finance">초기화</Link>
+          </Button>
+        )}
+      </FilterBar>
 
-      <div className="flex gap-6 text-sm">
-        <span>수입 합계 <strong className="text-blue-600">{formatWon(income)}</strong></span>
-        <span>지출 합계 <strong className="text-destructive">{formatWon(expense)}</strong></span>
-        <span>잔액 <strong>{formatWon(income - expense)}</strong></span>
+      {/* 수입/지출/잔액 — 색상만이 아니라 라벨로 의미를 명확히(§9.1) */}
+      <div className="flex flex-wrap gap-6 text-sm">
+        <span>
+          수입 합계{" "}
+          <strong className="tabular-nums text-info">{formatWon(income)}</strong>
+        </span>
+        <span>
+          지출 합계{" "}
+          <strong className="tabular-nums text-destructive">
+            {formatWon(expense)}
+          </strong>
+        </span>
+        <span>
+          잔액 <strong className="tabular-nums">{formatWon(income - expense)}</strong>
+        </span>
       </div>
 
       {vouchers.length === 0 ? (
-        <p className="py-8 text-sm text-muted-foreground">전표가 없습니다.</p>
+        <EmptyState
+          title="전표가 없습니다"
+          description={
+            filtered
+              ? "조회 조건에 맞는 전표가 없습니다."
+              : "수입·지출 전표를 등록하면 예결산 보고서와 기부금영수증을 만들 수 있습니다."
+          }
+          action={
+            canWrite && !filtered ? (
+              <Button asChild>
+                <Link href="/finance/new">
+                  <Plus />
+                  전표 등록
+                </Link>
+              </Button>
+            ) : undefined
+          }
+        />
       ) : (
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-border text-muted-foreground">
-            <tr>
-              <th className="py-2">일자</th>
-              <th className="py-2">구분</th>
-              <th className="py-2">계정</th>
-              <th className="py-2">적요</th>
-              <th className="py-2">헌금자</th>
-              <th className="py-2 text-right">금액</th>
-              {canWrite && <th className="py-2"></th>}
-            </tr>
-          </thead>
-          <tbody>
-            {vouchers.map((v) => (
-              <tr key={v.voucherId} className="border-b border-border">
-                <td className="py-2">{v.voucherDate}</td>
-                <td className="py-2">{ACCOUNT_TYPE_LABELS[v.type as AccountType] ?? v.type}</td>
-                <td className="py-2">{v.accountName ?? "—"}</td>
-                <td className="py-2">{v.summary ?? "—"}</td>
-                <td className="py-2">{v.memberName ?? "—"}</td>
-                <td className={`py-2 text-right ${v.type === "income" ? "text-blue-600" : "text-destructive"}`}>
-                  {formatWon(v.amount)}
-                </td>
-                {canWrite && (
-                  <td className="py-2 text-right">
-                    <form action={deleteVoucherAction.bind(null, v.voucherId)}>
-                      <button className="text-xs text-destructive">삭제</button>
-                    </form>
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>일자</TableHead>
+                <TableHead>구분</TableHead>
+                <TableHead>계정</TableHead>
+                <TableHead>적요</TableHead>
+                <TableHead>헌금자</TableHead>
+                <TableHead className="text-right">금액</TableHead>
+                {canWrite && <TableHead className="text-right">관리</TableHead>}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {vouchers.map((v) => (
+                <TableRow key={v.voucherId}>
+                  <TableCell className="tabular-nums">{v.voucherDate}</TableCell>
+                  <TableCell>
+                    <Badge tone={v.type === "income" ? "info" : "muted"}>
+                      {ACCOUNT_TYPE_LABELS[v.type as AccountType] ?? v.type}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{v.accountName ?? "—"}</TableCell>
+                  <TableCell>{v.summary ?? "—"}</TableCell>
+                  <TableCell>{v.memberName ?? "—"}</TableCell>
+                  <TableCell
+                    className={`text-right tabular-nums ${
+                      v.type === "income" ? "text-info" : "text-destructive"
+                    }`}
+                  >
+                    {formatWon(v.amount)}
+                  </TableCell>
+                  {canWrite && (
+                    <TableCell className="text-right">
+                      <form action={deleteVoucherAction.bind(null, v.voucherId)}>
+                        <Button type="submit" variant="destructive" size="sm">
+                          <Trash2 />
+                          삭제
+                        </Button>
+                      </form>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
 
       <Pagination

@@ -3,6 +3,11 @@ import { requirePermission } from "@church/core/rbac/guards";
 import { PERMISSIONS, hasPermission } from "@church/core/rbac/roles";
 import { listForms } from "@church/module-forms/service";
 import { createFormAction } from "@church/module-forms/actions";
+import { PageHeader, PageTitle, PageDescription } from "@/lib/ui/page";
+import { Input, Select } from "@/lib/ui/form";
+import { Button } from "@/lib/ui/button";
+import { Badge, type BadgeTone } from "@/lib/ui/badge";
+import { EmptyState } from "@/lib/ui/empty-state";
 import {
   FORM_CATEGORY_LABELS,
   FORM_STATUS_LABELS,
@@ -10,10 +15,12 @@ import {
   type FormStatus,
 } from "@church/module-forms/constants";
 
-const input =
-  "rounded-md border border-border px-3 py-2 text-sm dark:bg-transparent";
-const btn =
-  "rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background";
+// 폼 상태 → Badge 톤 (색만으로 의미 전달하지 않도록 라벨과 함께 사용, §11).
+const STATUS_TONE: Record<string, BadgeTone> = {
+  draft: "muted",
+  published: "success",
+  closed: "destructive",
+};
 
 export default async function FormsPage() {
   const user = await requirePermission(PERMISSIONS.FORMS_READ);
@@ -22,32 +29,37 @@ export default async function FormsPage() {
 
   return (
     <section className="flex max-w-3xl flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">설문 · 보고</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          설문/보고서 템플릿을 만들고 문항을 구성해 발행합니다.
-        </p>
-      </div>
+      <PageHeader>
+        <div>
+          <PageTitle>설문 · 보고</PageTitle>
+          <PageDescription>
+            설문/보고서 템플릿을 만들고 문항을 구성해 발행합니다.
+          </PageDescription>
+        </div>
+      </PageHeader>
 
       {canWrite && (
         <form action={createFormAction} className="flex flex-col gap-2 rounded-md border border-border p-3">
-          <input name="title" required placeholder="제목 (예: 2026 속장보고서)" className={input} />
+          <Input name="title" required placeholder="제목 (예: 2026 속장보고서)" />
           <div className="flex flex-wrap gap-2">
-            <select name="category" className={input} defaultValue="survey">
+            <Select name="category" defaultValue="survey" className="w-auto">
               <option value="survey">설문</option>
               <option value="report">보고서</option>
-            </select>
-            <input name="periodYear" type="number" placeholder="대상 연도(보고서)" className={`${input} w-40`} />
+            </Select>
+            <Input name="periodYear" type="number" placeholder="대상 연도(보고서)" className="w-40" />
             <label className="flex items-center gap-1 text-sm text-muted-foreground">
               <input type="checkbox" name="anonymous" /> 익명(공개 링크)
             </label>
-            <button className={btn}>생성</button>
+            <Button type="submit">생성</Button>
           </div>
         </form>
       )}
 
       {forms.length === 0 ? (
-        <p className="text-sm text-muted-foreground">아직 폼이 없습니다.</p>
+        <EmptyState
+          title="아직 폼이 없습니다"
+          description="설문 또는 보고서 템플릿을 만들면 문항을 구성하고 발행할 수 있습니다."
+        />
       ) : (
         <ul className="flex flex-col gap-1 text-sm">
           {forms.map((f) => (
@@ -55,15 +67,18 @@ export default async function FormsPage() {
               key={f.formId}
               className="flex items-center justify-between border-b border-border py-2"
             >
-              <Link href={`/forms/${f.formId}`} className="font-medium underline">
+              <Link
+                href={`/forms/${f.formId}`}
+                className="font-medium text-foreground hover:underline"
+              >
                 {f.title}
               </Link>
               <span className="flex items-center gap-2 text-muted-foreground">
                 <span>{FORM_CATEGORY_LABELS[f.category as FormCategory] ?? f.category}</span>
                 {f.periodYear ? <span>· {f.periodYear}</span> : null}
-                <span className="rounded bg-muted px-2 py-0.5 text-xs">
+                <Badge tone={STATUS_TONE[f.status] ?? "muted"}>
                   {FORM_STATUS_LABELS[f.status as FormStatus] ?? f.status}
-                </span>
+                </Badge>
               </span>
             </li>
           ))}

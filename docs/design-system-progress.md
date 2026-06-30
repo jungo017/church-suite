@@ -22,10 +22,13 @@
 - [x] 현 M2 레지스트리 셸 props 계약(`modules`/`personal`/`userName`) 그대로 유지 — 청사진 `lib/ui/app/types` 가 현 `NavModule`/active 로직과 동일해 호환. layout.tsx 무변경.
 - [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅
 
-### Phase D2. 목록/테이블 — ⬜ 대기
-- [ ] 신규 `lib/ui/filter-bar.tsx`
-- [ ] members·finance·assets·forms 목록 + finance 하위 + platform 대시보드 → PageHeader·FilterBar·Table·Badge·EmptyState, 금액 우측정렬 tabular-nums
-- [ ] 의미색 토큰화(`text-green→success`·`text-amber→warning`·수입 `text-blue→info`)
+### Phase D2. 목록/테이블 — 🟡 핵심 완료 (재적용)
+- [x] 신규 `lib/ui/filter-bar.tsx`
+- [x] 핵심 목록/테이블 14파일: members·finance·assets 목록 + finance(accounts·report·receipts·receipts/[memberId]) + forms(목록·assignments·report) + members/org/assignments + my/giving + platform 대시보드 + (app) 대시보드(StatCard·PageHeader·EmptyState, **엔타이틀먼트 게이팅 보존**)
+- [x] 청사진 디자인 가져와 현재 import 로 재배선(core+module), 이동 함수(getUserMember→`@church/core/member`, listDepartments→`@church/core/department`) split
+- [x] 품질게이트: typecheck ✅ / lint ✅ / build ✅ (test 는 CI)
+- [ ] **long-tail(후속)**: members 보조(attendance·education·families·stats·notify·org·labels·kiosk) · assets(audits·classification·labels) · site(offerings·new-family·boards) · my/forms → PageHeader/Table/Badge/EmptyState
+- [ ] 의미색 토큰화(`text-green→success`·`text-amber→warning`·수입 `text-blue→info`) — D5 색상 lint 와 함께 마무리
 
 ### Phase D3. 폼/상세 — ⬜ 대기
 - [ ] 신규 `lib/ui/description-list.tsx`
